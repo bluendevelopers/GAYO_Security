@@ -27,13 +27,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_main;
+        return R.layout.activity_work_record;
     }
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-    }
 
+    }
 
 }

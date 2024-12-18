@@ -1,6 +1,7 @@
 package bluen.homein.gayo_security.base;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ public abstract class BaseRecyclerAdapter<E, VH extends RecyclerView.ViewHolder>
     protected int mResource;
 
     protected abstract VH onCreateViewHolderBase(View view);
+
     protected abstract void onBindViewHolderBase(VH holder, int position);
 
     public BaseRecyclerAdapter(Context context, int resource) {
@@ -63,3 +65,5 @@ public abstract class BaseRecyclerAdapter<E, VH extends RecyclerView.ViewHolder>
         return mData.size();
     }
 }
+
+
