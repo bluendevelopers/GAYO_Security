@@ -12,8 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,35 +19,21 @@ import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.base.BaseRecyclerAdapter;
 import butterknife.BindView;
 
-public class WorkRecordActivity extends BaseActivity {
+public class CallActivity extends BaseActivity {
 
-    @BindView(R.id.rv_page_number)
-    RecyclerView rvPageNumber;
-    @BindView(R.id.tv_empty_view)
-    TextView tvEmptyView;
+    @BindView(R.id.rv_facility_list)
+    RecyclerView rvFacilityList;
+
     private PageNumberListAdapter adapter;
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_work_record;
+        return R.layout.activity_call;
     }
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.HORIZONTAL);
-        adapter = new PageNumberListAdapter(mContext, R.layout.item_page_number);
 
-        List<String> tempList = new ArrayList<String>() {{
-            add("1");
-            add("2");
-            add("3");
-        }};
-
-        adapter.addItems(tempList);
-        if (tempList == null || tempList.isEmpty()) {
-            tvEmptyView.setVisibility(View.VISIBLE);
-        }
-        rvPageNumber.setAdapter(adapter);
 
     }
 
@@ -61,12 +45,12 @@ public class WorkRecordActivity extends BaseActivity {
         }
 
         @Override
-        protected PageNumberListAdapter.ViewHolder onCreateViewHolderBase(View view) {
-            return new PageNumberListAdapter.ViewHolder(view);
+        protected ViewHolder onCreateViewHolderBase(View view) {
+            return new ViewHolder(view);
         }
 
         @Override
-        protected void onBindViewHolderBase(PageNumberListAdapter.ViewHolder holder, int position) {
+        protected void onBindViewHolderBase(ViewHolder holder, int position) {
 
             holder.tvPageNumber.setText(mData.get(position));
 

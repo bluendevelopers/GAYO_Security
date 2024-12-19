@@ -12,8 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.base.BaseRecyclerAdapter;
 import butterknife.BindView;
 
-public class WorkRecordActivity extends BaseActivity {
+public class AddContactActivity extends BaseActivity {
 
     @BindView(R.id.rv_page_number)
     RecyclerView rvPageNumber;
@@ -31,7 +29,7 @@ public class WorkRecordActivity extends BaseActivity {
 
     @Override
     protected int getLayoutResId() {
-        return R.layout.activity_work_record;
+        return R.layout.activity_add_contact;
     }
 
     @Override
@@ -61,12 +59,12 @@ public class WorkRecordActivity extends BaseActivity {
         }
 
         @Override
-        protected PageNumberListAdapter.ViewHolder onCreateViewHolderBase(View view) {
-            return new PageNumberListAdapter.ViewHolder(view);
+        protected ViewHolder onCreateViewHolderBase(View view) {
+            return new ViewHolder(view);
         }
 
         @Override
-        protected void onBindViewHolderBase(PageNumberListAdapter.ViewHolder holder, int position) {
+        protected void onBindViewHolderBase(ViewHolder holder, int position) {
 
             holder.tvPageNumber.setText(mData.get(position));
 

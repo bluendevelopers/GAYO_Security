@@ -50,11 +50,12 @@
 
                 <TextView
                     android:id="@+id/tv_selected_division"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
-                    android:layout_marginStart="30dp"
-                    android:text="전체"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:text="수신거부"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="22dp"
@@ -109,10 +110,10 @@
                     android:id="@+id/tv_selected_start_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginEnd="34dp"
-
+                    android:layout_marginBottom="7dp"
                     android:text="날짜 선택"
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
@@ -143,7 +144,7 @@
             android:layout_marginStart="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@+id/lay_start_date"
-            app:layout_constraintEnd_toStartOf="@+id/lay_worker_phone_number"
+            app:layout_constraintEnd_toStartOf="@+id/view2"
             app:layout_constraintHorizontal_weight="8"
             app:layout_constraintStart_toEndOf="@+id/lay_start_date"
             app:layout_constraintTop_toTopOf="@+id/lay_start_date">
@@ -168,11 +169,12 @@
                     android:id="@+id/tv_selected_end_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
+                    android:layout_marginTop="7dp"
                     android:layout_marginEnd="34dp"
-
+                    android:layout_marginBottom="7dp"
                     android:text="날짜 선택"
+
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
                     android:textSize="22dp"
@@ -196,89 +198,44 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/lay_worker_phone_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_end_date"
-            app:layout_constraintEnd_toStartOf="@+id/view2"
-            app:layout_constraintHorizontal_weight="8"
-
-            app:layout_constraintStart_toEndOf="@+id/lay_end_date"
-            app:layout_constraintTop_toTopOf="@+id/lay_end_date">
-
-            <TextView
-                android:id="@+id/tv_worker_phone_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="10dp"
-                android:text="근무자 연락처"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:textStyle="bold" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
-
-                <TextView
-                    android:id="@+id/tv_selected_workder_phone_number"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="7dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="28dp"
-                    android:text="전체"
-                    android:textAlignment="textStart"
-                    android:textColor="@color/black"
-                    android:textSize="22dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_selected_workder_phone_number"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/iv_selected_workder_phone_number"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="17dp"
-                    android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_selected_workder_phone_number"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_selected_workder_phone_number" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
 
         <View
             android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_worker_phone_number"
+            app:layout_constraintBottom_toBottomOf="@+id/lay_end_date"
             app:layout_constraintEnd_toStartOf="@+id/btn_search"
-            app:layout_constraintHorizontal_weight="3"
-            app:layout_constraintStart_toEndOf="@+id/lay_worker_phone_number"
-            app:layout_constraintTop_toTopOf="@+id/lay_worker_phone_number" />
+            app:layout_constraintHorizontal_weight="6"
+            app:layout_constraintStart_toEndOf="@+id/lay_end_date"
+            app:layout_constraintTop_toTopOf="@+id/lay_end_date" />
+
 
         <Button
             android:id="@+id/btn_search"
             android:layout_width="120dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/btn_blue_fill_border_radius_10"
             android:text="검 색"
             android:textColor="@color/white"
             android:textSize="25dp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_delete"
+            app:layout_constraintEnd_toStartOf="@+id/btn_delete" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_border_radius_10"
+            android:text="전체 삭제"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -300,7 +257,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingHorizontal="40dp"
             android:paddingVertical="15dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -318,7 +274,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
+                android:layout_weight="10"
                 android:text="날짜"
                 android:textAlignment="center"
                 android:textColor="@color/black"
@@ -328,8 +284,8 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="12"
-                android:text="근무자 연락처"
+                android:layout_weight="5"
+                android:text="통화 시간"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="25dp"
@@ -338,8 +294,8 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:text="시작 시간"
+                android:layout_weight="10"
+                android:text="통화 내역"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="25dp"
@@ -348,17 +304,30 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="7"
-                android:text="종료 시간"
+                android:layout_weight="5"
+                android:text="연결"
+                android:layout_marginEnd="-15dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="25dp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:text="삭제"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="25dp"
+                android:textStyle="bold" />
+
 
         </LinearLayout>
 
+
         <ListView
-            android:id="@+id/lv_work_record"
+            android:id="@+id/lv_call_record"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="none"
@@ -366,8 +335,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lay_list_top"
-            tools:listitem="@layout/item_work_record" />
-
+            tools:listitem="@layout/item_call_record" />
         <View
             android:id="@+id/v_divider1"
             android:layout_width="0dp"
@@ -384,22 +352,22 @@
             android:background="#d1d1d1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lv_work_record" />
+            app:layout_constraintTop_toBottomOf="@+id/lv_call_record" />
 
         <TextView
             android:id="@+id/tv_empty_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="근무 기록이\n존재하지 않습니다."
+            android:text="통화 기록이\n존재하지 않습니다."
             android:textAlignment="center"
             android:textColor="#999999"
             android:textSize="25dp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/lv_work_record"
+            app:layout_constraintBottom_toBottomOf="@+id/lv_call_record"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/lv_work_record"
-            app:layout_constraintTop_toTopOf="@+id/lv_work_record" />
+            app:layout_constraintStart_toStartOf="@+id/lv_call_record"
+            app:layout_constraintTop_toTopOf="@+id/lv_call_record" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
