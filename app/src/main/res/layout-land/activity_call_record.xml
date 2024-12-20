@@ -56,6 +56,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="12dp"
                     android:text="수신거부"
+                    android:fontFamily="@font/pretendard_regular"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="22dp"
@@ -115,6 +116,7 @@
                     android:layout_marginEnd="34dp"
                     android:layout_marginBottom="7dp"
                     android:text="날짜 선택"
+                    android:fontFamily="@font/pretendard_regular"
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
                     android:textSize="22dp"
@@ -174,7 +176,7 @@
                     android:layout_marginEnd="34dp"
                     android:layout_marginBottom="7dp"
                     android:text="날짜 선택"
-
+                    android:fontFamily="@font/pretendard_regular"
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
                     android:textSize="22dp"
@@ -216,10 +218,10 @@
             android:layout_height="40dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/btn_blue_fill_border_radius_10"
+            android:fontFamily="@font/pretendard_semibold"
             android:text="검 색"
             android:textColor="@color/white"
             android:textSize="25dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/btn_delete"
             app:layout_constraintEnd_toStartOf="@+id/btn_delete" />
 
@@ -233,7 +235,7 @@
             android:text="전체 삭제"
             android:textColor="@color/black"
             android:textSize="25dp"
-            android:textStyle="bold"
+            android:fontFamily="@font/pretendard_semibold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -407,7 +409,7 @@
                     android:text="이 전"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/pretendard_semibold" />
 
             </LinearLayout>
 
@@ -433,7 +435,7 @@
                     android:text="다 음"
                     android:textColor="@color/black"
                     android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/pretendard_semibold" />
 
                 <ImageView
                     android:layout_width="wrap_content"

@@ -9,10 +9,10 @@
         android:id="@+id/lay_item_work_record"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:gravity="center"
-        android:paddingHorizontal="40dp"
         android:background="@color/white"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:paddingHorizontal="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,24 +22,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
+            android:fontFamily="@font/pretendard_regular"
             android:text="근무"
             android:textAlignment="center"
             android:textColor="#0061df"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
+            android:fontFamily="@font/pretendard_regular"
             android:text="2024-08-16"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="12"
+            android:fontFamily="@font/pretendard_regular"
             android:text="010-1111-1111"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -49,19 +52,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
+            android:fontFamily="@font/pretendard_regular"
             android:text="오후 10 : 00"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
+            android:fontFamily="@font/pretendard_regular"
             android:text="오후 12 : 00"
             android:textAlignment="center"
             android:textColor="@color/black"
-            android:textSize="25dp"/>
+            android:textSize="25dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

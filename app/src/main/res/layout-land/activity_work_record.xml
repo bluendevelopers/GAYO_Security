@@ -54,6 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:text="전체"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -112,7 +113,7 @@
                     android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="34dp"
-
+                    android:fontFamily="@font/pretendard_regular"
                     android:text="날짜 선택"
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
@@ -171,7 +172,7 @@
                     android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="34dp"
-
+                    android:fontFamily="@font/pretendard_regular"
                     android:text="날짜 선택"
                     android:textAlignment="textStart"
                     android:textColor="@color/gray"
@@ -232,6 +233,7 @@
                     android:layout_marginVertical="7dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="28dp"
+                    android:fontFamily="@font/pretendard_regular"
                     android:text="전체"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
@@ -272,10 +274,10 @@
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/btn_blue_fill_border_radius_10"
+            android:fontFamily="@font/pretendard_semibold"
             android:text="검 색"
             android:textColor="@color/white"
             android:textSize="25dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -436,10 +438,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:text="이 전"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:textSize="25dp" />
 
             </LinearLayout>
 
@@ -462,10 +464,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:text="다 음"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:textStyle="bold" />
+                    android:textSize="25dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"

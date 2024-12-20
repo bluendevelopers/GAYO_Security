@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/btn_page_radius_10_fill"
         android:text="1"
+        android:fontFamily="@font/pretendard_medium"
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="25dp"

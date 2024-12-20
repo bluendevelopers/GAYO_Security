@@ -23,6 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
+            android:fontFamily="@font/pretendard_regular"
             android:text="수신"
             android:textAlignment="center"
             android:textColor="#0061df"
@@ -33,6 +34,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:fontFamily="@font/pretendard_regular"
             android:text="2024-08-16 오후 03:13"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -43,6 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5"
+            android:fontFamily="@font/pretendard_regular"
             android:text="3분 12초"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -53,6 +56,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:fontFamily="@font/pretendard_regular"
             android:text="공동현관 [ 101 - 2102 ]"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -61,8 +65,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_connect_btn"
             android:layout_width="0dp"
-            android:layout_marginEnd="-15dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="-15dp"
             android:layout_weight="5">
 
             <LinearLayout
@@ -88,11 +92,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/pretendard_medium"
                     android:text="연결"
                     android:textAlignment="center"
                     android:textColor="@color/Main_Color"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textSize="20dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -125,11 +129,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
+                    android:fontFamily="@font/pretendard_medium"
                     android:text="삭제"
                     android:textAlignment="center"
                     android:textColor="#f1293d"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textSize="20dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
