@@ -62,6 +62,6 @@ dependencies {
     // Butter Knife
     implementation libs.butterknife
     annotationProcessor libs.butterknife.compiler
-
+    implementation libs.android.slidr
 
 }

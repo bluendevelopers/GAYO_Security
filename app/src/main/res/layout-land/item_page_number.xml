@@ -24,9 +24,9 @@
         android:id="@+id/v_margin_right"
         android:layout_width="10dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_page_number"
-        app:layout_constraintStart_toEndOf="@+id/tv_page_number"
-        app:layout_constraintTop_toTopOf="@+id/tv_page_number" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_page_number"
+        app:layout_constraintStart_toEndOf="@id/tv_page_number"
+        app:layout_constraintTop_toTopOf="@id/tv_page_number" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

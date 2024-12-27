@@ -1,10 +1,13 @@
 package bluen.homein.gayo_security;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.github.florent37.androidslidr.Slidr;
 
 import bluen.homein.gayo_security.base.BaseActivity;
 import butterknife.BindView;
@@ -22,6 +25,8 @@ public class CallActivity extends BaseActivity {
     TextView tvDongNumber;
     @BindView(R.id.tv_apt_ho_number)
     TextView tvHoNumber;
+    @BindView(R.id.slidr_volume)
+    Slidr slidrVolume;
 
     @Override
     protected int getLayoutResId() {
@@ -31,7 +36,16 @@ public class CallActivity extends BaseActivity {
     @Override
     protected void initActivity(Bundle savedInstanceState) {
 
-
+        // 볼륨 조절
+        slidrVolume.setMax(100);
+        slidrVolume.setMin(0);
+        slidrVolume.setCurrentValue(5);
+        slidrVolume.setRegionTextFormatter(new Slidr.RegionTextFormatter() {
+            @Override
+            public String format(int region, float value) {
+                return String.format("", (int) value);
+            }
+        });
     }
 
 //    public static class PageNumberListAdapter extends BaseRecyclerAdapter<String, PageNumberListAdapter.ViewHolder> {

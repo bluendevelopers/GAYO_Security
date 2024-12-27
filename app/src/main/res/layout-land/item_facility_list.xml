@@ -15,7 +15,7 @@
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/v_margin_right"
+        app:layout_constraintEnd_toStartOf="@id/v_margin_right"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -39,7 +39,7 @@
         android:id="@+id/v_margin_right"
         android:layout_width="12dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
+        app:layout_constraintBottom_toBottomOf="@id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+        app:layout_constraintTop_toTopOf="@id/constraintLayout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

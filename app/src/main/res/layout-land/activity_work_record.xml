@@ -27,7 +27,7 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/lay_start_date"
+            app:layout_constraintEnd_toStartOf="@id/lay_start_date"
             app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -60,7 +60,7 @@
                     android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_selected_division"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_division"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,9 +70,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_selected_division"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_division"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_selected_division" />
+                    app:layout_constraintTop_toTopOf="@id/tv_selected_division" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -84,11 +84,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_division"
-            app:layout_constraintEnd_toStartOf="@+id/lay_end_date"
+            app:layout_constraintBottom_toBottomOf="@id/lay_division"
+            app:layout_constraintEnd_toStartOf="@id/lay_end_date"
             app:layout_constraintHorizontal_weight="8"
-            app:layout_constraintStart_toEndOf="@+id/lay_division"
-            app:layout_constraintTop_toTopOf="@+id/lay_division">
+            app:layout_constraintStart_toEndOf="@id/lay_division"
+            app:layout_constraintTop_toTopOf="@id/lay_division">
 
             <TextView
                 android:id="@+id/tv_start_date"
@@ -119,7 +119,7 @@
                     android:textColor="@color/gray"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_selected_start_date"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_start_date"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -129,9 +129,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="27dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_selected_start_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_start_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_selected_start_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_selected_start_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,11 +143,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_start_date"
-            app:layout_constraintEnd_toStartOf="@+id/lay_worker_phone_number"
+            app:layout_constraintBottom_toBottomOf="@id/lay_start_date"
+            app:layout_constraintEnd_toStartOf="@id/lay_worker_phone_number"
             app:layout_constraintHorizontal_weight="8"
-            app:layout_constraintStart_toEndOf="@+id/lay_start_date"
-            app:layout_constraintTop_toTopOf="@+id/lay_start_date">
+            app:layout_constraintStart_toEndOf="@id/lay_start_date"
+            app:layout_constraintTop_toTopOf="@id/lay_start_date">
 
             <TextView
                 android:id="@+id/tv_end_date"
@@ -178,7 +178,7 @@
                     android:textColor="@color/gray"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_selected_end_date"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_end_date"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -188,9 +188,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="27dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_selected_end_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_end_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_selected_end_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_selected_end_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -203,12 +203,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_end_date"
-            app:layout_constraintEnd_toStartOf="@+id/view2"
+            app:layout_constraintBottom_toBottomOf="@id/lay_end_date"
+            app:layout_constraintEnd_toStartOf="@id/view2"
             app:layout_constraintHorizontal_weight="8"
 
-            app:layout_constraintStart_toEndOf="@+id/lay_end_date"
-            app:layout_constraintTop_toTopOf="@+id/lay_end_date">
+            app:layout_constraintStart_toEndOf="@id/lay_end_date"
+            app:layout_constraintTop_toTopOf="@id/lay_end_date">
 
             <TextView
                 android:id="@+id/tv_worker_phone_number"
@@ -239,7 +239,7 @@
                     android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_selected_workder_phone_number"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_workder_phone_number"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -249,9 +249,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_selected_workder_phone_number"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_workder_phone_number"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/tv_selected_workder_phone_number" />
+                    app:layout_constraintTop_toTopOf="@id/tv_selected_workder_phone_number" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -261,11 +261,11 @@
             android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_worker_phone_number"
-            app:layout_constraintEnd_toStartOf="@+id/btn_search"
+            app:layout_constraintBottom_toBottomOf="@id/lay_worker_phone_number"
+            app:layout_constraintEnd_toStartOf="@id/btn_search"
             app:layout_constraintHorizontal_weight="3"
-            app:layout_constraintStart_toEndOf="@+id/lay_worker_phone_number"
-            app:layout_constraintTop_toTopOf="@+id/lay_worker_phone_number" />
+            app:layout_constraintStart_toEndOf="@id/lay_worker_phone_number"
+            app:layout_constraintTop_toTopOf="@id/lay_worker_phone_number" />
 
         <Button
             android:id="@+id/btn_search"
@@ -295,7 +295,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lay_filter">
+        app:layout_constraintTop_toBottomOf="@id/lay_filter">
 
         <LinearLayout
             android:id="@+id/lay_list_top"
@@ -364,10 +364,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="none"
-            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lay_list_top"
+            app:layout_constraintTop_toBottomOf="@id/lay_list_top"
             tools:listitem="@layout/item_work_record" />
 
         <View
@@ -386,7 +386,7 @@
             android:background="#d1d1d1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lv_work_record" />
+            app:layout_constraintTop_toBottomOf="@id/lv_work_record" />
 
         <TextView
             android:id="@+id/tv_empty_view"
@@ -398,10 +398,10 @@
             android:textSize="25dp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/lv_work_record"
+            app:layout_constraintBottom_toBottomOf="@id/lv_work_record"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/lv_work_record"
-            app:layout_constraintTop_toTopOf="@+id/lv_work_record" />
+            app:layout_constraintStart_toStartOf="@id/lv_work_record"
+            app:layout_constraintTop_toTopOf="@id/lv_work_record" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -484,10 +484,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@+id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@+id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@+id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@+id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
+                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
+                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
+                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

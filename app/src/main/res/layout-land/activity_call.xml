@@ -15,7 +15,7 @@
         android:layout_marginBottom="18dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@+id/lay_bottom"
+        app:layout_constraintBottom_toTopOf="@id/lay_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -25,16 +25,17 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/v_middle"
+            app:layout_constraintEnd_toStartOf="@id/v_middle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_clock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="80dp"
                 android:layout_marginBottom="60dp"
-
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -56,13 +57,264 @@
                     android:textColor="@color/black"
                     android:textSize="120dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_gayo_logo" />
+                    app:layout_constraintTop_toBottomOf="@id/iv_gayo_logo" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width=""
-                android:layout_height=""
+                android:id="@+id/lay_call_view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_call_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="85dp"
+                    android:layout_marginEnd="85dp"
+                    android:layout_marginBottom="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="8">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay_sender_apt_info"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="35dp"
+                        app:layout_constraintBottom_toTopOf="@id/tv_call_message"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent">
+
+
+                        <TextView
+                            android:id="@+id/tv_sender_apt_dong_number"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_extra_bold"
+                            android:gravity="center"
+                            android:maxLength="4"
+                            android:text="1011"
+                            android:textColor="@color/Main_Color"
+                            android:textSize="60dp"
+                            app:layout_constraintEnd_toStartOf="@id/tv_sender_apt_dong"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_sender_apt_dong"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="30dp"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:gravity="center"
+                            android:text="동"
+                            android:textColor="@color/black"
+                            android:textSize="40dp"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_sender_apt_dong_number"
+                            app:layout_constraintEnd_toStartOf="@id/tv_sender_apt_ho_number"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@id/tv_sender_apt_dong_number"
+                            app:layout_constraintTop_toTopOf="@id/tv_sender_apt_dong_number" />
+
+                        <TextView
+                            android:id="@+id/tv_sender_apt_ho_number"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_extra_bold"
+                            android:gravity="center"
+                            android:maxLength="4"
+                            android:text="1011"
+                            android:textColor="@color/Main_Color"
+                            android:textSize="60dp"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_sender_apt_dong"
+                            app:layout_constraintEnd_toStartOf="@id/tv_sender_apt_ho"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@id/tv_sender_apt_dong"
+                            app:layout_constraintTop_toTopOf="@id/tv_sender_apt_dong" />
+
+                        <TextView
+                            android:id="@+id/tv_sender_apt_ho"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/pretendard_semibold"
+                            android:gravity="center"
+                            android:text="호"
+                            android:textColor="@color/black"
+                            android:textSize="40dp"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_sender_apt_ho_number"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_weight="1"
+                            app:layout_constraintStart_toEndOf="@id/tv_sender_apt_ho_number"
+                            app:layout_constraintTop_toTopOf="@id/tv_sender_apt_ho_number" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <TextView
+                        android:id="@+id/tv_facility_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="35dp"
+                        android:fontFamily="@font/pretendard_extra_bold"
+                        android:gravity="center_horizontal"
+                        android:text="관리실"
+                        android:textColor="@color/Main_Color"
+                        android:textSize="60dp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toTopOf="@id/tv_call_message"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_call_message"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_regular"
+                        android:text="으로 부터 통화가 왔습니다."
+                        android:textColor="@color/black"
+                        android:textSize="40dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_caller_camera"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_call_time"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:alpha="0.35"
+                    android:background="@drawable/background_radius_35_fill_black"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_call_time"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_call_time"
+                    app:layout_constraintStart_toStartOf="@+id/tv_call_time"
+                    app:layout_constraintTop_toTopOf="@+id/tv_call_time" />
+
+                <TextView
+                    android:id="@+id/tv_call_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:paddingHorizontal="35dp"
+                    android:paddingVertical="12dp"
+                    android:text="00:00"
+                    android:textColor="@color/white"
+                    android:textSize="30dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/lay_call_volume"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_call_volume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginBottom="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay_volume_down"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/btn_border_radius_10_stroke_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/iv_volume_down"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:src="@drawable/volume_1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay_volume_seek_bar"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginEnd="15dp"
+                        android:background="@drawable/btn_border_radius_10_stroke_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/lay_volume_up"
+                        app:layout_constraintStart_toEndOf="@+id/lay_volume_down"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.github.florent37.androidslidr.Slidr
+                            android:id="@+id/slidr_volume"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginBottom="12dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:slidr_backgroundColor="#eeeeee"
+                            app:slidr_barHeight="15dp"
+                            app:slidr_draw_bubble="false"
+                            app:slidr_region_leftColor="@color/Main_Color"
+                            app:slidr_region_rightColor="@color/white"
+                            app:slidr_regions_textFollowRegionColor="@color/black"
+                            app:slidr_textBottom_visible="true"
+                            app:slidr_textTop_size="10dp" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/lay_volume_up"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/btn_border_radius_10_stroke_gray"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/iv_volume_up"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="7dp"
+                            android:src="@drawable/volume_2"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -83,18 +335,69 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/v_middle"
+            app:layout_constraintStart_toEndOf="@id/v_middle"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lay_call_recipient_info"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/lay_button"
+                app:layout_constraintBottom_toTopOf="@id/lay_button"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_weight="1.03">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_call_reception_select"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="통화 연결"
+                        android:textColor="#165ab2"
+                        android:textSize="50dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/textView6"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="거 절"
+                        android:textColor="#f1293d"
+                        android:textSize="50dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@id/textView7"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="0dp"
+                        android:layout_marginTop="35dp"
+                        android:alpha="0.4"
+                        android:background="#f1f1f1"
+                        app:layout_constraintBottom_toBottomOf="@id/textView7"
+                        app:layout_constraintEnd_toEndOf="@id/textView7"
+                        app:layout_constraintTop_toTopOf="@id/textView7" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_dong_ho_info"
@@ -102,7 +405,8 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="30dp"
-                    app:layout_constraintBottom_toTopOf="@+id/lay_car_number_info"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/lay_car_number_info"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -121,7 +425,7 @@
                         android:textColor="@color/Main_Color"
                         android:textSize="60dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_apt_dong"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_dong"
                         app:layout_constraintHorizontal_weight="3.5"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -138,11 +442,11 @@
                         android:textColor="@color/black"
                         android:textSize="40dp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_apt_dong_number"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_apt_ho_number"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong_number"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho_number"
                         app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintStart_toEndOf="@+id/tv_apt_dong_number"
-                        app:layout_constraintTop_toTopOf="@+id/tv_apt_dong_number" />
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong_number"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong_number" />
 
                     <TextView
                         android:id="@+id/tv_apt_ho_number"
@@ -155,11 +459,11 @@
                         android:text="1011"
                         android:textColor="@color/Main_Color"
                         android:textSize="60dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_apt_dong"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_apt_ho"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho"
                         app:layout_constraintHorizontal_weight="3.5"
-                        app:layout_constraintStart_toEndOf="@+id/tv_apt_dong"
-                        app:layout_constraintTop_toTopOf="@+id/tv_apt_dong" />
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong" />
 
                     <TextView
                         android:id="@+id/tv_apt_ho"
@@ -170,15 +474,14 @@
                         android:text="호"
                         android:textColor="@color/black"
                         android:textSize="40dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_apt_ho_number"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_ho_number"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintStart_toEndOf="@+id/tv_apt_ho_number"
-                        app:layout_constraintTop_toTopOf="@+id/tv_apt_ho_number" />
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_ho_number"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_ho_number" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_car_number_info"
@@ -221,13 +524,13 @@
                         android:layout_marginStart="50dp"
                         android:layout_marginEnd="10dp"
                         android:fontFamily="@font/pretendard_semibold"
+                        android:maxLength="8"
                         android:textAlignment="center"
                         android:textColor="@color/Main_Color"
                         android:textSize="40dp"
-                        android:maxLength="8"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView"
+                        app:layout_constraintStart_toEndOf="@id/textView"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:text="123가5678" />
 
@@ -236,24 +539,24 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lay_button"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:alpha="0.3"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lay_call_recipient_info"
+                app:layout_constraintTop_toBottomOf="@id/lay_call_recipient_info"
                 app:layout_constraintVertical_weight="1.98">
 
                 <LinearLayout
-                    android:id="@+id/tableLayout"
+                    android:id="@+id/lay_num_pad"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/constraintLayout3"
+                    app:layout_constraintEnd_toStartOf="@id/constraintLayout3"
                     app:layout_constraintHorizontal_weight="3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -499,13 +802,12 @@
 
                 </LinearLayout>
 
-
                 <View
                     android:layout_width="1dp"
                     android:layout_height="400dp"
                     android:background="#f1f1f1"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/tableLayout"
+                    app:layout_constraintEnd_toEndOf="@id/lay_num_pad"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -515,7 +817,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_weight="2"
-                    app:layout_constraintStart_toEndOf="@+id/tableLayout"
+                    app:layout_constraintStart_toEndOf="@id/lay_num_pad"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
@@ -524,7 +826,7 @@
                         android:layout_height="0dp"
                         android:gravity="center"
                         android:orientation="vertical"
-                        app:layout_constraintBottom_toTopOf="@+id/lay_call_btn"
+                        app:layout_constraintBottom_toTopOf="@id/lay_call_btn"
                         app:layout_constraintEnd_toStartOf="@id/lay_car_number_btn"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toStartOf="parent"
@@ -555,7 +857,7 @@
                         android:layout_height="0dp"
                         android:gravity="center"
                         android:orientation="vertical"
-                        app:layout_constraintBottom_toTopOf="@+id/lay_call_btn"
+                        app:layout_constraintBottom_toTopOf="@id/lay_call_btn"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_weight="1"
                         app:layout_constraintStart_toEndOf="@id/lay_delete_btn"
@@ -583,7 +885,7 @@
                         android:layout_width="0dp"
                         android:layout_height="1dp"
                         android:background="#f1f1f1"
-                        app:layout_constraintBottom_toBottomOf="@+id/lay_delete_btn"
+                        app:layout_constraintBottom_toBottomOf="@id/lay_delete_btn"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -593,7 +895,7 @@
                         android:layout_height="0dp"
                         android:background="#f1f1f1"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/lay_delete_btn"
+                        app:layout_constraintEnd_toEndOf="@id/lay_delete_btn"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <LinearLayout
@@ -603,11 +905,12 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/lay_door_open_btn"
+                        app:layout_constraintEnd_toStartOf="@id/lay_door_open_btn"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/lay_delete_btn">
+                        app:layout_constraintTop_toBottomOf="@id/lay_delete_btn">
 
                         <ImageView
+                            android:id="@+id/iv_call_icon"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/call_icon"
@@ -633,8 +936,8 @@
                         android:orientation="vertical"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/lay_call_btn"
-                        app:layout_constraintTop_toBottomOf="@+id/lay_car_number_btn">
+                        app:layout_constraintStart_toEndOf="@id/lay_call_btn"
+                        app:layout_constraintTop_toBottomOf="@id/lay_car_number_btn">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -658,6 +961,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
+                    android:id="@+id/view3"
                     android:layout_width="600dp"
                     android:layout_height="2dp"
                     android:background="#f1f1f1"
@@ -685,7 +989,7 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+            app:layout_constraintEnd_toStartOf="@id/constraintLayout"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -721,7 +1025,7 @@
             android:background="@drawable/background_radius_15_fill"
             android:elevation="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/lay_bottom"
+            app:layout_constraintEnd_toEndOf="@id/lay_bottom"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView

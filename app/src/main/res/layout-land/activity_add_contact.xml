@@ -27,7 +27,7 @@
             android:layout_marginBottom="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/lay_ip_address"
+            app:layout_constraintEnd_toStartOf="@id/lay_ip_address"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -75,11 +75,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_facility_name"
-            app:layout_constraintEnd_toStartOf="@+id/view2"
+            app:layout_constraintBottom_toBottomOf="@id/lay_facility_name"
+            app:layout_constraintEnd_toStartOf="@id/view2"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/lay_facility_name"
-            app:layout_constraintTop_toTopOf="@+id/lay_facility_name">
+            app:layout_constraintStart_toEndOf="@id/lay_facility_name"
+            app:layout_constraintTop_toTopOf="@id/lay_facility_name">
 
             <TextView
                 android:id="@+id/tv_start_date"
@@ -123,11 +123,11 @@
             android:id="@+id/view2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/lay_ip_address"
-            app:layout_constraintEnd_toStartOf="@+id/btn_search"
+            app:layout_constraintBottom_toBottomOf="@id/lay_ip_address"
+            app:layout_constraintEnd_toStartOf="@id/btn_search"
             app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toEndOf="@+id/lay_ip_address"
-            app:layout_constraintTop_toTopOf="@+id/lay_ip_address" />
+            app:layout_constraintStart_toEndOf="@id/lay_ip_address"
+            app:layout_constraintTop_toTopOf="@id/lay_ip_address" />
 
 
         <Button
@@ -140,8 +140,8 @@
             android:text="추가"
             android:textColor="@color/white"
             android:textSize="25dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_delete"
-            app:layout_constraintEnd_toStartOf="@+id/btn_delete" />
+            app:layout_constraintBottom_toBottomOf="@id/btn_delete"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete" />
 
         <Button
             android:id="@+id/btn_delete"
@@ -170,7 +170,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lay_filter">
+        app:layout_constraintTop_toBottomOf="@id/lay_filter">
 
         <LinearLayout
             android:id="@+id/lay_list_top"
@@ -233,10 +233,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="none"
-            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lay_list_top"
+            app:layout_constraintTop_toBottomOf="@id/lay_list_top"
             tools:listitem="@layout/item_add_contact" />
 
         <View
@@ -255,7 +255,7 @@
             android:background="#d1d1d1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lv_add_contact" />
+            app:layout_constraintTop_toBottomOf="@id/lv_add_contact" />
 
         <TextView
             android:id="@+id/tv_empty_view"
@@ -267,10 +267,10 @@
             android:textSize="25dp"
             android:textStyle="bold"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/lv_add_contact"
+            app:layout_constraintBottom_toBottomOf="@id/lv_add_contact"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/lv_add_contact"
-            app:layout_constraintTop_toTopOf="@+id/lv_add_contact" />
+            app:layout_constraintStart_toStartOf="@id/lv_add_contact"
+            app:layout_constraintTop_toTopOf="@id/lv_add_contact" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -353,10 +353,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@+id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@+id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@+id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@+id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
+                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
+                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
+                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

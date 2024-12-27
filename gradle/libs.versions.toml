@@ -1,5 +1,6 @@
 [versions]
 agp = "8.5.1"
+androidSlidr = "1.0.3"
 butterknife = "10.2.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -11,6 +12,7 @@ navigationFragment = "2.6.0"
 navigationUi = "2.6.0"
 
 [libraries]
+android-slidr = { module = "com.github.florent37:android-slidr", version.ref = "androidSlidr" }
 butterknife = { module = "com.jakewharton:butterknife", version.ref = "butterknife" }
 butterknife-compiler = { module = "com.jakewharton:butterknife-compiler", version.ref = "butterknife" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
