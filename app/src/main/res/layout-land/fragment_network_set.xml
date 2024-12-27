@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="40dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@id/tv_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="170dp"
+                android:layout_marginTop="50dp"
+                android:text="기기 명"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_ip_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/et_device_name"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="기기 명 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_device_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_device_name" />
+
+            <TextView
+                android:id="@+id/tv_ip_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="IP 주소"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_mac_address"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_device_name" />
+
+            <EditText
+                android:id="@+id/et_ip_address"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="IP 주소 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_ip_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_ip_address" />
+
+            <TextView
+                android:id="@+id/tv_mac_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="MAC 주소"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_subnet_mask"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_ip_address" />
+
+            <EditText
+                android:id="@+id/et_mac_address"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="MAC 주소 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_mac_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_mac_address" />
+
+            <TextView
+                android:id="@+id/tv_subnet_mask"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="Subnet"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_gateway"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_mac_address" />
+
+            <EditText
+                android:id="@+id/et_subnet_mask"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="Subnet 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_subnet_mask"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_subnet_mask" />
+
+            <TextView
+                android:id="@+id/tv_gateway"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="Gateway"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_server_ip"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_subnet_mask" />
+
+            <EditText
+                android:id="@+id/et_gateway"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="Gateway 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_gateway"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_gateway" />
+
+            <TextView
+                android:id="@+id/tv_server_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="서버 IP"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_server_port"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_gateway" />
+
+            <EditText
+                android:id="@+id/et_server_ip"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="서버 IP 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_server_ip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_server_ip" />
+
+            <TextView
+                android:id="@+id/tv_server_port"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="서버 Port"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_allow_ip"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_server_ip" />
+
+            <EditText
+                android:id="@+id/et_server_port"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:layout_marginEnd="170dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:hint="서버 Port 입력"
+                android:paddingStart="35dp"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_server_port"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintTop_toTopOf="@id/tv_server_port" />
+
+            <TextView
+                android:id="@+id/tv_allow_ip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:text="허용 IP"
+                android:textColor="#333333"
+                android:textSize="30dp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toTopOf="@id/tv_data_load"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_server_port" />
+
+            <EditText
+                android:id="@+id/et_allow_ip_1"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="150dp"
+                android:gravity="center"
+                android:background="@drawable/btn_border_radius_15"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_allow_ip"
+                app:layout_constraintStart_toEndOf="@id/tv_device_name"
+                app:layout_constraintEnd_toStartOf="@id/et_allow_ip_2"
+                app:layout_constraintTop_toTopOf="@id/tv_allow_ip" />
+
+            <EditText
+                android:id="@+id/et_allow_ip_2"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:gravity="center"
+                android:inputType="number"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_allow_ip"
+                app:layout_constraintEnd_toStartOf="@id/et_allow_ip_3"
+                app:layout_constraintStart_toEndOf="@id/et_allow_ip_1"
+                app:layout_constraintTop_toTopOf="@id/tv_allow_ip" />
+
+            <EditText
+                android:id="@+id/et_allow_ip_3"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:gravity="center"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_allow_ip"
+                app:layout_constraintEnd_toStartOf="@id/et_allow_ip_4"
+                app:layout_constraintStart_toEndOf="@id/et_allow_ip_2"
+                app:layout_constraintTop_toTopOf="@id/tv_allow_ip" />
+
+            <EditText
+                android:id="@+id/et_allow_ip_4"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:gravity="center"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_allow_ip"
+                app:layout_constraintEnd_toStartOf="@id/tv_allow_add"
+                app:layout_constraintStart_toEndOf="@id/et_allow_ip_3"
+                app:layout_constraintTop_toTopOf="@id/tv_allow_ip" />
+
+            <TextView
+                android:id="@+id/tv_allow_add"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:text="+"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:textSize="35dp"
+                android:layout_marginEnd="170dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_allow_ip"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/et_allow_ip_4"
+                app:layout_constraintTop_toTopOf="@id/tv_allow_ip" />
+
+            <TextView
+                android:id="@+id/tv_data_load"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="80dp"
+                android:gravity="center"
+                android:layout_marginEnd="170dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:text="설정 데이터 불러오기"
+                android:textColor="#333333"
+                android:textSize="26dp"
+                android:layout_marginBottom="10dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_device_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_allow_ip" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lay_empty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_border_radius_10"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="취 소"
+        android:textColor="#333333"
+        android:textSize="35dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_save"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@id/lay_empty" />
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_blue_fill_border_radius_10"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="저장 하기"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@id/tv_cancel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+
 }
 
 android {
@@ -63,5 +64,6 @@ dependencies {
     implementation libs.butterknife
     annotationProcessor libs.butterknife.compiler
 
-
+    // slidr
+    implementation 'com.github.florent37:android-slidr:1.0.3'
 }

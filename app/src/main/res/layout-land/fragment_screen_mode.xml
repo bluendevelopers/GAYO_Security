@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_bright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="130dp"
+        android:text="화면 밝기"
+        android:textColor="#4a4a4a"
+        android:textSize="28dp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_bright_min"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:src="@drawable/ic_bright_min"
+        app:layout_constraintBottom_toBottomOf="@id/tv_bright"
+        app:layout_constraintStart_toEndOf="@id/tv_bright"
+        app:layout_constraintTop_toTopOf="@id/tv_bright" />
+
+    <com.github.florent37.androidslidr.Slidr
+        android:id="@+id/slidr"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_bright"
+        app:layout_constraintEnd_toStartOf="@id/iv_bright_max"
+        app:layout_constraintStart_toEndOf="@id/iv_bright_min"
+        app:layout_constraintTop_toTopOf="@id/tv_bright"
+        app:slidr_backgroundColor="#eeeeee"
+        app:slidr_barHeight="15dp"
+        app:slidr_draw_bubble="false"
+        app:slidr_region_leftColor="@color/Main_Color"
+        app:slidr_region_rightColor="@color/white"
+        app:slidr_regions_centerText="false"
+        app:slidr_regions_textFollowRegionColor="@color/black"
+        app:slidr_textBottom_visible="true"
+        app:slidr_textTop_size="10dp" />
+
+
+    <ImageView
+        android:id="@+id/iv_bright_max"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        android:src="@drawable/ic_bright_max"
+        app:layout_constraintBottom_toBottomOf="@id/tv_bright"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_bright" />
+
+    <TextView
+        android:id="@+id/tv_screen_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:text="바탕화면"
+        android:textColor="#4a4a4a"
+        android:textSize="28dp"
+        android:textStyle="normal"
+        app:layout_constraintStart_toStartOf="@id/tv_bright"
+        app:layout_constraintTop_toBottomOf="@id/tv_bright" />
+
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_option_left"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintStart_toStartOf="@id/iv_bright_min"
+        app:layout_constraintTop_toTopOf="@id/tv_screen_mode" />
+
+    <TextView
+        android:id="@+id/tv_screen_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="라이트 모드"
+        android:textColor="#4a4a4a"
+        android:textSize="28dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@id/iv_right"
+        app:layout_constraintStart_toEndOf="@id/iv_left"
+        app:layout_constraintTop_toTopOf="@id/tv_screen_mode" />
+
+    <ImageView
+        android:id="@+id/iv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="100dp"
+        android:src="@drawable/ic_option_right"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_screen_mode" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lay_empty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_border_radius_10"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="취 소"
+        android:textColor="#333333"
+        android:textSize="35dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_save"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="@id/lay_empty" />
+
+    <TextView
+        android:id="@+id/tv_save"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_blue_fill_border_radius_10"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="저장 하기"
+        android:textColor="@color/white"
+        android:textSize="35dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="2"
+        app:layout_constraintStart_toEndOf="@id/tv_cancel" />
+</androidx.constraintlayout.widget.ConstraintLayout>

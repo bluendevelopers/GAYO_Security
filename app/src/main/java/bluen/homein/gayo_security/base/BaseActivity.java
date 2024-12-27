@@ -31,23 +31,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Gayo_SharedPreferences mPrefGlobal = null;
     public boolean mIsFinish;
     public boolean mIsAdviewSet;
-    public String TAG = "";
 
     protected abstract int getLayoutResId();
 
     protected abstract void initActivity(Bundle savedInstanceState);
 
-    private String pushCode;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            Log.e("BaseActivity", "Android Version 8 Error");
-        }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         if (null == mContext) {
             mContext = getApplicationContext();
@@ -64,7 +56,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
 
         initActivity(savedInstanceState);
-
     }
 
     @Override
@@ -177,8 +168,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-
-
     public class BaseWebViewClient extends WebViewClient {
 
         @Override
@@ -193,5 +182,4 @@ public abstract class BaseActivity extends AppCompatActivity {
             showProgress();
         }
     }
-
 }
