@@ -35,7 +35,6 @@
         <activity
             android:name=".AddContactActivity"
             android:exported="true">
-
         </activity>
 
         <activity

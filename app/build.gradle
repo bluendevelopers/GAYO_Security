@@ -64,4 +64,6 @@ dependencies {
     annotationProcessor libs.butterknife.compiler
     implementation libs.android.slidr
 
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
 }
