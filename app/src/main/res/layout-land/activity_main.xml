@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/lay_main_right"
+        app:layout_constraintEnd_toStartOf="@id/lay_main_right"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -34,6 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextClock
+                android:id="@+id/textClock"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -59,7 +60,7 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/lay_main_left"
+        app:layout_constraintStart_toEndOf="@id/lay_main_left"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -84,7 +85,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tv_security_state_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_semibold"
@@ -95,6 +96,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tv_worker_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_semibold"
@@ -102,7 +104,7 @@
                     android:textColor="#222222"
                     android:textSize="30dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_security_state_1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -115,11 +117,11 @@
                 android:layout_marginBottom="18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
+                app:layout_constraintStart_toEndOf="@id/constraintLayout4"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/iv_power_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/off_icon"
@@ -128,6 +130,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tv_security_state_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -136,9 +139,9 @@
                     android:textColor="#222222"
                     android:textSize="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/imageView3"
-                    app:layout_constraintStart_toStartOf="@+id/imageView3"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+                    app:layout_constraintEnd_toEndOf="@id/iv_power_btn"
+                    app:layout_constraintStart_toStartOf="@id/iv_power_btn"
+                    app:layout_constraintTop_toBottomOf="@id/iv_power_btn" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -156,7 +159,7 @@
             android:background="@drawable/w_main_box_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout2">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayout5"
@@ -170,7 +173,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tv_year_and_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
@@ -182,7 +185,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/tv_day_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_semibold"
@@ -191,9 +194,10 @@
                     android:textSize="68dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_year_and_month" />
 
                 <TextView
+                    android:id="@+id/tv_week_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -203,7 +207,7 @@
                     android:textColor="@color/black"
                     android:textSize="23dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/textView4" />
+                    app:layout_constraintStart_toEndOf="@id/tv_day_number" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -232,7 +236,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/iv_weather_img"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/w_menu_icon_1"
@@ -246,32 +250,55 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@id/iv_weather_img"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:id="@+id/textView6"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_light"
-                        android:text="2℃"
-                        android:textColor="@color/black"
-                        android:textSize="54dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_temperature"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/pretendard_light"
+                            android:text="2"
+                            android:textAlignment="textEnd"
+                            android:textColor="@color/black"
+                            android:textSize="54dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_celsius"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:fontFamily="@font/pretendard_light"
+                            android:text="℃"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/black"
+                            android:textSize="40dp"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_temperature"
+                            app:layout_constraintStart_toEndOf="@id/tv_temperature" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
+                        android:id="@+id/tv_region_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="11dp"
                         android:fontFamily="@font/pretendard_light"
                         android:text="대구 남구 대명동"
                         android:textColor="@color/black"
                         android:textSize="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+                        app:layout_constraintTop_toBottomOf="@id/constraintLayout8" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -286,207 +313,362 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="-10dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="@+id/lay_2"
-            app:layout_constraintStart_toStartOf="@+id/lay_2"
+            app:layout_constraintEnd_toEndOf="@id/lay_2"
+            app:layout_constraintStart_toStartOf="@id/lay_2"
             app:layout_constraintTop_toBottomOf="@id/lay_2">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_1" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="9dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="호출 하기"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
 
-            <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_1"
+                        app:layout_constraintBottom_toTopOf="@id/tv_call"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_call"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="호출 하기"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_call"
+                        app:layout_constraintStart_toStartOf="@id/iv_call"
+                        app:layout_constraintTop_toBottomOf="@id/iv_call" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_2" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="9dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="통화 기록"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
 
-            <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_call_record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_2"
+                        app:layout_constraintBottom_toTopOf="@id/tv_call_record"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_call_record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="통화 기록"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_call_record"
+
+                        app:layout_constraintStart_toStartOf="@id/iv_call_record"
+                        app:layout_constraintTop_toBottomOf="@id/iv_call_record" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="18dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_3" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="방문자 목록"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_visitor_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_3"
+                        app:layout_constraintBottom_toTopOf="@id/tv_visior_list"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_visior_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="방문자 목록"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_visitor_list"
+                        app:layout_constraintStart_toStartOf="@id/iv_visitor_list"
+                        app:layout_constraintTop_toBottomOf="@id/iv_visitor_list" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/lay_4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="-10dp"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="-10dp"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="@+id/lay_2"
-            app:layout_constraintStart_toStartOf="@+id/lay_2"
+            app:layout_constraintEnd_toEndOf="@id/lay_2"
+            app:layout_constraintStart_toStartOf="@id/lay_2"
             app:layout_constraintTop_toBottomOf="@id/lay_3">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_4" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="9dp"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="근무 기록"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
 
-            <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_work_record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_4"
+                        app:layout_constraintBottom_toTopOf="@id/tv_work_record"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_work_record"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="근무 기록"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_work_record"
+                        app:layout_constraintStart_toStartOf="@id/iv_work_record"
+                        app:layout_constraintTop_toBottomOf="@id/iv_work_record" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="18dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_5" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="근무자 변경"
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
 
-            <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_change_worker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_5"
+                        app:layout_constraintBottom_toTopOf="@id/tv_change_worker"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_change_worker"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="근무자 변경"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_change_worker"
+                        app:layout_constraintStart_toStartOf="@id/iv_change_worker"
+                        app:layout_constraintTop_toBottomOf="@id/iv_change_worker" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_border_radius_20_stroke_gray"
-                android:elevation="4dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="18dp">
+                android:layout_weight="1">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/w_menu_icon_6" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/pretendard_semibold"
-                    android:gravity="center_horizontal"
-                    android:text="사용자 설정 "
-                    android:textColor="@color/black"
-                    android:textSize="25dp" />
-            </LinearLayout>
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:alpha="0.7"
+                    android:background="@drawable/btn_border_radius_20_stroke_gray"
+                    android:elevation="4dp" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/w_menu_icon_6"
+                        app:layout_constraintBottom_toTopOf="@id/tv_setting"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="9dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center_horizontal"
+                        android:text="사용자 설정"
+                        android:textColor="@color/black"
+                        android:textSize="25dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/iv_setting"
+                        app:layout_constraintStart_toStartOf="@id/iv_setting"
+                        app:layout_constraintTop_toBottomOf="@id/iv_setting" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </FrameLayout>
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

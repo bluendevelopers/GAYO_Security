@@ -200,10 +200,10 @@
                     android:alpha="0.35"
                     android:background="@drawable/background_radius_35_fill_black"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_call_time"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_call_time"
-                    app:layout_constraintStart_toStartOf="@+id/tv_call_time"
-                    app:layout_constraintTop_toTopOf="@+id/tv_call_time" />
+                    app:layout_constraintBottom_toBottomOf="@id/tv_call_time"
+                    app:layout_constraintEnd_toEndOf="@id/tv_call_time"
+                    app:layout_constraintStart_toStartOf="@id/tv_call_time"
+                    app:layout_constraintTop_toTopOf="@id/tv_call_time" />
 
                 <TextView
                     android:id="@+id/tv_call_time"
@@ -217,7 +217,7 @@
                     android:textColor="@color/white"
                     android:textSize="30dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/lay_call_volume"
+                    app:layout_constraintBottom_toTopOf="@id/lay_call_volume"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -263,8 +263,8 @@
                         android:layout_marginEnd="15dp"
                         android:background="@drawable/btn_border_radius_10_stroke_gray"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/lay_volume_up"
-                        app:layout_constraintStart_toEndOf="@+id/lay_volume_down"
+                        app:layout_constraintEnd_toStartOf="@id/lay_volume_up"
+                        app:layout_constraintStart_toEndOf="@id/lay_volume_down"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <com.github.florent37.androidslidr.Slidr
