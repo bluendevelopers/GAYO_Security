@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import bluen.homein.gayo_security.dialog.PopupDialog;
 import bluen.homein.gayo_security.global.GlobalApplication;
 import bluen.homein.gayo_security.preference.Gayo_Preferences;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
@@ -30,15 +33,25 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ProgressDialog progressDialog;
     public Gayo_SharedPreferences mPrefGlobal = null;
     public boolean mIsFinish;
+    public String TAG = "";
     public boolean mIsAdviewSet;
+    public Vibrator vibrator;
+    public PopupDialog popupDialog;
+    public String buildingCode = "0004";
+    public String serialCode = "testserialCode1";
+    public String macAddress = "00-00-00-00";
+    public String ipAddress = "192.168.0.101";
 
     protected abstract int getLayoutResId();
 
     protected abstract void initActivity(Bundle savedInstanceState);
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        popupDialog = new PopupDialog(this);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
