@@ -89,7 +89,7 @@ public class ResponseDataFormat {
         }
     }
 
-    private static class PageCountInfo extends MyGson implements Serializable {
+    public static class PageCountInfo extends MyGson implements Serializable {
 
         @SerializedName("page")
         private int currentPage;
@@ -98,6 +98,17 @@ public class ResponseDataFormat {
         @SerializedName("pageCount")
         private int pageItemCount;
 
+        public int getCurrentPage() {
+            return currentPage;
+        }
+
+        public int getTotalPageCnt() {
+            return totalPageCnt;
+        }
+
+        public int getPageItemCount() {
+            return pageItemCount;
+        }
     }
 
     public static class WorkRecordListBody extends MyGson implements Serializable {
@@ -133,7 +144,7 @@ public class ResponseDataFormat {
             private int rowNum;
 
             @SerializedName("workType")
-            private String workDivision;
+            private String workType;
 
             @SerializedName("workDay")
             private String workDate;
@@ -147,8 +158,8 @@ public class ResponseDataFormat {
             @SerializedName("managerPhone")
             private String workerPhone;
 
-            public String getWorkDivision() {
-                return workDivision;
+            public String getworkType() {
+                return workType;
             }
 
             public String getWorkDate() {

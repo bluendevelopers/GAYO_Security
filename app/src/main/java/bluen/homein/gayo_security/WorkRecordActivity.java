@@ -1,10 +1,20 @@
 package bluen.homein.gayo_security;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -13,9 +23,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import bluen.homein.gayo_security.adapter.WorkRecordListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
@@ -24,6 +40,7 @@ import bluen.homein.gayo_security.rest.RequestDataFormat;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.rest.Retrofit;
 import butterknife.BindView;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +55,19 @@ public class WorkRecordActivity extends BaseActivity {
     TextView tvEmptyView;
     @BindView(R.id.tv_selected_start_date)
     TextView tvSelectedStartDate;
+    private View dialogView;
 
+    @OnClick(R.id.lay_start_date_btn)
+    void showWeekdaySelectionPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(WorkRecordActivity.this);
+        dialogView = inflater.inflate(R.layout.dialog_select_date_base, null);
+        builder.setView(dialogView);
+
+        ImageView ivCloseBtn = dialogView.findViewById(R.id.iv_close_btn);
+        Button btnComplete = dialogView.findViewById(R.id.btn_confirm);
+
+    }
     private PageNumberListAdapter pageNumberListAdapter;
     private int currentPageNumber = 1; //default
     private String startDate = ""; //default
@@ -48,6 +77,7 @@ public class WorkRecordActivity extends BaseActivity {
     private List<String> pageList;
     private List<ResponseDataFormat.WorkRecordListBody.WorkRecordInfo> workerRecordList;
     private WorkRecordListAdapter workRecordListAdapter;
+
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_work_record;
@@ -55,6 +85,7 @@ public class WorkRecordActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
+        hideNavigationBar();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.HORIZONTAL);
         pageNumberListAdapter = new PageNumberListAdapter(mContext, R.layout.item_page_number);
 
@@ -77,22 +108,30 @@ public class WorkRecordActivity extends BaseActivity {
     }
 
 
-    private void getWorkRecordList( ) {
+    private void getWorkRecordList() {
         showProgress();
 
         Retrofit.WorkRecordApi workRecordApi = Retrofit.WorkRecordApi.retrofit.create(Retrofit.WorkRecordApi.class);
 
-        Call<ResponseDataFormat.WorkRecordListBody> call = workRecordApi.workRecordListPost(mPrefGlobal.getAuthorization(),new RequestDataFormat.WorkRecordListBody(serialCode,buildingCode,currentPageNumber, startDate, endDate,workerPhoneNumber,division)); // test
+        Call<ResponseDataFormat.WorkRecordListBody> call = workRecordApi.workRecordListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkRecordListBody(serialCode, buildingCode, currentPageNumber, startDate, endDate, workerPhoneNumber, division)); // test
         call.enqueue(new Callback<ResponseDataFormat.WorkRecordListBody>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WorkRecordListBody> call, Response<ResponseDataFormat.WorkRecordListBody> response) {
                 closeProgress();
                 if (response.body() != null) {
                     if (response.body().getMessage() == null) {
+                        if (pageList == null) {
+                            pageList = new ArrayList<>();
+                        }
+                        if (pageList.isEmpty()) {
+                            for (int i = 1; i <= response.body().getPageCountValue().getTotalPageCnt(); i++) {
+                                pageList.add(String.valueOf(i));
+                            }
+                        }
                         workRecordListAdapter.setData(response.body().getWorkRecordList());
 
-//                        pageNumberListAdapter.addItems(pageList);
-//                        rvPageNumber.setAdapter(pageNumberListAdapter);
+                        pageNumberListAdapter.addItems(pageList);
+                        rvPageNumber.setAdapter(pageNumberListAdapter);
                     }
                 } else {
 
@@ -107,6 +146,138 @@ public class WorkRecordActivity extends BaseActivity {
         });
 
     }
+
+//    private void createSelectDatePopup(TextView _tvSelectDate, int statusNumber) {
+//        LayoutInflater inflater = LayoutInflater.from(WorkRecordActivity.this);
+//
+//        //popup
+//        dialogView = inflater.inflate(R.layout.dialog_select_date_base, null);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(WorkRecordActivity.this);
+//        builder.setView(dialogView);
+//        AlertDialog dialog = builder.create();
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//
+//        dialog.show();
+//
+//        Window window = dialog.getWindow();
+//        if (window != null) {
+//            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+//            layoutParams.copyFrom(window.getAttributes());
+//
+//            layoutParams.gravity = Gravity.BOTTOM;
+//            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+//            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//
+//            window.setAttributes(layoutParams);
+//        }
+//
+//        Button btnComplete = dialogView.findViewById(R.id.btn_confirm);
+//        ImageView ivCloseBtn = dialogView.findViewById(R.id.iv_close_btn);
+//        DatePicker datePicker = dialogView.findViewById(R.id.datePicker);
+//
+//        // DatePicker 최소 날짜를 오늘 날짜로 설정
+//        if (statusNumber == STATUS_ONE_DAY) {
+//            datePicker.setMinDate(today.getTimeInMillis());
+//            tvPopupTitle.setText("키 발급 날짜를 선택하세요");
+//        } else if (statusNumber == STATUS_START_DATE) {
+//            tvPopupTitle.setText("키 발급 시작 날짜를 선택하세요");
+//            datePicker.setMinDate(today.getTimeInMillis());
+//
+//
+//        } else {
+//            tvPopupTitle.setText("키 발급 종료 날짜를 선택하세요");
+//            String startDateStr = tvSelectStartDate.getText().toString();
+//            try {
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM. dd", Locale.KOREA);
+//                Date startDate = sdf.parse(startDateStr);
+//                if (startDate != null) {
+//                    Calendar calendar = Calendar.getInstance();
+//                    calendar.setTime(startDate);
+//
+//                    calendar.add(Calendar.DAY_OF_MONTH, 1);
+//
+//                    datePicker.setMinDate(calendar.getTimeInMillis());
+//                }
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//                datePicker.setMinDate(today.getTimeInMillis());
+//            }
+//        }
+//        datePicker.init(year, month, day, null);
+//        // selectedDate = String.format("%04d. %02d. %02d", year, month + 1, day);
+//
+//        final String[] selectedTime = new String[1];
+//
+//        selectedTime[0] = String.format("%04d. %02d. %02d", datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+//
+//        datePicker.setOnDateChangedListener(new DatePicker.OnDateChangedListener() {
+//            @Override
+//            public void onDateChanged(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+//                //selectedDate = String.format("%04d. %02d. %02d", selectedYear, selectedMonth + 1, selectedDay);
+//
+//                selectedTime[0] = String.format("%04d. %02d. %02d", datePicker.getYear(), datePicker.getMonth() + 1, datePicker.getDayOfMonth());
+//            }
+//        });
+//
+//        // 클릭 이벤트 처리
+//        btnComplete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                if (selectedTime[0] != null && !selectedTime[0].equals("")) {
+//                    _tvSelectDate.setText(selectedTime[0]);
+//                    year = datePicker.getYear();
+//                    month = datePicker.getMonth();
+//                    day = datePicker.getDayOfMonth();
+//                }
+//
+//                if (statusNumber == STATUS_ONE_DAY) {
+//                    try {
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM. dd", Locale.KOREA);
+//                        Date date = sdf.parse(selectedTime[0]);
+//                        if (date != null) {
+//                            Calendar calendar = Calendar.getInstance();
+//                            calendar.setTime(date);
+//                            setWeekDay(calendar);
+//                        }
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                    }
+//                } else if (statusNumber == STATUS_START_DATE && !tvSelectEndDate.getText().toString().isEmpty()) {
+//                    String startDateStr = tvSelectStartDate.getText().toString();
+//                    String endDateStr = tvSelectEndDate.getText().toString();
+//
+//                    try {
+//                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy. MM. dd", Locale.KOREA);
+//                        Date startDate = sdf.parse(startDateStr);
+//                        Date endDate = sdf.parse(endDateStr);
+//
+//                        if (startDate != null && endDate != null && (startDate.equals(endDate) || startDate.after(endDate))) {
+//                            // 시작 날짜가 종료 날짜와 같거나 더 미래인 경우
+//                            Calendar calendar = Calendar.getInstance();
+//                            calendar.setTime(startDate);
+//                            calendar.add(Calendar.DAY_OF_MONTH, 1); // 다음 날로 설정
+//
+//                            String newEndDateStr = sdf.format(calendar.getTime());
+//
+//                            // tvSelectEndDate 업데이트
+//                            tvSelectEndDate.setText(newEndDateStr);
+//                        }
+//                    } catch (ParseException e) {
+//                        e.printStackTrace();
+//                        // 날짜 파싱 오류 처리
+//                    }
+//                }
+//
+//                dialog.dismiss();
+//
+//            }
+//        });
+//        ivCloseBtn.setOnClickListener(v -> {
+//            dialog.dismiss();
+//        });
+//
+//    }
     public static class PageNumberListAdapter extends BaseRecyclerAdapter<String, PageNumberListAdapter.ViewHolder> {
         private int currentPageNumber = 1;
 

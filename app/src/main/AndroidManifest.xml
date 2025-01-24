@@ -31,7 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:replace="android:allowBackup"
-        tools:targetApi="31">
+       >
 
         <activity
             android:name=".MainActivity"

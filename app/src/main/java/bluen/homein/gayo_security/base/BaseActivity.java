@@ -182,6 +182,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void hideNavigationBar() {
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY; // Immersive 모드 추가
+        decorView.setSystemUiVisibility(uiOptions);
+    }
+
+
     public class BaseWebViewClient extends WebViewClient {
 
         @Override

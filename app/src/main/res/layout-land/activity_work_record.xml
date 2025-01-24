@@ -102,6 +102,7 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_start_date_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
@@ -161,6 +162,7 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_end_date_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
@@ -363,6 +365,7 @@
             android:id="@+id/lv_work_record"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:divider="#00000000"
             android:scrollbars="none"
             app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -386,12 +389,13 @@
             android:background="#d1d1d1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lv_work_record" />
+            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"/>
 
         <TextView
             android:id="@+id/tv_empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
             android:text="근무 기록이\n존재하지 않습니다."
             android:textAlignment="center"
             android:textColor="#999999"
@@ -401,7 +405,8 @@
             app:layout_constraintBottom_toBottomOf="@id/lv_work_record"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/lv_work_record"
-            app:layout_constraintTop_toTopOf="@id/lv_work_record" />
+            app:layout_constraintTop_toTopOf="@id/lv_work_record"
+            tools:ignore="RtlCompat" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

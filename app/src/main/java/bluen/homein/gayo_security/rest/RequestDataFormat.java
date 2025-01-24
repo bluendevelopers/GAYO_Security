@@ -58,16 +58,16 @@ public class RequestDataFormat {
         @SerializedName("managerPhone")
         private String workerPhoneNumber;
         @SerializedName("workType")
-        private String workDivision;
+        private String workType;
 
-        public WorkRecordListBody(String serialCode, String buildingCode, int currentPage, String startDate, String endDate, String workerPhoneNumber, String workDivision) {
+        public WorkRecordListBody(String serialCode, String buildingCode, int currentPage, String startDate, String endDate, String workerPhoneNumber, String workType) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
             this.currentPage = currentPage;
             this.startDate = startDate;
             this.endDate = endDate;
             this.workerPhoneNumber = workerPhoneNumber;
-            this.workDivision = workDivision;
+            this.workType = workType;
         }
     }
 
