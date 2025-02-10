@@ -18,6 +18,7 @@ import java.util.List;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.base.BaseRecyclerAdapter;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class AddContactActivity extends BaseActivity {
 
@@ -27,6 +28,11 @@ public class AddContactActivity extends BaseActivity {
     TextView tvEmptyView;
     private PageNumberListAdapter adapter;
 
+    @OnClick(R.id.lay_home_btn)
+    void clickHomeBtn() {
+        finish();
+    }
+
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_add_contact;
@@ -34,6 +40,8 @@ public class AddContactActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
+        hideNavigationBar();
+
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.HORIZONTAL);
         adapter = new PageNumberListAdapter(mContext, R.layout.item_page_number);
 

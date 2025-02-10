@@ -1,6 +1,5 @@
 package bluen.homein.gayo_security.base;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -20,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.dialog.ProgressDialog;
 import bluen.homein.gayo_security.global.GlobalApplication;
 import bluen.homein.gayo_security.preference.Gayo_Preferences;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;

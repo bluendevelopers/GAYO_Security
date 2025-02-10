@@ -57,6 +57,17 @@ public class WorkRecordActivity extends BaseActivity {
     TextView tvSelectedStartDate;
     private View dialogView;
 
+
+    private PageNumberListAdapter pageNumberListAdapter;
+    private int currentPageNumber = 1; //default
+    private String startDate = ""; //default
+    private String endDate = ""; //default
+    private String workerPhoneNumber = ""; //default
+    private String division = "00"; //default
+    private List<String> pageList;
+    private List<ResponseDataFormat.WorkRecordListBody.WorkRecordInfo> workerRecordList;
+    private WorkRecordListAdapter workRecordListAdapter;
+
     @OnClick(R.id.lay_start_date_btn)
     void showWeekdaySelectionPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -68,15 +79,11 @@ public class WorkRecordActivity extends BaseActivity {
         Button btnComplete = dialogView.findViewById(R.id.btn_confirm);
 
     }
-    private PageNumberListAdapter pageNumberListAdapter;
-    private int currentPageNumber = 1; //default
-    private String startDate = ""; //default
-    private String endDate = ""; //default
-    private String workerPhoneNumber = ""; //default
-    private String division = "00"; //default
-    private List<String> pageList;
-    private List<ResponseDataFormat.WorkRecordListBody.WorkRecordInfo> workerRecordList;
-    private WorkRecordListAdapter workRecordListAdapter;
+
+    @OnClick(R.id.lay_home_btn)
+    void clickHomeBtn() {
+        finish();
+    }
 
     @Override
     protected int getLayoutResId() {
@@ -89,7 +96,7 @@ public class WorkRecordActivity extends BaseActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.HORIZONTAL);
         pageNumberListAdapter = new PageNumberListAdapter(mContext, R.layout.item_page_number);
 
-        // 최초진입시 당일 전체로 검색 api 실행
+        // 최초 진입 시 당일 전체로 검색 api 실행
 
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

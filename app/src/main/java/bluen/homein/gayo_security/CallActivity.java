@@ -11,6 +11,7 @@ import com.github.florent37.androidslidr.Slidr;
 
 import bluen.homein.gayo_security.base.BaseActivity;
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class CallActivity extends BaseActivity {
 
@@ -28,6 +29,11 @@ public class CallActivity extends BaseActivity {
     @BindView(R.id.slidr_volume)
     Slidr slidrVolume;
 
+    @OnClick(R.id.lay_home_btn)
+    void clickHomeBtn() {
+        finish();
+    }
+
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_call;
@@ -35,6 +41,7 @@ public class CallActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
+        hideNavigationBar();
 
         // 볼륨 조절
         slidrVolume.setMax(100);

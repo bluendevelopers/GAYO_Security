@@ -55,7 +55,6 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.iv_weather_img)
     ImageView ivWeatherImg;
 
-
     @OnClick(R.id.lay_back_btn)
     void clickBackBtn() {
         onBackPressed();
@@ -93,7 +92,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.lay_visitor_list_btn)
     void clickVisitorListBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        Intent intent = new Intent(MainActivity.this, CallRecordActivity.class);
+        Intent intent = new Intent(MainActivity.this, VisitorListActivity.class);
         startActivity(intent);
     }
 
@@ -107,14 +106,14 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.lay_change_worker_btn)
     void clickChangeWorkerBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        Intent intent = new Intent(MainActivity.this, CallRecordActivity.class);
+        Intent intent = new Intent(MainActivity.this, ChangeWorkerActivity.class);
         startActivity(intent);
     }
 
     @OnClick(R.id.lay_setting_btn)
     void clickSettingBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        Intent intent = new Intent(MainActivity.this, CallRecordActivity.class);
+        Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
         startActivity(intent);
     }
 
@@ -137,7 +136,7 @@ public class MainActivity extends BaseActivity {
     private void getCurrentWorkerInfo(Retrofit.MainInfoApi mainInfoApi) {
         showProgress();
 
-        Call<ResponseDataFormat.CurrentWorkerData> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(),new RequestDataFormat.DeviceInfoBody(serialCode,buildingCode)); // test
+        Call<ResponseDataFormat.CurrentWorkerData> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
         call.enqueue(new Callback<ResponseDataFormat.CurrentWorkerData>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.CurrentWorkerData> call, Response<ResponseDataFormat.CurrentWorkerData> response) {
@@ -151,6 +150,7 @@ public class MainActivity extends BaseActivity {
 
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseDataFormat.CurrentWorkerData> call, Throwable t) {
                 closeProgress();
@@ -162,7 +162,7 @@ public class MainActivity extends BaseActivity {
     private void getWeatherInfo(Retrofit.MainInfoApi mainInfoApi) {
         showProgress();
 
-        Call<ResponseDataFormat.WeatherData> call = mainInfoApi.weatherInfoPost(mPrefGlobal.getAuthorization(),new RequestDataFormat.WeatherBody(buildingCode)); // test
+        Call<ResponseDataFormat.WeatherData> call = mainInfoApi.weatherInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WeatherBody(buildingCode)); // test
         call.enqueue(new Callback<ResponseDataFormat.WeatherData>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WeatherData> call, Response<ResponseDataFormat.WeatherData> response) {
@@ -187,8 +187,10 @@ public class MainActivity extends BaseActivity {
         });
 
     }
+
     private void toggleSecurity() {
     }
+
     private void setWeatherImg(int weatherNumber) {
 
         switch (weatherNumber) {
