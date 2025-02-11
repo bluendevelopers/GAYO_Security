@@ -7,6 +7,192 @@ import java.util.List;
 
 public class RequestDataFormat {
 
+    public static class ContactBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+        @SerializedName("connDeviceName")
+        private String connDeviceName;
+        @SerializedName("connDeviceIP")
+        private String connDeviceIP;
+        @SerializedName("page")
+        private int page;
+
+        public ContactBody(String serialCode, String buildingCode) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+        }
+
+        public ContactBody(String serialCode, String buildingCode, String connDeviceIP) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.connDeviceIP = connDeviceIP;
+        }
+
+        public ContactBody(String serialCode, String buildingCode, String connDeviceName, String connDeviceIP) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.connDeviceName = connDeviceName;
+            this.connDeviceIP = connDeviceIP;
+        }
+
+        public void setPage(int page) {
+            this.page = page;
+        }
+    }
+
+    public static class NetworkInfoBody implements Serializable {
+    }
+
+    public static class PreferencesBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+
+        @SerializedName("deviceUI")
+        private DeviceUIBody deviceUIBody;
+        @SerializedName("deviceSound")
+        private DeviceSoundBody deviceSoundBody;
+        @SerializedName("deviceSleepMode")
+        private DeviceSleepModeBody deviceSleepModeBody;
+        @SerializedName("deviceNetwork")
+        private DeviceNetworkBody deviceNetworkBody;
+
+        public PreferencesBody(String serialCode, String buildingCode, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.deviceUIBody = deviceUIBody;
+            this.deviceSoundBody = deviceSoundBody;
+            this.deviceSleepModeBody = deviceSleepModeBody;
+            this.deviceNetworkBody = deviceNetworkBody;
+        }
+    }
+
+    public static class DeviceSoundBody implements Serializable {
+
+        @SerializedName("intercomSound")
+        private int intercomSound;
+        @SerializedName("intercomBell")
+        private String intercomBell;
+        @SerializedName("callSound")
+        private int callSound;
+        @SerializedName("callBell")
+        private String callBell;
+        @SerializedName("entranceSound")
+        private int entranceSound;
+        @SerializedName("entranceBell")
+        private String entranceBell;
+        @SerializedName("notiSound")
+        private int notiSound;
+        @SerializedName("systemSound")
+        private int systemSound;
+
+        public int getIntercomSound() {
+            return intercomSound;
+        }
+
+        public String getIntercomBell() {
+            return intercomBell;
+        }
+
+        public int getCallSound() {
+            return callSound;
+        }
+
+        public String getCallBell() {
+            return callBell;
+        }
+
+        public int getEntranceSound() {
+            return entranceSound;
+        }
+
+        public String getEntranceBell() {
+            return entranceBell;
+        }
+
+        public int getNotiSound() {
+            return notiSound;
+        }
+
+        public int getSystemSound() {
+            return systemSound;
+        }
+    }
+
+    public static class IpAddressBody implements Serializable {
+        @SerializedName("ipAddress")
+        private String ipAddress;
+
+        public String getIpAddress() {
+            return ipAddress;
+        }
+    }
+
+    public static class DeviceNetworkBody implements Serializable {
+        @SerializedName("facilityName")
+        private String facilityName;
+        @SerializedName("ipAddress")
+        private String ipAddress;
+        @SerializedName("macAddress")
+        private String macAddress;
+        @SerializedName("gateWayIP")
+        private String gateWayIP;
+        @SerializedName("subNet")
+        private String subNet;
+        @SerializedName("serverIP")
+        private String serverIP;
+        @SerializedName("serverPort")
+        private int serverPort;
+        @SerializedName("ipPermission")
+        private IpAddressBody[] ipPermissionArray;
+
+    }
+
+    public static class DeviceSleepModeBody implements Serializable {
+        @SerializedName("mainReturnTime")
+        private int mainReturnTime;
+        @SerializedName("sleepTime")
+        private int sleepTime;
+
+        public DeviceSleepModeBody(int mainReturnTime, int sleepTime) {
+            this.mainReturnTime = mainReturnTime;
+            this.sleepTime = sleepTime;
+        }
+
+        public int getMainReturnTime() {
+            return mainReturnTime;
+        }
+
+        public int getSleepTime() {
+            return sleepTime;
+        }
+    }
+
+    public static class DeviceUIBody implements Serializable {
+        @SerializedName("brightness")
+        private int brightness;
+        @SerializedName("uiMode")
+        private String uiMode;
+
+        public DeviceUIBody(int brightness, String uiMode) {
+            this.brightness = brightness;
+            this.uiMode = uiMode;
+        }
+
+        public int getBrightness() {
+            return brightness;
+        }
+
+        public String getUiMode() {
+            return uiMode;
+        }
+    }
+
     public static class DeviceInfoBody implements Serializable {
 
         @SerializedName("serialCode")
@@ -70,6 +256,76 @@ public class RequestDataFormat {
             this.workType = workType;
         }
     }
+
+    public static class CallRecordListBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+        @SerializedName("page")
+        private int currentPage;
+
+        @SerializedName("startDate")
+        private String startDate;
+        @SerializedName("endDate")
+        private String endDate;
+
+        @SerializedName("callType")
+        private String callType;
+        @SerializedName("callSeq")
+        private String callSeq;
+
+        public CallRecordListBody(String serialCode, String buildingCode, int currentPage, String startDate, String endDate, String callType) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.currentPage = currentPage;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.callType = callType;
+        }
+
+        public CallRecordListBody(String serialCode, String buildingCode, String callSeq) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.callSeq = callSeq;
+        }
+    }
+
+    public static class VisitorRecordListBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+        @SerializedName("page")
+        private int currentPage;
+
+        @SerializedName("hisStartDate")
+        private String hisStartDate;
+        @SerializedName("hisEndDate")
+        private String hisEndDate;
+        @SerializedName("hisType")
+        private String hisType;
+        @SerializedName("hisSeq")
+        private String hisSeq;
+
+        public VisitorRecordListBody(String serialCode, String buildingCode, String hisSeq) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.hisSeq = hisSeq;
+        }
+
+        public VisitorRecordListBody(String serialCode, String buildingCode, int currentPage, String hisStartDate, String hisEndDate, String hisType) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.currentPage = currentPage;
+            this.hisStartDate = hisStartDate;
+            this.hisEndDate = hisEndDate;
+            this.hisType = hisType;
+        }
+    }
+
 
 }
 

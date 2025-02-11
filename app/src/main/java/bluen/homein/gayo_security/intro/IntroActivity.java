@@ -153,7 +153,7 @@ public class IntroActivity extends BaseActivity {
     private void doLogin() {
         showProgress();
 
-        Retrofit.AuthApi loginInterface = Retrofit.AuthApi.retrofit.create(Retrofit.AuthApi.class);
+        Retrofit.LoginApi loginInterface = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
 
         Call<ResponseDataFormat.LoginData> call = loginInterface.getAuthInfo(new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode,macAddress,ipAddress)); // test
         call.enqueue(new Callback<ResponseDataFormat.LoginData>() {

@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/pretendard_extra_bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:text="No"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -150,7 +150,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:fontFamily="@font/pretendard_extra_bold"
+            android:fontFamily="@font/pretendard_semibold"
             android:text="등록된 근무자 연락처"
             android:textColor="#000000"
             android:textSize="25dp"
@@ -172,6 +172,8 @@
             android:layout_height="0dp"
 
             app:layout_constraintBottom_toTopOf="@+id/v_divider2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/v_2"
             tools:listitem="@layout/item_worker_list" />
 

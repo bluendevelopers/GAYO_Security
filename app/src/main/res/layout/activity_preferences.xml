@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -88,7 +89,7 @@
         android:id="@+id/tv_screen_mode"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/background_radius_15_fill"
         android:backgroundTint="@color/Main_Color"
@@ -102,14 +103,15 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_voice_set"
+        app:layout_constraintEnd_toStartOf="@+id/tv_voice_set"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/lay_container" />
 
     <TextView
         android:id="@+id/tv_voice_set"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         android:fontFamily="@font/pretendard_semibold"
@@ -121,14 +123,15 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/tv_sleep_mode"
-        app:layout_constraintStart_toEndOf="@id/tv_screen_mode" />
+        app:layout_constraintEnd_toStartOf="@+id/tv_sleep_mode"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_screen_mode" />
 
     <TextView
         android:id="@+id/tv_sleep_mode"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         android:fontFamily="@font/pretendard_semibold"
@@ -140,14 +143,15 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/network_set"
-        app:layout_constraintStart_toEndOf="@id/tv_voice_set" />
+        app:layout_constraintEnd_toStartOf="@+id/network_set"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_voice_set" />
 
     <TextView
         android:id="@+id/network_set"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         android:fontFamily="@font/pretendard_semibold"
@@ -159,13 +163,15 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/tv_data_set"
-        app:layout_constraintStart_toEndOf="@id/tv_sleep_mode" />
+        app:layout_constraintEnd_toStartOf="@+id/tv_data_set"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tv_sleep_mode" />
 
     <TextView
         android:id="@+id/tv_data_set"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         android:fontFamily="@font/pretendard_semibold"
@@ -177,6 +183,24 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@+id/tv_patrol_mode"
+        app:layout_constraintStart_toEndOf="@+id/network_set" />
+
+    <TextView
+        android:id="@+id/tv_patrol_mode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_radius_15_fill"
+        android:elevation="3dp"
+        android:fontFamily="@font/pretendard_semibold"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:text="순찰모드 설정"
+        android:textColor="#333333"
+        android:textSize="25dp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
         app:layout_constraintEnd_toEndOf="@+id/lay_container"
-        app:layout_constraintStart_toEndOf="@id/network_set" />
+        app:layout_constraintStart_toEndOf="@+id/tv_data_set" />
 </androidx.constraintlayout.widget.ConstraintLayout>
