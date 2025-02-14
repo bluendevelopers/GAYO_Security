@@ -77,7 +77,7 @@
         android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout11">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout11">
 
         <LinearLayout
             android:id="@+id/lay_facility_name"
@@ -284,10 +284,7 @@
                 android:textColor="@color/black"
                 android:textSize="25dp"
                 android:textStyle="bold" />
-
-
         </LinearLayout>
-
 
         <ListView
             android:id="@+id/lv_add_contact"
@@ -299,6 +296,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lay_list_top"
             tools:listitem="@layout/item_add_contact" />
+
+        <TextView
+            android:id="@+id/tv_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="연락처가\n존재하지 않습니다."
+            android:textAlignment="center"
+            android:textColor="#999999"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lay_list_top" />
 
         <View
             android:id="@+id/v_divider1"
@@ -318,21 +330,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lv_add_contact" />
 
-        <TextView
-            android:id="@+id/tv_empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="통화 기록이\n존재하지 않습니다."
-            android:textAlignment="center"
-            android:textColor="#999999"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/lv_add_contact"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/lv_add_contact"
-            app:layout_constraintTop_toTopOf="@id/lv_add_contact" />
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_list_bottom"
@@ -343,7 +340,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/lay_btn_before"
+                android:id="@+id/lay_before_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -376,7 +373,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lay_btn_next"
+                android:id="@+id/lay_next_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -414,10 +411,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_before_btn"
+                app:layout_constraintEnd_toStartOf="@id/lay_next_btn"
+                app:layout_constraintStart_toEndOf="@id/lay_before_btn"
+                app:layout_constraintTop_toTopOf="@id/lay_before_btn"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

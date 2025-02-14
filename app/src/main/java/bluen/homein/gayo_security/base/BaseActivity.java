@@ -46,7 +46,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void initActivity(Bundle savedInstanceState);
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -182,12 +181,31 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+//    public void hideNavigationBar() {
+//        View decorView = getWindow().getDecorView();
+//        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+//                | View.SYSTEM_UI_FLAG_FULLSCREEN
+//                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY; // Immersive 모드 추가
+//        decorView.setSystemUiVisibility(uiOptions);
+//    }
+
     public void hideNavigationBar() {
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY; // Immersive 모드 추가
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(uiOptions);
+
+        // UI 가시성 변경 감지 리스너 추가
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    // 네비게이션 바가 다시 나타난 경우 다시 숨김 처리
+                    hideNavigationBar();
+                }
+            }
+        });
     }
 
 

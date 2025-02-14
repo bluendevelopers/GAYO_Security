@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:id="@+id/lay_root"
     android:layout_height="105dp"
+    android:background="#f8f9fb"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/lay_item_call_record"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
         android:gravity="center"
-
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -52,7 +52,7 @@
             android:textSize="25dp" />
 
         <TextView
-            android:id="@+id/tv_call_record"
+            android:id="@+id/tv_facility_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
@@ -63,13 +63,13 @@
             android:textSize="25dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lay_connect_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="-15dp"
             android:layout_weight="5">
 
             <LinearLayout
+                android:id="@+id/lay_connect_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_border_radius_10_stroke_blue"
@@ -101,12 +101,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lay_delete_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="5">
 
             <LinearLayout
+                android:id="@+id/lay_delete_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_border_radius_10_stroke_red"
@@ -137,7 +137,15 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </LinearLayout>
+
+    <View
+        android:id="@+id/v_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#d1d1d1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

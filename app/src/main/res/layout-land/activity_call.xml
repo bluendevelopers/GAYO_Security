@@ -78,7 +78,7 @@
         app:layout_constraintBottom_toTopOf="@id/lay_bottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout2">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_main_left"

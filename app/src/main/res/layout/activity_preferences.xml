@@ -83,7 +83,7 @@
         app:layout_constraintBottom_toTopOf="@id/tv_screen_mode"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10" />
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout10" />
 
     <TextView
         android:id="@+id/tv_screen_mode"
@@ -103,9 +103,9 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_voice_set"
+        app:layout_constraintEnd_toStartOf="@id/tv_voice_set"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/lay_container" />
+        app:layout_constraintStart_toStartOf="@id/lay_container" />
 
     <TextView
         android:id="@+id/tv_voice_set"
@@ -122,10 +122,10 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@+id/tv_sleep_mode"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@id/tv_sleep_mode"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_screen_mode" />
+        app:layout_constraintStart_toEndOf="@id/tv_screen_mode" />
 
     <TextView
         android:id="@+id/tv_sleep_mode"
@@ -142,10 +142,10 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@+id/network_set"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@id/network_set"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_voice_set" />
+        app:layout_constraintStart_toEndOf="@id/tv_voice_set" />
 
     <TextView
         android:id="@+id/network_set"
@@ -162,10 +162,10 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@+id/tv_data_set"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@id/tv_data_set"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tv_sleep_mode" />
+        app:layout_constraintStart_toEndOf="@id/tv_sleep_mode" />
 
     <TextView
         android:id="@+id/tv_data_set"
@@ -182,9 +182,9 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@+id/tv_patrol_mode"
-        app:layout_constraintStart_toEndOf="@+id/network_set" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toStartOf="@id/tv_patrol_mode"
+        app:layout_constraintStart_toEndOf="@id/network_set" />
 
     <TextView
         android:id="@+id/tv_patrol_mode"
@@ -200,7 +200,7 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_screen_mode"
-        app:layout_constraintEnd_toEndOf="@+id/lay_container"
-        app:layout_constraintStart_toEndOf="@+id/tv_data_set" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintEnd_toEndOf="@id/lay_container"
+        app:layout_constraintStart_toEndOf="@id/tv_data_set" />
 </androidx.constraintlayout.widget.ConstraintLayout>

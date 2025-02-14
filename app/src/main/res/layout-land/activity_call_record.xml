@@ -77,7 +77,7 @@
         android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout9">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout9">
 
         <LinearLayout
             android:id="@+id/lay_division"
@@ -179,7 +179,7 @@
                     android:fontFamily="@font/pretendard_regular"
                     android:text="날짜 선택"
                     android:textAlignment="textStart"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_selected_start_date"
@@ -239,7 +239,7 @@
                     android:fontFamily="@font/pretendard_regular"
                     android:text="날짜 선택"
                     android:textAlignment="textStart"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/iv_selected_end_date"
@@ -399,6 +399,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lay_list_top"
             tools:listitem="@layout/item_call_record" />
+        <TextView
+            android:id="@+id/tv_empty_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="통화 기록이\n존재하지 않습니다."
+            android:gravity="center"
+            android:textColor="#999999"
+            android:textSize="25dp"
+            android:fontFamily="@font/pretendard_semibold"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lay_list_top" />
+
         <View
             android:id="@+id/v_divider1"
             android:layout_width="0dp"
@@ -407,20 +422,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lay_list_top" />
-        <TextView
-            android:id="@+id/tv_empty_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="통화 기록이\n존재하지 않습니다."
-            android:textAlignment="center"
-            android:textColor="#999999"
-            android:textSize="25dp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@id/lv_call_record"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/lv_call_record"
-            app:layout_constraintTop_toTopOf="@id/lv_call_record" />
 
         <View
             android:id="@+id/v_divider2"
@@ -429,7 +430,7 @@
             android:background="#d1d1d1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lv_call_record" />
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_list_bottom"
@@ -440,7 +441,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/lay_btn_before"
+                android:id="@+id/lay_before_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -473,7 +474,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lay_btn_next"
+                android:id="@+id/lay_next_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -511,10 +512,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_before_btn"
+                app:layout_constraintEnd_toStartOf="@id/lay_next_btn"
+                app:layout_constraintStart_toEndOf="@id/lay_before_btn"
+                app:layout_constraintTop_toTopOf="@id/lay_before_btn"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -78,7 +78,7 @@
         android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout10">
 
         <TextView
             android:id="@+id/tv_now_worker"
@@ -102,7 +102,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_now_worker" />
 
         <TextView
-            android:id="@+id/tv_phoneNumber"
+            android:id="@+id/tv_phone_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
@@ -127,8 +127,8 @@
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/lay_now"
-        app:layout_constraintStart_toStartOf="@+id/lay_now"
+        app:layout_constraintEnd_toEndOf="@id/lay_now"
+        app:layout_constraintStart_toStartOf="@id/lay_now"
         app:layout_constraintTop_toBottomOf="@id/lay_now">
 
         <TextView
@@ -167,18 +167,18 @@
             app:layout_constraintTop_toBottomOf="@id/tv_no" />
 
         <ListView
-            android:id="@+id/list_worker"
+            android:id="@+id/lv_worker_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
 
-            app:layout_constraintBottom_toTopOf="@+id/v_divider2"
+            app:layout_constraintBottom_toTopOf="@id/v_divider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/v_2"
+            app:layout_constraintTop_toBottomOf="@id/v_2"
             tools:listitem="@layout/item_worker_list" />
 
         <TextView
-            android:id="@+id/tv_empty"
+            android:id="@+id/tv_empty_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:gravity="center"
@@ -195,7 +195,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#d1d1d1"
-            app:layout_constraintTop_toTopOf="@+id/lay_list_bottom" />
+            app:layout_constraintTop_toTopOf="@id/lay_list_bottom" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_list_bottom"
@@ -206,7 +206,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/lay_btn_before"
+                android:id="@+id/lay_before_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -239,7 +239,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lay_btn_next"
+                android:id="@+id/lay_next_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -277,10 +277,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_before_btn"
+                app:layout_constraintEnd_toStartOf="@id/lay_next_btn"
+                app:layout_constraintStart_toEndOf="@id/lay_before_btn"
+                app:layout_constraintTop_toTopOf="@id/lay_before_btn"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -79,7 +79,7 @@
         android:paddingBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout10">
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout10">
 
         <TextView
             android:id="@+id/tv_division"
@@ -167,7 +167,7 @@
                 android:layout_marginStart="39dp"
                 android:gravity="center_horizontal"
                 android:text="2021-08-25"
-                android:textColor="#999999"
+                android:textColor="@color/black"
                 android:textSize="22dp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -218,7 +218,7 @@
                 android:layout_marginStart="39dp"
                 android:gravity="center_horizontal"
                 android:text="날짜 선택"
-                android:textColor="#999999"
+                android:textColor="@color/black"
                 android:textSize="22dp"
                 android:textStyle="normal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -296,15 +296,15 @@
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/lay_date"
-        app:layout_constraintStart_toStartOf="@+id/lay_date"
+        app:layout_constraintEnd_toEndOf="@id/lay_date"
+        app:layout_constraintStart_toStartOf="@id/lay_date"
         app:layout_constraintTop_toBottomOf="@id/lay_date">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_rec"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toStartOf="@id/lay_visit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -327,7 +327,7 @@
             android:layout_height="0dp"
             android:layout_marginBottom="4dp"
             android:background="#d1d1d1"
-            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -336,13 +336,13 @@
             android:id="@+id/lay_visit"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/lay_list_bottom"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/lay_rec"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_visit_state"
+                android:id="@+id/tv_visit_type"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:fontFamily="@font/pretendard_semibold"
@@ -362,7 +362,7 @@
                 android:layout_height="60dp"
                 android:background="@color/line"
                 app:layout_constraintEnd_toStartOf="@id/tv_visit_date"
-                app:layout_constraintStart_toEndOf="@id/tv_visit_state"
+                app:layout_constraintStart_toEndOf="@id/tv_visit_type"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -433,33 +433,36 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="#d1d1d1"
-                app:layout_constraintBottom_toBottomOf="@+id/v_5"
+                app:layout_constraintBottom_toBottomOf="@id/v_5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_visit_state" />
+                app:layout_constraintTop_toBottomOf="@id/tv_visit_type" />
 
             <ListView
-                android:id="@+id/list_visit"
-                android:layout_width="match_parent"
+                android:id="@+id/lv_visit_history"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_visit_state"
-                tools:listitem="@layout/item_visit_list" />
+                app:layout_constraintTop_toBottomOf="@id/tv_visit_type"
+                tools:listitem="@layout/item_visit_history_list" />
 
             <TextView
-                android:id="@+id/tv_empty"
-                android:layout_width="match_parent"
+                android:id="@+id/tv_empty_view"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:fontFamily="@font/pretendard_semibold"
                 android:gravity="center"
-                android:text="방문자 목록이 존재하지 않습니다."
+                android:text="방문자 목록이 존재 하지 않습니다."
                 android:textColor="#999999"
                 android:textSize="25dp"
-                android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_visit_state" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_visit_type" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -467,9 +470,9 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#d1d1d1"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/lay_visit" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_list_bottom"
@@ -480,7 +483,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
-                android:id="@+id/lay_btn_before"
+                android:id="@+id/lay_before_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -513,7 +516,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/lay_btn_next"
+                android:id="@+id/lay_next_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -551,10 +554,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="@id/lay_btn_before"
-                app:layout_constraintEnd_toStartOf="@id/lay_btn_next"
-                app:layout_constraintStart_toEndOf="@id/lay_btn_before"
-                app:layout_constraintTop_toTopOf="@id/lay_btn_before"
+                app:layout_constraintBottom_toBottomOf="@id/lay_before_btn"
+                app:layout_constraintEnd_toStartOf="@id/lay_next_btn"
+                app:layout_constraintStart_toEndOf="@id/lay_before_btn"
+                app:layout_constraintTop_toTopOf="@id/lay_before_btn"
                 tools:listitem="@layout/item_page_number" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

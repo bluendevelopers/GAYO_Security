@@ -25,10 +25,10 @@ public class RequestDataFormat {
             this.buildingCode = buildingCode;
         }
 
-        public ContactBody(String serialCode, String buildingCode, String connDeviceIP) {
+        public ContactBody(String serialCode, String buildingCode, int page) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
-            this.connDeviceIP = connDeviceIP;
+            this.page = page;
         }
 
         public ContactBody(String serialCode, String buildingCode, String connDeviceName, String connDeviceIP) {
@@ -228,6 +228,22 @@ public class RequestDataFormat {
         }
     }
 
+
+    public static class WorkerListBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+        @SerializedName("page")
+        private int currentPage;
+
+        public WorkerListBody(String serialCode, String buildingCode, int currentPage) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.currentPage = currentPage;
+        }
+    }
 
     public static class WorkRecordListBody implements Serializable {
 

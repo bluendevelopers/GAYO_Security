@@ -16,7 +16,7 @@ public class ResponseDataFormat {
         }
     }
 
-    public static class CurrentWorkerData extends MyGson implements Serializable {
+    public static class CurrentWorkerInfo extends MyGson implements Serializable {
         @SerializedName("managerName")
         private String workerName;
         @SerializedName("managerPhone")
@@ -154,7 +154,7 @@ public class ResponseDataFormat {
     public static class WorkRecordListBody extends MyGson implements Serializable {
 
         @SerializedName("pageCountValue")
-        private PageCountInfo pageCountValue;
+        private PageCountInfo pageCountInfo;
         @SerializedName("workManagerList")
         List<WorkRecordInfo> workRecordList;
         @SerializedName("result")
@@ -170,8 +170,8 @@ public class ResponseDataFormat {
             return message;
         }
 
-        public PageCountInfo getPageCountValue() {
-            return pageCountValue;
+        public PageCountInfo getPageCountInfo() {
+            return pageCountInfo;
         }
 
         public List<WorkRecordInfo> getWorkRecordList() {
@@ -223,7 +223,7 @@ public class ResponseDataFormat {
     public static class FacilityContactListBody extends MyGson implements Serializable {
 
         @SerializedName("pageCountValue")
-        private PageCountInfo pageCountValue;
+        private PageCountInfo pageCountInfo;
         @SerializedName("connDeviceList")
         List<FacilityContactInfo> facilityContactList;
 
@@ -240,8 +240,8 @@ public class ResponseDataFormat {
             return message;
         }
 
-        public PageCountInfo getPageCountValue() {
-            return pageCountValue;
+        public PageCountInfo getPageCountInfo() {
+            return pageCountInfo;
         }
 
         public List<FacilityContactInfo> getFacilityContactList() {
@@ -274,6 +274,222 @@ public class ResponseDataFormat {
 
     }
 
+    public static class VisitHistoryListBody extends MyGson implements Serializable {
+
+        @SerializedName("pageCountValue")
+        private PageCountInfo pageCountInfo;
+
+        @SerializedName("hisList")
+        List<VisitHistoryInfo> visitorList;
+
+        @SerializedName("result")
+        private String result;
+        @SerializedName("message")
+        private String message;
+
+        public String getResult() {
+            return result;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public PageCountInfo getPageCountInfo() {
+            return pageCountInfo;
+        }
+
+        public List<VisitHistoryInfo> getVisitHistoryList() {
+            return visitorList;
+        }
+
+        public static class VisitHistoryInfo extends MyGson implements Serializable {
+
+            @SerializedName("row_num")
+            private int rowNum;
+
+            @SerializedName("hisSeq")
+            private String hisSeq;
+            @SerializedName("codeName")
+            private String visitType;
+            @SerializedName("hisDay")
+            private String visitDate;
+            @SerializedName("hisTime")
+            private String visitingTime;
+            @SerializedName("hisFileName")
+            private String visitHistoryFileName;
+            @SerializedName("histFileType")
+            private String visitHistoryFileType;
+
+            public int getRowNum() {
+                return rowNum;
+            }
+
+            public String getHisSeq() {
+                return hisSeq;
+            }
+
+            public String getVisitType() {
+                return visitType;
+            }
+
+            public String getVisitDate() {
+                return visitDate;
+            }
+
+            public String getVisitingTime() {
+                return visitingTime;
+            }
+
+            public String getVisitHistoryFileName() {
+                return visitHistoryFileName;
+            }
+
+            public String getVisitHistoryFileType() {
+                return visitHistoryFileType;
+            }
+        }
+
+    }
+
+    public static class WorkerListBody extends MyGson implements Serializable {
+
+        @SerializedName("pageCountValue")
+        private PageCountInfo pageCountInfo;
+
+        @SerializedName("currentManager")
+        private CurrentWorkerInfo currentManagerInfo;
+
+        @SerializedName("residentsList")
+        List<WorkerPhoneNumberInfo> workerList;
+
+
+        @SerializedName("result")
+        private String result;
+        @SerializedName("message")
+        private String message;
+
+        public String getResult() {
+            return result;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public PageCountInfo getPageCountInfo() {
+            return pageCountInfo;
+        }
+
+        public CurrentWorkerInfo getCurrentManagerInfo() {
+            return currentManagerInfo;
+        }
+
+        public List<WorkerPhoneNumberInfo> getWorkerList() {
+            return workerList;
+        }
+
+        public static class WorkerPhoneNumberInfo extends MyGson implements Serializable {
+
+            @SerializedName("rowNum")
+            private int rowNum;
+
+            @SerializedName("resiHp")
+            private String phoneNumber;
+
+            public int getRowNum() {
+                return rowNum;
+            }
+
+            public String getPhoneNumber() {
+                return phoneNumber;
+            }
+        }
+
+    }
+
+    public static class CallRecordListBody extends MyGson implements Serializable {
+
+        @SerializedName("pageCountValue")
+        private PageCountInfo pageCountInfo;
+        @SerializedName("callList")
+        List<CallRecordInfo> callRecordList;
+
+        @SerializedName("result")
+        private String result;
+        @SerializedName("message")
+        private String message;
+
+        public String getResult() {
+            return result;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public PageCountInfo getPageCountInfo() {
+            return pageCountInfo;
+        }
+
+        public List<CallRecordInfo> getCallRecordList() {
+            return callRecordList;
+        }
+
+        public static class CallRecordInfo extends MyGson implements Serializable {
+
+            @SerializedName("rowNum")
+            private int rowNum;
+
+            @SerializedName("callseq")
+            private String callSeq;
+
+            @SerializedName("codeName")
+            private String callType;
+
+            @SerializedName("startDate")
+            private String startDate;
+
+            @SerializedName("callMiniute")
+            private String callMinute;
+
+            @SerializedName("callSecond")
+            private String callSecond;
+
+            @SerializedName("callLocName")
+            private String callLocName;
+
+            public int getRowNum() {
+                return rowNum;
+            }
+
+            public String getCallSeq() {
+                return callSeq;
+            }
+
+            public String getCallType() {
+                return callType;
+            }
+
+            public String getStartDate() {
+                return startDate;
+            }
+
+            public String getCallMinute() {
+                return callMinute;
+            }
+
+            public String getCallSecond() {
+                return callSecond;
+            }
+
+            public String getCallLocName() {
+                return callLocName;
+            }
+        }
+
+    }
+
     // 근무 or 통화 구분
     public class EtcType {
         @SerializedName("codeNumber")
@@ -292,7 +508,7 @@ public class ResponseDataFormat {
     }
 
     // 방문자 기록 구분
-    public class VisitorRecordType {
+    public class VisitType {
         @SerializedName("entranceCode")
         private String entranceCode;
 

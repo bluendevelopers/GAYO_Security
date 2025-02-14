@@ -38,7 +38,7 @@ public class Retrofit {
     public interface MainInfoApi {
 
         @POST(RetrofitURL.CURRENT_WORKER_INFO)
-        Call<ResponseDataFormat.CurrentWorkerData> currentWorkerPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody deviceInfoBody);
+        Call<ResponseDataFormat.CurrentWorkerInfo> currentWorkerPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody deviceInfoBody);
 
         @POST(RetrofitURL.WEATHER_INFO_URL)
         Call<ResponseDataFormat.WeatherData> weatherInfoPost(@Header("Authorization") String auth, @Body RequestDataFormat.WeatherBody weatherBody);
@@ -101,7 +101,7 @@ public class Retrofit {
     public interface WorkerChangePageApi {
 
         @POST(RetrofitURL.WORKER_LIST)
-        Call<ResponseDataFormat.WeatherData> workerListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WeatherBody weatherBody);
+        Call<ResponseDataFormat.WorkerListBody> workerListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerListBody weatherBody);
 
         @POST(RetrofitURL.WORKER_CHANGE)
         Call<ResponseDataFormat.WeatherData> workerChangePost(@Header("Authorization") String auth, @Body RequestDataFormat.WeatherBody weatherBody);
@@ -139,10 +139,10 @@ public class Retrofit {
         Call<List<ResponseDataFormat.EtcType>> loadCallStateTypeListGet(@Header("Authorization") String auth);
 
         @POST(RetrofitURL.LOAD_CALL_LOG_LIST)
-        Call<ResponseDataFormat.FacilityContactListBody> callRecordListPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
+        Call<ResponseDataFormat.CallRecordListBody> callRecordListPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
 
         @POST(RetrofitURL.DELETE_CALL_LOG_DATA)
-        Call<ResponseDataFormat.FacilityContactListBody> deleteCallRecordPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
+        Call<ResponseDataFormat.CallRecordListBody> deleteCallRecordPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
@@ -154,16 +154,16 @@ public class Retrofit {
 
     //** 방문자 목록
 
-    public interface VisitorRecordApi {
+    public interface VisitorHistoryApi {
 
         @GET(RetrofitURL.LOAD_VISITOR_TYPE_LIST)
-        Call<List<ResponseDataFormat.VisitorRecordType>> loadVisitorTypeListGet(@Header("Authorization") String auth);
+        Call<List<ResponseDataFormat.VisitType>> loadVisitorTypeListGet(@Header("Authorization") String auth);
 
         @POST(RetrofitURL.LOAD_VISITOR_LOG_LIST)
-        Call<ResponseDataFormat.FacilityContactListBody> callRecordListPost(@Header("Authorization") String auth, @Body RequestDataFormat.VisitorRecordListBody visitorRecordListBody);
+        Call<ResponseDataFormat.VisitHistoryListBody> visitHistoryListPost(@Header("Authorization") String auth, @Body RequestDataFormat.VisitorRecordListBody visitorRecordListBody);
 
         @POST(RetrofitURL.DELETE_VISITOR_LOG_RECORD)
-        Call<ResponseDataFormat.FacilityContactListBody> deleteCallRecordPost(@Header("Authorization") String auth, @Body RequestDataFormat.VisitorRecordListBody visitorRecordListBody);
+        Call<ResponseDataFormat.VisitHistoryListBody> deleteCallRecordPost(@Header("Authorization") String auth, @Body RequestDataFormat.VisitorRecordListBody visitorRecordListBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

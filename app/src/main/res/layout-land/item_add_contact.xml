@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lay_root"
     android:layout_width="match_parent"
     android:layout_height="105dp"
+    android:background="#f8f9fb"
     android:orientation="horizontal">
 
     <LinearLayout
         android:id="@+id/lay_item_add_contact"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@color/white"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="30dp"
@@ -24,32 +24,32 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2.2"
-            android:text="관리실"
             android:fontFamily="@font/pretendard_regular"
+            android:text="관리실"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="25dp" />
 
         <TextView
-            android:id="@+id/tv_date"
+            android:id="@+id/tv_ip_address"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2.2"
-            android:text="101.203.103.204"
             android:fontFamily="@font/pretendard_regular"
+            android:text="101.203.103.204"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="24dp" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lay_connect_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="-30dp"
             android:layout_weight="1.3">
 
             <LinearLayout
+                android:id="@+id/lay_ping_test_btn"
                 android:layout_width="90dp"
                 android:layout_height="40dp"
                 android:background="@drawable/btn_border_radius_10_stroke_blue"
@@ -62,7 +62,7 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="18dp"
                     android:layout_marginHorizontal="10dp"
                     android:fontFamily="@font/pretendard_medium"
                     android:text="테스트"
@@ -73,12 +73,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lay_delete_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
 
             <LinearLayout
+                android:id="@+id/lay_delete_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_border_radius_10_stroke_red"
@@ -112,4 +112,12 @@
 
     </LinearLayout>
 
+    <View
+        android:id="@+id/v_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#d1d1d1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -75,7 +75,7 @@
                 android:id="@+id/lay_0"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/lay_1"
+                app:layout_constraintBottom_toTopOf="@id/lay_1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -86,10 +86,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:background="@drawable/w_main_box_1"
-                app:layout_constraintBottom_toTopOf="@+id/lay_2"
-                app:layout_constraintEnd_toEndOf="@+id/lay_0"
-                app:layout_constraintStart_toStartOf="@+id/lay_0"
-                app:layout_constraintTop_toBottomOf="@+id/lay_0"
+                app:layout_constraintBottom_toTopOf="@id/lay_2"
+                app:layout_constraintEnd_toEndOf="@id/lay_0"
+                app:layout_constraintStart_toStartOf="@id/lay_0"
+                app:layout_constraintTop_toBottomOf="@id/lay_0"
                 app:layout_constraintVertical_weight="24">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -133,7 +133,7 @@
                         android:textColor="#222222"
                         android:textSize="30dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/tv_worker_name"
+                        app:layout_constraintStart_toEndOf="@id/tv_worker_name"
                         app:layout_constraintTop_toBottomOf="@id/tv_security_state_1" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -184,10 +184,10 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/w_main_box_2"
-                app:layout_constraintBottom_toTopOf="@+id/lay_3"
-                app:layout_constraintEnd_toEndOf="@+id/lay_1"
-                app:layout_constraintStart_toStartOf="@+id/lay_1"
-                app:layout_constraintTop_toBottomOf="@+id/lay_1"
+                app:layout_constraintBottom_toTopOf="@id/lay_3"
+                app:layout_constraintEnd_toEndOf="@id/lay_1"
+                app:layout_constraintStart_toStartOf="@id/lay_1"
+                app:layout_constraintTop_toBottomOf="@id/lay_1"
                 app:layout_constraintVertical_weight="32.4">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -199,7 +199,7 @@
                     android:layout_marginEnd="38dp"
                     android:layout_marginBottom="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/v_middle"
+                    app:layout_constraintEnd_toStartOf="@id/v_middle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -263,7 +263,7 @@
                     android:layout_marginBottom="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/v_middle"
+                    app:layout_constraintStart_toEndOf="@id/v_middle"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -344,10 +344,10 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="-10dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/lay_4"
+                app:layout_constraintBottom_toTopOf="@id/lay_4"
                 app:layout_constraintEnd_toEndOf="@id/lay_2"
                 app:layout_constraintStart_toStartOf="@id/lay_2"
-                app:layout_constraintTop_toBottomOf="@+id/lay_2"
+                app:layout_constraintTop_toBottomOf="@id/lay_2"
                 app:layout_constraintVertical_weight="30">
 
                 <FrameLayout
@@ -531,10 +531,10 @@
                 android:layout_marginStart="-10dp"
                 android:layout_marginEnd="-10dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/lay_5"
+                app:layout_constraintBottom_toTopOf="@id/lay_5"
                 app:layout_constraintEnd_toEndOf="@id/lay_2"
                 app:layout_constraintStart_toStartOf="@id/lay_2"
-                app:layout_constraintTop_toBottomOf="@+id/lay_3"
+                app:layout_constraintTop_toBottomOf="@id/lay_3"
                 app:layout_constraintVertical_weight="30">
 
                 <FrameLayout
@@ -714,7 +714,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/lay_2"
                 app:layout_constraintStart_toStartOf="@id/lay_2"
-                app:layout_constraintTop_toBottomOf="@+id/lay_4"
+                app:layout_constraintTop_toBottomOf="@id/lay_4"
                 app:layout_constraintVertical_weight="5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -28,6 +28,12 @@ public class PreferencesActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    @Override
     protected int getLayoutResId() {
         return R.layout.activity_preferences;
     }

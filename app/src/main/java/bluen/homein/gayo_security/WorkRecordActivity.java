@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import bluen.homein.gayo_security.adapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.adapter.WorkRecordListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.base.BaseRecyclerAdapter;
@@ -46,6 +48,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class WorkRecordActivity extends BaseActivity {
+    @BindView(R.id.lay_before_btn)
+    LinearLayout layBeforeBtn;
+    @BindView(R.id.lay_next_btn)
+    LinearLayout layNextBtn;
+
 
     @BindView(R.id.rv_page_number)
     RecyclerView rvPageNumber;
@@ -55,10 +62,12 @@ public class WorkRecordActivity extends BaseActivity {
     TextView tvEmptyView;
     @BindView(R.id.tv_selected_start_date)
     TextView tvSelectedStartDate;
+    @BindView(R.id.tv_selected_end_date)
+    TextView tvSelectedEndDate;
+
     private View dialogView;
-
-
     private PageNumberListAdapter pageNumberListAdapter;
+    private WorkRecordListAdapter workRecordListAdapter;
     private int currentPageNumber = 1; //default
     private String startDate = ""; //default
     private String endDate = ""; //default
@@ -66,7 +75,14 @@ public class WorkRecordActivity extends BaseActivity {
     private String division = "00"; //default
     private List<String> pageList;
     private List<ResponseDataFormat.WorkRecordListBody.WorkRecordInfo> workerRecordList;
-    private WorkRecordListAdapter workRecordListAdapter;
+
+    @OnClick(R.id.lay_before_btn)
+    void clickBeforeBtn() {
+    }
+
+    @OnClick(R.id.lay_next_btn)
+    void clickNextBtn() {
+    }
 
     @OnClick(R.id.lay_start_date_btn)
     void showWeekdaySelectionPopup() {
@@ -86,6 +102,12 @@ public class WorkRecordActivity extends BaseActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        hideNavigationBar();
+    }
+
+    @Override
     protected int getLayoutResId() {
         return R.layout.activity_work_record;
     }
@@ -94,7 +116,7 @@ public class WorkRecordActivity extends BaseActivity {
     protected void initActivity(Bundle savedInstanceState) {
         hideNavigationBar();
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, RecyclerView.HORIZONTAL);
-        pageNumberListAdapter = new PageNumberListAdapter(mContext, R.layout.item_page_number);
+        pageNumberListAdapter = new PageNumberListAdapter(WorkRecordActivity.this, R.layout.item_page_number);
 
         // 최초 진입 시 당일 전체로 검색 api 실행
 
@@ -102,18 +124,21 @@ public class WorkRecordActivity extends BaseActivity {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDate = today.format(formatter);
         startDate = formattedDate;
+        endDate = formattedDate;
         tvSelectedStartDate.setText(startDate);
+        tvSelectedEndDate.setText(endDate);
 
         workRecordListAdapter = new WorkRecordListAdapter(WorkRecordActivity.this);
         lvWorkRecord.setAdapter(workRecordListAdapter);
         lvWorkRecord.setEmptyView(tvEmptyView);
+
         getDivisionList();
         getWorkRecordList();
     }
 
     private void getDivisionList() {
-    }
 
+    }
 
     private void getWorkRecordList() {
         showProgress();
@@ -125,29 +150,44 @@ public class WorkRecordActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ResponseDataFormat.WorkRecordListBody> call, Response<ResponseDataFormat.WorkRecordListBody> response) {
                 closeProgress();
-                if (response.body() != null) {
-                    if (response.body().getMessage() == null) {
-                        if (pageList == null) {
-                            pageList = new ArrayList<>();
-                        }
-                        if (pageList.isEmpty()) {
-                            for (int i = 1; i <= response.body().getPageCountValue().getTotalPageCnt(); i++) {
+                hideNavigationBar();
+
+                if (response.body().getMessage() == null) {
+                    pageList = new ArrayList<>();
+
+                    if (response.body().getPageCountInfo().getTotalPageCnt() != 0) {
+                        for (int i = 1; i <= response.body().getPageCountInfo().getTotalPageCnt(); i++) {
+                            if (!pageList.contains(String.valueOf(i))) {
                                 pageList.add(String.valueOf(i));
                             }
                         }
-                        workRecordListAdapter.setData(response.body().getWorkRecordList());
-
-                        pageNumberListAdapter.addItems(pageList);
-                        rvPageNumber.setAdapter(pageNumberListAdapter);
+                    } else {
+                        if (!pageList.contains("1")) {
+                            pageList.add("1");
+                        }
                     }
-                } else {
+                    layBeforeBtn.setVisibility(View.VISIBLE);
+                    layNextBtn.setVisibility(View.VISIBLE);
+                    if (currentPageNumber == 1) {
+                        layBeforeBtn.setVisibility(View.INVISIBLE);
+                    } else if (currentPageNumber == response.body().getPageCountInfo().getTotalPageCnt()) {
+                        layNextBtn.setVisibility(View.INVISIBLE);
+                    }
 
+                    workRecordListAdapter.setData(response.body().getWorkRecordList());
+
+
+                    pageNumberListAdapter.setItems(pageList);
+                    pageNumberListAdapter.setData(currentPageNumber);
+                    rvPageNumber.setAdapter(pageNumberListAdapter);
                 }
+
             }
 
             @Override
             public void onFailure(Call<ResponseDataFormat.WorkRecordListBody> call, Throwable t) {
                 closeProgress();
+                hideNavigationBar();
 
             }
         });
@@ -285,62 +325,5 @@ public class WorkRecordActivity extends BaseActivity {
 //        });
 //
 //    }
-    public static class PageNumberListAdapter extends BaseRecyclerAdapter<String, PageNumberListAdapter.ViewHolder> {
-        private int currentPageNumber = 1;
-
-        public PageNumberListAdapter(Context context, int resource) {
-            super(context, resource);
-        }
-
-        @Override
-        protected PageNumberListAdapter.ViewHolder onCreateViewHolderBase(View view) {
-            return new PageNumberListAdapter.ViewHolder(view);
-        }
-
-        @Override
-        protected void onBindViewHolderBase(PageNumberListAdapter.ViewHolder holder, int position) {
-
-            holder.tvPageNumber.setText(mData.get(position));
-
-            if (position == mData.size() - 1) {
-                holder.vMarginRight.setVisibility(View.GONE);
-            }
-
-            if (mData.get(position).equals(String.valueOf(currentPageNumber))) {
-                holder.tvPageNumber.setTextColor(Color.WHITE);
-                holder.tvPageNumber.setTypeface(holder.tvPageNumber.getTypeface(), Typeface.BOLD);
-
-            } else {
-                holder.tvPageNumber.setTextColor(Color.BLACK);
-                holder.tvPageNumber.setBackground(null);
-
-            }
-
-
-        }
-
-        // Recycler View Holder
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            ConstraintLayout layRoot;
-            TextView tvPageNumber;
-            View vMarginRight;
-
-
-            ViewHolder(@NonNull View v) {
-                super(v);
-
-                layRoot = v.findViewById(R.id.lay_root);
-                tvPageNumber = v.findViewById(R.id.tv_page_number);
-                vMarginRight = v.findViewById(R.id.v_margin_right);
-
-                //페이지 번호 클릭 시
-                layRoot.setOnClickListener(view -> {
-
-                });
-
-            }
-        }
-
-    }
 
 }

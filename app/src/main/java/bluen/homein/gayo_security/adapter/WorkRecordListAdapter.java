@@ -1,6 +1,7 @@
 package bluen.homein.gayo_security.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,7 +75,14 @@ public class WorkRecordListAdapter extends BaseAdapter {
             tvWorkStartTime.setTypeface(tvWorkStartTime.getTypeface(), Typeface.BOLD);
             tvWorkEndTime.setTypeface(tvWorkStartTime.getTypeface(), Typeface.BOLD);
             tvWorkerPhoneNumber.setTypeface(tvWorkStartTime.getTypeface(), Typeface.BOLD);
+        } else {
+            layRoot.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
         }
+
+        if (itemsList.get(position).getworkType().equals("순찰")) {
+            tvDivision.setTextColor(Color.parseColor("#f1293d"));
+        }
+
         if (!itemsList.isEmpty()) {
             if (position == itemsList.size() - 1) {
                 vDivider.setVisibility(View.GONE);
@@ -87,13 +96,4 @@ public class WorkRecordListAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    private String changeDateFormat(String dateStr) throws ParseException {
-        // 원래 날짜
-        SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        // 변환할 날짜
-        SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy. MM. dd");
-
-        Date date = originalFormat.parse(dateStr);
-        return targetFormat.format(date);
-    }
 }

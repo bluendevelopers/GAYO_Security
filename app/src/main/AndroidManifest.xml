@@ -64,7 +64,7 @@
             android:name=".ChangeWorkerActivity"
             android:exported="true"></activity>
         <activity
-            android:name=".VisitorListActivity"
+            android:name=".VisitHistoryListActivity"
             android:exported="true"></activity>
 
 

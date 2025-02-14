@@ -37,6 +37,13 @@ public abstract class BaseRecyclerAdapter<E, VH extends RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
+    public void setItems(List<E> items) {
+        mData.clear();
+        mData.addAll(items);
+
+        notifyDataSetChanged();
+    }
+
     public void clearItems() {
         mData.clear();
 

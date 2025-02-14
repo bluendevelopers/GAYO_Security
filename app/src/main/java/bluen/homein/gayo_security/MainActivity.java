@@ -1,17 +1,14 @@
 package bluen.homein.gayo_security;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.annotation.Nullable;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import bluen.homein.gayo_security.base.BaseActivity;
@@ -26,6 +23,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends BaseActivity {
+
+    private static final int REQUEST_CODE_MAIN = 1;
+    private static final int RESULT_CHANGED_WORKER = 2;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -92,7 +92,7 @@ public class MainActivity extends BaseActivity {
     @OnClick(R.id.lay_visitor_list_btn)
     void clickVisitorListBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        Intent intent = new Intent(MainActivity.this, VisitorListActivity.class);
+        Intent intent = new Intent(MainActivity.this, VisitHistoryListActivity.class);
         startActivity(intent);
     }
 
@@ -107,7 +107,7 @@ public class MainActivity extends BaseActivity {
     void clickChangeWorkerBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Intent intent = new Intent(MainActivity.this, ChangeWorkerActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_MAIN);
     }
 
     @OnClick(R.id.lay_setting_btn)
@@ -117,6 +117,14 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getWeatherInfo();
+        if (resultCode == RESULT_CHANGED_WORKER) {
+            getCurrentWorkerInfo();
+        }
+    }
 
     @Override
     protected int getLayoutResId() {
@@ -126,20 +134,20 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
-        Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
-        getCurrentWorkerInfo(mainInfoApi);
-        getWeatherInfo(mainInfoApi);
+        getCurrentWorkerInfo();
+        getWeatherInfo();
 
     }
 
-    private void getCurrentWorkerInfo(Retrofit.MainInfoApi mainInfoApi) {
+    private void getCurrentWorkerInfo() {
         showProgress();
+        Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
-        Call<ResponseDataFormat.CurrentWorkerData> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
-        call.enqueue(new Callback<ResponseDataFormat.CurrentWorkerData>() {
+        Call<ResponseDataFormat.CurrentWorkerInfo> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
+        call.enqueue(new Callback<ResponseDataFormat.CurrentWorkerInfo>() {
             @Override
-            public void onResponse(Call<ResponseDataFormat.CurrentWorkerData> call, Response<ResponseDataFormat.CurrentWorkerData> response) {
+            public void onResponse(Call<ResponseDataFormat.CurrentWorkerInfo> call, Response<ResponseDataFormat.CurrentWorkerInfo> response) {
                 closeProgress();
                 if (response.body() != null) {
                     if (response.body().getMessage() == null) {
@@ -152,15 +160,16 @@ public class MainActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseDataFormat.CurrentWorkerData> call, Throwable t) {
+            public void onFailure(Call<ResponseDataFormat.CurrentWorkerInfo> call, Throwable t) {
                 closeProgress();
 
             }
         });
     }
 
-    private void getWeatherInfo(Retrofit.MainInfoApi mainInfoApi) {
+    private void getWeatherInfo() {
         showProgress();
+        Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
         Call<ResponseDataFormat.WeatherData> call = mainInfoApi.weatherInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WeatherBody(buildingCode)); // test
         call.enqueue(new Callback<ResponseDataFormat.WeatherData>() {
