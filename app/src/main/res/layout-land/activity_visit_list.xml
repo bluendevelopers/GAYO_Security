@@ -71,219 +71,237 @@
         android:id="@+id/lay_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
+        android:layout_marginHorizontal="40dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
-        android:paddingBottom="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout10">
 
-        <TextView
-            android:id="@+id/tv_division"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:text="구분"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/lay_division"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/lay_division"
             android:layout_width="0dp"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_border_radius_10"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/lay_start_date"
-            app:layout_constraintHorizontal_weight="3"
+            app:layout_constraintHorizontal_weight="5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_division">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/tv_visit"
+                android:id="@+id/tv_division"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="31dp"
-                android:gravity="center_horizontal"
-                android:text="전체"
-                android:textColor="#333333"
-                android:textSize="22dp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="구분"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_type"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
-                android:src="@drawable/ic_down"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:background="@drawable/btn_gray_border_radius_10">
 
-        <TextView
-            android:id="@+id/tv_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:text="시작 날짜"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/lay_start_date"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/tv_select_type"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="7dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="12dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="전체"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_division"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+                <ImageView
+                    android:id="@+id/iv_selected_division"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/dwon_icon"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_type"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_type" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/lay_start_date"
             android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_border_radius_10"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/lay_division"
             app:layout_constraintEnd_toStartOf="@id/lay_end_date"
-            app:layout_constraintHorizontal_weight="4"
+            app:layout_constraintHorizontal_weight="8"
             app:layout_constraintStart_toEndOf="@id/lay_division"
-            app:layout_constraintTop_toBottomOf="@id/tv_start">
+            app:layout_constraintTop_toTopOf="@id/lay_division">
 
             <TextView
                 android:id="@+id/tv_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="39dp"
-                android:gravity="center_horizontal"
-                android:text="2021-08-25"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="10dp"
+                android:text="시작 날짜"
                 android:textColor="@color/black"
-                android:textSize="22dp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_start_date"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
-                android:src="@drawable/ic_down"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:background="@drawable/btn_gray_border_radius_10">
 
-        <TextView
-            android:id="@+id/tv_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="21dp"
-            android:text="종료 날짜"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="@id/lay_end_date"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/tv_select_start_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginBottom="7dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="날짜 선택"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_start_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+                <ImageView
+                    android:id="@+id/iv_selected_start_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/dwon_icon"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_start_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_start_date" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/lay_end_date"
             android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_border_radius_10"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
-            app:layout_constraintEnd_toStartOf="@id/lay_data_manage"
-            app:layout_constraintHorizontal_weight="4"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@id/lay_start_date"
+            app:layout_constraintEnd_toStartOf="@id/view2"
+            app:layout_constraintHorizontal_weight="8"
             app:layout_constraintStart_toEndOf="@id/lay_start_date"
-            app:layout_constraintTop_toBottomOf="@id/tv_end">
+            app:layout_constraintTop_toTopOf="@id/lay_start_date">
 
             <TextView
                 android:id="@+id/tv_end_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="39dp"
-                android:gravity="center_horizontal"
-                android:text="날짜 선택"
-                android:textColor="@color/black"
-                android:textSize="22dp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="17dp"
-                android:src="@drawable/ic_down"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/lay_data_manage"
-            android:layout_width="wrap_content"
-            android:layout_height="45dp"
-            android:layout_marginStart="150dp"
-            android:layout_marginEnd="30dp"
-            app:layout_constraintBottom_toBottomOf="@id/lay_end_date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/lay_end_date"
-            app:layout_constraintTop_toTopOf="@id/lay_end_date">
-
-            <Button
-                android:id="@+id/tv_search"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
-                android:background="@drawable/btn_blue_fill_border_radius_10"
-                android:fontFamily="@font/pretendard_semibold"
-                android:gravity="center_horizontal|center_vertical"
-                android:paddingStart="35dp"
-                android:paddingEnd="35dp"
-                android:text="검 색"
-                android:textColor="#ffffff"
-                android:textSize="25dp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_delete"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="45dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/btn_border_radius_10"
-                android:fontFamily="@font/pretendard_semibold"
-                android:gravity="center_horizontal|center_vertical"
-                android:paddingStart="29dp"
-                android:paddingEnd="29dp"
-                android:text="전체 삭제"
-                android:textColor="#333333"
-                android:textSize="25dp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_search"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginBottom="10dp"
+                android:text="종료 날짜"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_end_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_gray_border_radius_10">
+
+                <TextView
+                    android:id="@+id/tv_select_end_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginEnd="34dp"
+                    android:layout_marginBottom="7dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="날짜 선택"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_end_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_selected_end_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="17dp"
+                    android:src="@drawable/dwon_icon"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_end_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_end_date" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@id/lay_end_date"
+            app:layout_constraintEnd_toStartOf="@id/btn_search"
+            app:layout_constraintHorizontal_weight="6"
+            app:layout_constraintStart_toEndOf="@id/lay_end_date"
+            app:layout_constraintTop_toTopOf="@id/lay_end_date" />
+
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/btn_blue_fill_border_radius_10"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="검 색"
+            android:textColor="@color/white"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_delete"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/btn_border_radius_10"
+            android:fontFamily="@font/pretendard_semibold"
+            android:text="전체 삭제"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -400,7 +418,7 @@
                 android:textSize="25dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@id/v_6"
-                app:layout_constraintHorizontal_weight="2"
+                app:layout_constraintHorizontal_weight="1.8"
                 app:layout_constraintStart_toEndOf="@id/v_5"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -424,7 +442,7 @@
                 android:textSize="25dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintHorizontal_weight="1.2"
                 app:layout_constraintStart_toEndOf="@id/v_6"
                 app:layout_constraintTop_toTopOf="parent" />
 

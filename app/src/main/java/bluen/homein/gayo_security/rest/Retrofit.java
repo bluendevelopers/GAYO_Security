@@ -104,7 +104,7 @@ public class Retrofit {
         Call<ResponseDataFormat.WorkerListBody> workerListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerListBody weatherBody);
 
         @POST(RetrofitURL.WORKER_CHANGE)
-        Call<ResponseDataFormat.WeatherData> workerChangePost(@Header("Authorization") String auth, @Body RequestDataFormat.WeatherBody weatherBody);
+        Call<ResponseDataFormat.WorkerListBody> workerChangePost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerBody workerBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
@@ -122,6 +122,9 @@ public class Retrofit {
 
         @POST(RetrofitURL.WORK_RECORD_LIST)
         Call<ResponseDataFormat.WorkRecordListBody> workRecordListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkRecordListBody workRecordListBody);
+
+        @POST(RetrofitURL.WORKER_PHONE_NUMBER_LIST)
+        Call<List<ResponseDataFormat.WorkerListBody.WorkerInfo>> workerPhoneNumberListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerBody workerBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

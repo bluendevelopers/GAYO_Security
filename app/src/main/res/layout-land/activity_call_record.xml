@@ -105,19 +105,20 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_division"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_select_type"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="5dp"
                     android:fontFamily="@font/pretendard_regular"
-                    android:text="수신거부"
+                    android:text="전체"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="22dp"
@@ -132,9 +133,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_division"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_type"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_division" />
+                    app:layout_constraintTop_toTopOf="@id/tv_select_type" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -164,12 +165,13 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_start_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_start_date"
+                    android:id="@+id/tv_select_start_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -190,11 +192,11 @@
                     android:id="@+id/iv_selected_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="27dp"
+                    android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_start_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_start_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_start_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_select_start_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -224,12 +226,13 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_end_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_end_date"
+                    android:id="@+id/tv_select_end_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
@@ -250,11 +253,11 @@
                     android:id="@+id/iv_selected_end_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="27dp"
+                    android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_end_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_end_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_end_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_select_end_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -367,9 +370,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="-15dp"
                 android:layout_weight="5"
                 android:text="연결"
-                android:layout_marginEnd="-15dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="25dp"
@@ -399,15 +402,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lay_list_top"
             tools:listitem="@layout/item_call_record" />
+
         <TextView
             android:id="@+id/tv_empty_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="통화 기록이\n존재하지 않습니다."
+            android:fontFamily="@font/pretendard_semibold"
             android:gravity="center"
+            android:text="통화 기록이\n존재하지 않습니다."
             android:textColor="#999999"
             android:textSize="25dp"
-            android:fontFamily="@font/pretendard_semibold"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -428,9 +432,9 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:background="#d1d1d1"
+            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/lay_list_bottom" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_list_bottom"
@@ -466,10 +470,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:text="이 전"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:fontFamily="@font/pretendard_semibold" />
+                    android:textSize="25dp" />
 
             </LinearLayout>
 
@@ -492,10 +496,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="30dp"
                     android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/pretendard_semibold"
                     android:text="다 음"
                     android:textColor="@color/black"
-                    android:textSize="25dp"
-                    android:fontFamily="@font/pretendard_semibold" />
+                    android:textSize="25dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"

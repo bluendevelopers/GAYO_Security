@@ -228,6 +228,28 @@ public class RequestDataFormat {
         }
     }
 
+    public static class WorkerBody implements Serializable {
+
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+        @SerializedName("managerIdx")
+        private String managerIdx;
+        @SerializedName("managerPhone")
+        private String managerPhone;
+
+        public WorkerBody(String buildingCode) {
+            this.buildingCode = buildingCode;
+        }
+
+        public WorkerBody(String serialCode, String buildingCode, String managerIdx, String managerPhone) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.managerIdx = managerIdx;
+            this.managerPhone = managerPhone;
+        }
+    }
 
     public static class WorkerListBody implements Serializable {
 
@@ -290,7 +312,7 @@ public class RequestDataFormat {
         @SerializedName("callType")
         private String callType;
         @SerializedName("callSeq")
-        private String callSeq;
+        private Integer callSeq;
 
         public CallRecordListBody(String serialCode, String buildingCode, int currentPage, String startDate, String endDate, String callType) {
             this.serialCode = serialCode;
@@ -301,7 +323,7 @@ public class RequestDataFormat {
             this.callType = callType;
         }
 
-        public CallRecordListBody(String serialCode, String buildingCode, String callSeq) {
+        public CallRecordListBody(String serialCode, String buildingCode, Integer callSeq) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
             this.callSeq = callSeq;

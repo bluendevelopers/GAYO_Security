@@ -30,6 +30,7 @@ public class RetrofitURL {
 
     //** 근무 기록
     public final static String WORK_RECORD_LIST = "work/manager/his/list";
+    public final static String WORKER_PHONE_NUMBER_LIST = "build/manager/list";
 
     //** 통화 목록
     public final static String LOAD_CALL_LOG_LIST = "device/search/call";

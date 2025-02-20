@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 
 
-import bluen.homein.gayo_security.MainActivity;
+import bluen.homein.gayo_security.activity.MainActivity;
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.preference.Gayo_Preferences;

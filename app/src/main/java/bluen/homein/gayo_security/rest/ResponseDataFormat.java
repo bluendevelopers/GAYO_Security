@@ -21,10 +21,16 @@ public class ResponseDataFormat {
         private String workerName;
         @SerializedName("managerPhone")
         private String workerPhoneNumber;
+        @SerializedName("managerIdx")
+        private String workerIdx;
         @SerializedName("result")
         private String result;
         @SerializedName("message")
         private String message;
+
+        public String getWorkerIdx() {
+            return workerIdx;
+        }
 
         public String getWorkerName() {
             return workerName;
@@ -198,7 +204,7 @@ public class ResponseDataFormat {
             @SerializedName("managerPhone")
             private String workerPhone;
 
-            public String getworkType() {
+            public String getWorkType() {
                 return workType;
             }
 
@@ -361,8 +367,7 @@ public class ResponseDataFormat {
         private CurrentWorkerInfo currentManagerInfo;
 
         @SerializedName("residentsList")
-        List<WorkerPhoneNumberInfo> workerList;
-
+        List<WorkerInfo> workerList;
 
         @SerializedName("result")
         private String result;
@@ -385,20 +390,35 @@ public class ResponseDataFormat {
             return currentManagerInfo;
         }
 
-        public List<WorkerPhoneNumberInfo> getWorkerList() {
+        public List<WorkerInfo> getWorkerList() {
             return workerList;
         }
 
-        public static class WorkerPhoneNumberInfo extends MyGson implements Serializable {
+        public static class WorkerInfo extends MyGson implements Serializable {
 
             @SerializedName("rowNum")
             private int rowNum;
-
             @SerializedName("resiHp")
             private String phoneNumber;
+            @SerializedName("managerIdx")
+            private String idx;
+            @SerializedName("managerPhone")
+            private String managerPhone; // 근무 기록 필터용
+
+            public WorkerInfo(String managerPhone) {
+                this.managerPhone = managerPhone;
+            }
+
+            public String getIdx() {
+                return idx;
+            }
 
             public int getRowNum() {
                 return rowNum;
+            }
+
+            public String getManagerPhone() {
+                return managerPhone;
             }
 
             public String getPhoneNumber() {
@@ -442,7 +462,7 @@ public class ResponseDataFormat {
             private int rowNum;
 
             @SerializedName("callseq")
-            private String callSeq;
+            private int callSeq;
 
             @SerializedName("codeName")
             private String callType;
@@ -463,7 +483,7 @@ public class ResponseDataFormat {
                 return rowNum;
             }
 
-            public String getCallSeq() {
+            public int getCallSeq() {
                 return callSeq;
             }
 

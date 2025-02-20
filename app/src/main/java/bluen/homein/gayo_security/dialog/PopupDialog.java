@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import bluen.homein.gayo_security.R;
 
@@ -65,8 +65,17 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
     private void setDisplay() {
         if (null != mDialog) {
             Window dialogWindow = mDialog.getWindow();
+            dialogWindow.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |       // 네비게이션바 숨김
+                            View.SYSTEM_UI_FLAG_FULLSCREEN |            // 상태바 숨김
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY         // 몰입 모드 유지
+            );
             Window layoutWindow = getWindow();
-            if (null != dialogWindow && null != layoutWindow) {
+            if (null != layoutWindow) {
+
                 WindowManager.LayoutParams params = dialogWindow.getAttributes();
 
                 Display display = layoutWindow.getWindowManager().getDefaultDisplay();
@@ -75,6 +84,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
                 params.width = (int) (point.x * 0.9f);
                 dialogWindow.setAttributes(params);
+                mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
 
 //            Window window = mDialog.getWindow();
@@ -87,16 +97,203 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
         }
     }
 
+
     //------------------------------ show
 
-    public void showAlertDialog(String _cancel, String _confirm, String _title, String _sub) {
+    public void showAlertDialog(String _title, String _msg, String _confirm) {  // title + msg + cancel&confirm Dialog
         if (null == mDialog) {
             setDialog();
             setDisplay();
 
             Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
             Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
-            TextView title = mDialog.findViewById(R.id.dialog_tv_msg);
+            TextView title = mDialog.findViewById(R.id.dialog_tv_main_content);
+            TextView msg = mDialog.findViewById(R.id.dialog_tv_msg);
+
+            cancel.setVisibility(View.GONE);
+
+            if (_confirm != null) {
+                confirm.setText(_confirm);
+                confirm.setOnClickListener(this);
+//                confirm.setOnClickListener(v -> {
+//                    dismiss();
+//                    dialogListener.onNextStep();
+//                });
+            } else {
+                confirm.setVisibility(View.GONE);
+            }
+
+            if (_title != null) {
+                title.setText(_title);
+            } else {
+                title.setVisibility(View.GONE);
+            }
+
+            if (_msg != null) {
+                msg.setText(_msg);
+            } else {
+                msg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showAlertDialog(String _msg, String _confirm) {  //  msg + cancel&confirm Dialog
+        if (null == mDialog) {
+            setDialog();
+            setDisplay();
+
+            Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
+            Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
+            TextView title = mDialog.findViewById(R.id.dialog_tv_main_content);
+            TextView msg = mDialog.findViewById(R.id.dialog_tv_msg);
+
+            title.setVisibility(View.GONE);
+            cancel.setVisibility(View.GONE);
+
+            if (_confirm != null) {
+                confirm.setText(_confirm);
+                confirm.setOnClickListener(this);
+
+//                confirm.setOnClickListener(v -> {
+//                    dismiss();
+//                    dialogListener.onNextStep();
+//                });
+            } else {
+                confirm.setVisibility(View.GONE);
+            }
+
+            if (msg != null) {
+                msg.setText(_msg);
+            } else {
+                msg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showWarningDialog(String _msg, String _confirm) {  // Warning img + msg + cancel&confirm Dialog
+        if (null == mDialog) {
+            setDialog();
+            setDisplay();
+
+            ConstraintLayout laySuccess = mDialog.findViewById(R.id.lay_alert_msg);
+            ConstraintLayout layWarning = mDialog.findViewById(R.id.lay_warning_msg);
+            Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
+            Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
+            TextView msg = mDialog.findViewById(R.id.dialog_tv_warning_msg);
+
+            laySuccess.setVisibility(View.GONE);
+            layWarning.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.GONE);
+
+            if (_confirm != null) {
+                confirm.setText(_confirm);
+                confirm.setOnClickListener(this);
+//                confirm.setOnClickListener(v -> {
+//                    dismiss();
+//                    dialogListener.onNextStep();
+//
+//                });
+            } else {
+                confirm.setVisibility(View.GONE);
+            }
+
+            if (_msg != null) {
+                msg.setText(_msg);
+            } else {
+                msg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showWarningDialog(String _msg, String _cancel, String _confirm) {  // Warning img + msg + cancel&confirm Dialog
+        if (null == mDialog) {
+            setDialog();
+            setDisplay();
+
+            ConstraintLayout laySuccess = mDialog.findViewById(R.id.lay_alert_msg);
+            ConstraintLayout layWarning = mDialog.findViewById(R.id.lay_warning_msg);
+            Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
+            Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
+            TextView msg = mDialog.findViewById(R.id.dialog_tv_warning_msg);
+
+            laySuccess.setVisibility(View.GONE);
+            layWarning.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.GONE);
+
+            if (_confirm != null) {
+                confirm.setText(_confirm);
+                confirm.setOnClickListener(v -> {
+                    dismiss();
+                    dialogListener.onNextStep();
+                });
+            } else {
+                confirm.setVisibility(View.GONE);
+            }
+
+            cancel.setText(_cancel);
+            cancel.setOnClickListener(this);
+
+            if (_msg != null) {
+                msg.setText(_msg);
+            } else {
+                msg.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showAlertDialog(String _additionalMsg, String _title, String _sub, String _cancel, String _confirm) {
+        if (null == mDialog) {
+            setDialog();
+            setDisplay();
+
+            Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
+            Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
+            TextView additionalMsg = mDialog.findViewById(R.id.dialog_tv_additional_msg);
+            TextView title = mDialog.findViewById(R.id.dialog_tv_main_content);
+            TextView sub = mDialog.findViewById(R.id.dialog_tv_msg);
+
+            if (_confirm != null) {
+                confirm.setText(_confirm);
+                confirm.setOnClickListener(v -> {
+                    dismiss();
+                    dialogListener.onNextStep();
+                });
+            } else {
+                confirm.setVisibility(View.GONE);
+            }
+
+            cancel.setText(_cancel);
+            cancel.setOnClickListener(this);
+
+            if (_additionalMsg != null) {
+                additionalMsg.setVisibility(View.VISIBLE);
+                additionalMsg.setText(_additionalMsg);
+            } else {
+                additionalMsg.setVisibility(View.GONE);
+            }
+
+            if (_title != null) {
+                title.setText(_title);
+            } else {
+                title.setVisibility(View.GONE);
+            }
+
+            if (_sub != null) {
+                sub.setText(_sub);
+            } else {
+                sub.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void showAlertDialog(String _title, String _sub, String _cancel, String _confirm) {
+        if (null == mDialog) {
+            setDialog();
+            setDisplay();
+
+            Button confirm = mDialog.findViewById(R.id.dialog_btn_confirm);
+            Button cancel = mDialog.findViewById(R.id.dialog_btn_cancel);
+            TextView title = mDialog.findViewById(R.id.dialog_tv_main_content);
             TextView sub = mDialog.findViewById(R.id.dialog_tv_msg);
 
             if (_confirm != null) {

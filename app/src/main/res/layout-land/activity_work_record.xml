@@ -104,16 +104,17 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_division"
+                    android:id="@+id/tv_select_type"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginStart="20dp"
                     android:fontFamily="@font/pretendard_regular"
                     android:text="전체"
                     android:textAlignment="textStart"
@@ -130,9 +131,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_division"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_type"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_division" />
+                    app:layout_constraintTop_toTopOf="@id/tv_select_type" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -162,13 +163,13 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/lay_start_date_btn"
+                android:id="@+id/lay_select_start_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_start_date"
+                    android:id="@+id/tv_select_start_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
@@ -189,12 +190,12 @@
                     android:id="@+id/iv_selected_start_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="27dp"
+                    android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_start_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_start_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_selected_start_date"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_start_date" />
+                    app:layout_constraintStart_toEndOf="@id/tv_select_start_date"
+                    app:layout_constraintTop_toTopOf="@id/tv_select_start_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -224,13 +225,13 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/lay_end_date_btn"
+                android:id="@+id/lay_select_end_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_end_date"
+                    android:id="@+id/tv_select_end_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
@@ -250,11 +251,11 @@
                     android:id="@+id/iv_selected_end_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="27dp"
+                    android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_end_date"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_select_end_date"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_end_date" />
+                    app:layout_constraintTop_toTopOf="@id/tv_select_end_date" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -286,36 +287,36 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_select_worker_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/btn_gray_border_radius_10">
 
                 <TextView
-                    android:id="@+id/tv_selected_workder_phone_number"
+                    android:id="@+id/tv_selected_worker_phone_number"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="7dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="20dp"
                     android:fontFamily="@font/pretendard_regular"
                     android:text="전체"
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/iv_selected_workder_phone_number"
+                    app:layout_constraintEnd_toStartOf="@id/iv_selected_worker_phone_number"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
-                    android:id="@+id/iv_selected_workder_phone_number"
+                    android:id="@+id/iv_selected_worker_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="17dp"
                     android:src="@drawable/dwon_icon"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_workder_phone_number"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_selected_worker_phone_number"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_selected_workder_phone_number" />
+                    app:layout_constraintTop_toTopOf="@id/tv_selected_worker_phone_number" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import bluen.homein.gayo_security.dialog.PopupDialog;
 import bluen.homein.gayo_security.dialog.ProgressDialog;
 import bluen.homein.gayo_security.global.GlobalApplication;
@@ -181,6 +184,42 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public void showPopupDialog(String _title, String _sub, String _cancel, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showAlertDialog(_title, _sub, _cancel, _confirm);
+        }
+    }
+
+    public void showPopupDialog(String _title, String _sub, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showAlertDialog(_title, _sub, _confirm);
+        }
+    }
+
+    public void showPopupDialog(String _msg, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showAlertDialog(_msg, _confirm);
+        }
+    }
+
+    public void showWarningDialog(String _msg, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showWarningDialog(_msg, _confirm);
+        }
+    }
+
+    public void showWarningDialog(String _msg, String _cancel, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showWarningDialog(_msg, _cancel, _confirm);
+        }
+    }
+
+    public void showPopupDialog(String _additionalMsg, String _title, String _sub, String _cancel, String _confirm) {
+        if (null != popupDialog) {
+            popupDialog.showAlertDialog(_additionalMsg, _title, _sub, _cancel, _confirm);
+        }
+    }
+
 //    public void hideNavigationBar() {
 //        View decorView = getWindow().getDecorView();
 //        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -221,6 +260,36 @@ public abstract class BaseActivity extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             showProgress();
+        }
+    }
+
+    public static class ErrorBodyParser {
+
+        public static final int ERROR_CODE_NUM = 0;
+        public static final int ERROR_MESSAGE_NUM = 1;
+
+        public static String[] JsonParser(String data) {
+
+            String[] result = new String[10];
+
+            if (data.contains("result")) {
+                try {
+                    JsonParser jsonParser = new JsonParser();
+                    //json 데이터가 이미 "[{a,b,c},{d,e,f}]"와 같이 String으로 가지고 있거나,
+                    //json 파일에서 Reader를 통해 텍스트를 읽어 들이는 방법입니다.
+
+                    JsonObject jsonObject = (JsonObject) jsonParser.parse(data);
+
+                    result[ERROR_CODE_NUM] = (jsonObject.get("result")).toString();
+                    result[ERROR_MESSAGE_NUM] = (jsonObject.get("message")).toString();
+
+                } catch (NullPointerException e) {
+                    result = null;
+                    e.printStackTrace();
+                }
+            }
+
+            return result;
         }
     }
 }

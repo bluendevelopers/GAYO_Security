@@ -35,36 +35,36 @@
         tools:replace="android:allowBackup">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true"></activity>
 
         <activity
-            android:name=".WorkRecordActivity"
+            android:name=".activity.workRecord.WorkRecordActivity"
             android:exported="true">
 
         </activity>
 
         <activity
-            android:name=".CallRecordActivity"
+            android:name=".activity.callRecord.CallRecordActivity"
             android:exported="true">
 
         </activity>
 
         <activity
-            android:name=".AddContactActivity"
+            android:name=".activity.addFacilityContact.AddContactActivity"
             android:exported="true"></activity>
 
         <activity
-            android:name=".CallActivity"
+            android:name=".activity.call.CallActivity"
             android:exported="true"></activity>
         <activity
-            android:name=".PreferencesActivity"
+            android:name=".activity.preferences.PreferencesActivity"
             android:exported="true"></activity>
         <activity
-            android:name=".ChangeWorkerActivity"
+            android:name=".activity.changeWorker.ChangeWorkerActivity"
             android:exported="true"></activity>
         <activity
-            android:name=".VisitHistoryListActivity"
+            android:name=".activity.visitHistory.VisitHistoryListActivity"
             android:exported="true"></activity>
 
 
