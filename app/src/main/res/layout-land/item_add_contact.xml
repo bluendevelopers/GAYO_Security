@@ -67,7 +67,7 @@
                     android:fontFamily="@font/pretendard_medium"
                     android:text="테스트"
                     android:gravity="center"
-                    android:textColor="@color/Main_Color"
+                    android:textColor="@color/main_color"
                     android:textSize="20dp" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -80,19 +80,19 @@
         android:layout_weight="1"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_screen_mode"
+        app:layout_constraintBottom_toTopOf="@id/tv_screen_set_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout10" />
 
     <TextView
-        android:id="@+id/tv_screen_mode"
+        android:id="@+id/tv_screen_set_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/background_radius_15_fill"
-        android:backgroundTint="@color/Main_Color"
+        android:backgroundTint="@color/main_color"
         android:elevation="3dp"
         android:fontFamily="@font/pretendard_semibold"
         android:gravity="center"
@@ -103,12 +103,12 @@
         android:textSize="25dp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_voice_set"
+        app:layout_constraintEnd_toStartOf="@id/tv_volume_set_btn"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@id/lay_container" />
 
     <TextView
-        android:id="@+id/tv_voice_set"
+        android:id="@+id/tv_volume_set_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -122,13 +122,13 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/tv_sleep_mode"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
+        app:layout_constraintEnd_toStartOf="@id/tv_sleep_mode_btn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_screen_mode" />
+        app:layout_constraintStart_toEndOf="@id/tv_screen_set_btn" />
 
     <TextView
-        android:id="@+id/tv_sleep_mode"
+        android:id="@+id/tv_sleep_mode_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -138,17 +138,17 @@
         android:gravity="center"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="슬립모드"
+        android:text="슬립모드 설정"
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/network_set"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
+        app:layout_constraintEnd_toStartOf="@id/tv_network_set_btn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_voice_set" />
+        app:layout_constraintStart_toEndOf="@id/tv_volume_set_btn" />
 
     <TextView
-        android:id="@+id/network_set"
+        android:id="@+id/tv_network_set_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -162,13 +162,13 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/tv_data_set"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
+        app:layout_constraintEnd_toStartOf="@id/tv_data_set_btn"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_sleep_mode" />
+        app:layout_constraintStart_toEndOf="@id/tv_sleep_mode_btn" />
 
     <TextView
-        android:id="@+id/tv_data_set"
+        android:id="@+id/tv_data_set_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
@@ -182,12 +182,12 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
-        app:layout_constraintEnd_toStartOf="@id/tv_patrol_mode"
-        app:layout_constraintStart_toEndOf="@id/network_set" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
+        app:layout_constraintEnd_toStartOf="@id/tv_patrol_mode_btn"
+        app:layout_constraintStart_toEndOf="@id/tv_network_set_btn" />
 
     <TextView
-        android:id="@+id/tv_patrol_mode"
+        android:id="@+id/tv_patrol_mode_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/background_radius_15_fill"
@@ -200,7 +200,7 @@
         android:textColor="#333333"
         android:textSize="25dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_mode"
+        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
         app:layout_constraintEnd_toEndOf="@id/lay_container"
-        app:layout_constraintStart_toEndOf="@id/tv_data_set" />
+        app:layout_constraintStart_toEndOf="@id/tv_data_set_btn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="Main_Color">#2081ff</color>
+    <color name="main_color">#2081ff</color>
     <color name="Main_reverse_Color">#f1293d</color>
 
     <color name="background">#efefef</color>

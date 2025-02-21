@@ -47,7 +47,7 @@
         android:paddingEnd="80dp"
         android:paddingBottom="13dp"
         android:text="선 택"
-        android:textColor="@color/Main_Color"
+        android:textColor="@color/main_color"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

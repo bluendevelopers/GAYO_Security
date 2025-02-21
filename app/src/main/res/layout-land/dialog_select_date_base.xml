@@ -45,7 +45,7 @@
             android:id="@+id/btn_confirm"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/Main_Color"
+            android:background="@color/main_color"
             android:fontFamily="@font/pretendard_extra_bold"
             android:paddingVertical="30dp"
             android:text="확 인"

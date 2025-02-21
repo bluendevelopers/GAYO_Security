@@ -65,7 +65,7 @@
                 android:letterSpacing="0.0"
                 android:lineSpacingExtra="1dp"
                 android:text="Main Content"
-                android:textColor="@color/Main_Color"
+                android:textColor="@color/main_color"
                 android:textSize="45dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/dialog_tv_msg"
