@@ -361,6 +361,7 @@
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_blue_fill_border_radius_15"
+        android:fontFamily="@font/pretendard_regular"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

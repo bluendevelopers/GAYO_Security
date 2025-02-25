@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="@+id/iv_bright_min">
 
         <com.github.florent37.androidslidr.Slidr
-            android:id="@+id/slidr_volume"
+            android:id="@+id/slidr_brightness"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -121,7 +121,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"></androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/tv_cancel"
@@ -152,6 +152,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
+        android:fontFamily="@font/pretendard_regular"
         android:text="저장 하기"
         android:textColor="@color/white"
         android:textSize="35dp"

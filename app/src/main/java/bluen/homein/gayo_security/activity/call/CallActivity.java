@@ -72,16 +72,7 @@ public class CallActivity extends BaseActivity {
     protected void initActivity(Bundle savedInstanceState) {
         hideNavigationBar();
 
-        // 볼륨 조절
-        slidrVolume.setMax(100);
-        slidrVolume.setMin(0);
-        slidrVolume.setCurrentValue(5);
-        slidrVolume.setRegionTextFormatter(new Slidr.RegionTextFormatter() {
-            @Override
-            public String format(int region, float value) {
-                return String.format("", (int) value);
-            }
-        });
+
     }
 
 //    public static class PageNumberListAdapter extends BaseRecyclerAdapter<String, PageNumberListAdapter.ViewHolder> {

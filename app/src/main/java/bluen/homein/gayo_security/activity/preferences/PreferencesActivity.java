@@ -31,6 +31,8 @@ import butterknife.OnClick;
 public class PreferencesActivity extends BaseActivity {
 
 
+    @BindView(R.id.tv_page_title)
+    TextView tvPageTitle;
     @BindView(R.id.tv_screen_set_btn)
     TextView tvScreenSetBtn;
     @BindView(R.id.tv_volume_set_btn)
@@ -66,10 +68,8 @@ public class PreferencesActivity extends BaseActivity {
     @OnClick({R.id.tv_screen_set_btn, R.id.tv_volume_set_btn, R.id.tv_sleep_mode_btn,
             R.id.tv_network_set_btn, R.id.tv_data_set_btn, R.id.tv_patrol_mode_btn})
     void onTextViewClicked(View view) {
-        // 클릭된 버튼 찾기
         TextView clickedTextView = (TextView) view;
 
-        // 모든 버튼 초기화 (클릭된 버튼 제외)
         for (TextView tv : textViewArray) {
             if (tv != clickedTextView) {
                 clearButtonUi(tv);
@@ -86,21 +86,27 @@ public class PreferencesActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.tv_screen_set_btn:
                 selectedFragment = new ScreenSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 화면 설정");
                 break;
             case R.id.tv_volume_set_btn:
                 selectedFragment = new VolumeSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 음량 조절");
                 break;
             case R.id.tv_sleep_mode_btn:
                 selectedFragment = new SleepModeSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 슬립모드 설정");
                 break;
             case R.id.tv_network_set_btn:
                 selectedFragment = new NetworkSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 네트워크 설정");
                 break;
             case R.id.tv_data_set_btn:
                 selectedFragment = new DataSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 데이터 설정");
                 break;
             case R.id.tv_patrol_mode_btn:
                 selectedFragment = new PatrolModeSetFragment();
+                tvPageTitle.setText("사용자 설정 _ 순찰모드 설정");
                 break;
         }
 
@@ -143,6 +149,14 @@ public class PreferencesActivity extends BaseActivity {
             }
         });
 
+        Fragment selectedFragment = new ScreenSetFragment();
+
+        if (selectedFragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.lay_container, selectedFragment)
+                    .commit();
+        }
     }
 
 }

@@ -5,7 +5,8 @@ public class RetrofitURL {
 
     public final static String BASE_URL = "https://gayo-smarthome-guard.bluen.co.kr/ "; // REAL SERVER
     public final static String BASE_TEST_URL = "https://gayo-smarthome-guard-dev.azurewebsites.net/"; // TEST SERVER
-    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER
+//    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER???
+    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";// WebSocket Signal Server
 
     //** 로그인 및 메인
     public final static String LOGIN_URL = "dev/login";

@@ -22,6 +22,11 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission
+        android:name="android.permission.CAPTURE_VIDEO_OUTPUT"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name="bluen.homein.gayo_security.global.GlobalApplication"
         android:allowBackup="false"
@@ -36,7 +41,7 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
 
         <activity
             android:name=".activity.workRecord.WorkRecordActivity"
@@ -52,20 +57,20 @@
 
         <activity
             android:name=".activity.addFacilityContact.AddContactActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
 
         <activity
             android:name=".activity.call.CallActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activity.preferences.PreferencesActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activity.changeWorker.ChangeWorkerActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".activity.visitHistory.VisitHistoryListActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
 
 
         <activity
