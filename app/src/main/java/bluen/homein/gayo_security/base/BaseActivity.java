@@ -37,13 +37,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     public Gayo_SharedPreferences mPrefGlobal = null;
     public boolean mIsFinish;
     public String TAG = "";
-    public boolean mIsAdviewSet;
     public Vibrator vibrator;
     public PopupDialog popupDialog;
     public String buildingCode = "0004";
-    public String serialCode = "testserialCode1";
-    public String macAddress = "00-00-00-00";
-    public String ipAddress = "192.168.0.101";
+
+//    public String serialCode = "testserialcode1";
+    public String macAddress = "00-00-00-00"; //더미
+    public String ipAddress = "192.168.0.102"; //더미
+
+    public String serialCode = "testserialCode6";
 
     protected abstract int getLayoutResId();
 

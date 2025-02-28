@@ -95,7 +95,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="80dp"
                 android:layout_marginBottom="60dp"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
@@ -126,6 +125,8 @@
                 android:id="@+id/lay_call_view"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:background="@color/white"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -248,10 +249,15 @@
                         app:layout_constraintStart_toStartOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lay_caller_camera"
+                <org.webrtc.SurfaceViewRenderer
+                    android:id="@+id/remote_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_call_time"
@@ -408,10 +414,98 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_weight="1.03">
 
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_dong_ho_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="30dp"
+                    app:layout_constraintBottom_toTopOf="@id/lay_car_number_info"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_weight="8">
+
+                    <TextView
+                        android:id="@+id/tv_apt_dong_number"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginBottom="22dp"
+                        android:fontFamily="@font/pretendard_extra_bold"
+                        android:gravity="center"
+                        android:maxLength="4"
+                        android:text=""
+                        android:textColor="@color/main_color"
+                        android:textSize="60dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_dong"
+                        app:layout_constraintHorizontal_weight="3.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <TextView
+                        android:id="@+id/tv_apt_dong"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="15dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center"
+                        android:visibility="invisible"
+                        android:text="동"
+                        android:textColor="@color/black"
+                        android:textSize="40dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong_number"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho_number"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong_number"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong_number" />
+
+                    <TextView
+                        android:id="@+id/tv_apt_ho_number"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/pretendard_extra_bold"
+                        android:gravity="center"
+                        android:maxLength="4"
+                        android:paddingHorizontal="0dp"
+                        android:text=""
+                        android:textColor="@color/main_color"
+                        android:textSize="60dp"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong"
+                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho"
+                        app:layout_constraintHorizontal_weight="3.5"
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong" />
+
+                    <TextView
+                        android:id="@+id/tv_apt_ho"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center"
+                        android:visibility="invisible"
+                        android:text="호"
+                        android:textColor="@color/black"
+                        android:textSize="40dp"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_ho_number"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toEndOf="@id/tv_apt_ho_number"
+                        app:layout_constraintTop_toTopOf="@id/tv_apt_ho_number" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_call_reception_select"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:background="@color/white"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -456,90 +550,6 @@
                         app:layout_constraintBottom_toBottomOf="@id/textView7"
                         app:layout_constraintEnd_toEndOf="@id/textView7"
                         app:layout_constraintTop_toTopOf="@id/textView7" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/lay_dong_ho_info"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginEnd="30dp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@id/lay_car_number_info"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_weight="8">
-
-                    <TextView
-                        android:id="@+id/tv_apt_dong_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="35dp"
-                        android:layout_marginBottom="22dp"
-                        android:fontFamily="@font/pretendard_extra_bold"
-                        android:gravity="center"
-                        android:maxLength="4"
-                        android:text="1011"
-                        android:textColor="@color/main_color"
-                        android:textSize="60dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/tv_apt_dong"
-                        app:layout_constraintHorizontal_weight="3.5"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <TextView
-                        android:id="@+id/tv_apt_dong"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginEnd="15dp"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:gravity="center"
-                        android:text="동"
-                        android:textColor="@color/black"
-                        android:textSize="40dp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong_number"
-                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho_number"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong_number"
-                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong_number" />
-
-                    <TextView
-                        android:id="@+id/tv_apt_ho_number"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/pretendard_extra_bold"
-                        android:gravity="center"
-                        android:maxLength="4"
-                        android:paddingHorizontal="0dp"
-                        android:text="1011"
-                        android:textColor="@color/main_color"
-                        android:textSize="60dp"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_dong"
-                        app:layout_constraintEnd_toStartOf="@id/tv_apt_ho"
-                        app:layout_constraintHorizontal_weight="3.5"
-                        app:layout_constraintStart_toEndOf="@id/tv_apt_dong"
-                        app:layout_constraintTop_toTopOf="@id/tv_apt_dong" />
-
-                    <TextView
-                        android:id="@+id/tv_apt_ho"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:fontFamily="@font/pretendard_semibold"
-                        android:gravity="center"
-                        android:text="호"
-                        android:textColor="@color/black"
-                        android:textSize="40dp"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_apt_ho_number"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_weight="1"
-                        app:layout_constraintStart_toEndOf="@id/tv_apt_ho_number"
-                        app:layout_constraintTop_toTopOf="@id/tv_apt_ho_number" />
-
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -603,7 +613,7 @@
                 android:id="@+id/lay_button"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:alpha="0.3"
+                android:alpha="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

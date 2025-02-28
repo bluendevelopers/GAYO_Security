@@ -3,7 +3,6 @@ package bluen.homein.gayo_security.rest;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class RequestDataFormat {
 
@@ -43,10 +42,7 @@ public class RequestDataFormat {
         }
     }
 
-    public static class NetworkInfoBody implements Serializable {
-    }
-
-    public static class PreferencesBody implements Serializable {
+    public static class DeviceBody implements Serializable {
 
         @SerializedName("serialCode")
         private String serialCode;
@@ -62,13 +58,50 @@ public class RequestDataFormat {
         @SerializedName("deviceNetwork")
         private DeviceNetworkBody deviceNetworkBody;
 
-        public PreferencesBody(String serialCode, String buildingCode, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
+        @SerializedName("result")
+        private String result;
+        @SerializedName("message")
+        private String message;
+
+        public String getResult() {
+            return result;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public DeviceBody(String serialCode, String buildingCode, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
             this.deviceUIBody = deviceUIBody;
             this.deviceSoundBody = deviceSoundBody;
             this.deviceSleepModeBody = deviceSleepModeBody;
             this.deviceNetworkBody = deviceNetworkBody;
+        }
+
+        public String getSerialCode() {
+            return serialCode;
+        }
+
+        public String getBuildingCode() {
+            return buildingCode;
+        }
+
+        public DeviceUIBody getDeviceUIBody() {
+            return deviceUIBody;
+        }
+
+        public DeviceSoundBody getDeviceSoundBody() {
+            return deviceSoundBody;
+        }
+
+        public DeviceSleepModeBody getDeviceSleepModeBody() {
+            return deviceSleepModeBody;
+        }
+
+        public DeviceNetworkBody getDeviceNetworkBody() {
+            return deviceNetworkBody;
         }
     }
 
@@ -151,6 +184,37 @@ public class RequestDataFormat {
         @SerializedName("ipPermission")
         private IpAddressBody[] ipPermissionArray;
 
+        public String getFacilityName() {
+            return facilityName;
+        }
+
+        public String getIpAddress() {
+            return ipAddress;
+        }
+
+        public String getMacAddress() {
+            return macAddress;
+        }
+
+        public String getGateWayIP() {
+            return gateWayIP;
+        }
+
+        public String getSubNet() {
+            return subNet;
+        }
+
+        public String getServerIP() {
+            return serverIP;
+        }
+
+        public int getServerPort() {
+            return serverPort;
+        }
+
+        public IpAddressBody[] getIpPermissionArray() {
+            return ipPermissionArray;
+        }
     }
 
     public static class DeviceSleepModeBody implements Serializable {

@@ -6,16 +6,16 @@ import android.content.SharedPreferences;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import bluen.homein.gayo_security.rest.RequestDataFormat;
 
 
 public class Gayo_SharedPreferences {
@@ -39,6 +39,15 @@ public class Gayo_SharedPreferences {
     public String getAuthorization() {
         return getString(PrefKey.AUTHORIZATION, null);
 
+    }
+
+    public String getFirebaseToken() {
+        return getString(PrefKey.FIREBASE_TOKEN, null);
+
+    }
+
+    public void setFirebaseToken(String _value) {
+        putString(PrefKey.FIREBASE_TOKEN, _value);
     }
 
     //----------------------------------------- Data Get
@@ -157,14 +166,31 @@ public class Gayo_SharedPreferences {
 
     //--------------------------------------------------- Class Get & Put
 
+    public static class PrefDeviceData {
+        public static final String PREF_DEVICE_KEY = "device_data_key";
+        public static final String PREF_DEVICE_VALUE = "device_data_value";
 
+        public static RequestDataFormat.DeviceBody prefItem;
+
+        public static void setPrefDeviceData(Context _context, RequestDataFormat.DeviceBody _prefItem) {
+            _context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE).edit()
+                    .putString(PREF_DEVICE_VALUE, new Gson().toJson(_prefItem, RequestDataFormat.DeviceBody.class)).commit();
+            prefItem = getDeviceData(_context);
+        }
+
+        public static RequestDataFormat.DeviceBody getDeviceData(Context _context) {
+            return new Gson().fromJson(_context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE)
+                    .getString(PREF_DEVICE_VALUE, ""), RequestDataFormat.DeviceBody.class);
+        }
+
+    }
     //---------------------------------------- User Info
-
 
 
     static private class PrefKey {
 
-        static final private String AUTHORIZATION = "authorization";
+        private static final String AUTHORIZATION = "authorization";
+        private static final String FIREBASE_TOKEN = "firebase_token";
 
     }
 

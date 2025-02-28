@@ -64,7 +64,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -83,7 +83,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lay_1"
-                android:layout_width="wrap_content"
+                android:layout_width="490dp"
                 android:layout_height="0dp"
                 android:background="@drawable/w_main_box_1"
                 app:layout_constraintBottom_toTopOf="@id/lay_2"
@@ -94,10 +94,11 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout4"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="34dp"
                     android:layout_marginTop="25dp"
+                    app:layout_constraintEnd_toStartOf="@+id/constraintLayout11"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -125,7 +126,7 @@
 
                     <TextView
                         android:id="@+id/tv_worker_phone_number"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/pretendard_semibold"
@@ -139,15 +140,14 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout11"
                     android:layout_width="wrap_content"
                     android:layout_height="88dp"
-                    android:layout_marginStart="40dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginEnd="24dp"
                     android:layout_marginBottom="18dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/constraintLayout4"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
@@ -257,12 +257,8 @@
                     android:id="@+id/constraintLayout6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="22dp"
-                    android:layout_marginEnd="27dp"
-                    android:layout_marginBottom="22dp"
+                    android:layout_marginStart="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/v_middle"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -272,15 +268,16 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/weather_01"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/constraintLayout7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/constraintLayout7"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="18dp"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/iv_weather_img"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -294,8 +291,8 @@
 
                             <TextView
                                 android:id="@+id/tv_temperature"
-                                android:layout_width="31dp"
-                                android:layout_height="77dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:fontFamily="@font/pretendard_light"
                                 android:text="2"
                                 android:textAlignment="textEnd"

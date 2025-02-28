@@ -20,10 +20,10 @@ public class Retrofit {
         Call<ResponseDataFormat.LoginData> getAuthInfo(@Body RequestDataFormat.DeviceInfoBody body);
 
         @POST(RetrofitURL.LOAD_SETTING_DATA)
-        Call<RequestDataFormat.PreferencesBody> loadPreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
+        Call<RequestDataFormat.DeviceBody> loadDeviceDataPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
 
         @POST(RetrofitURL.LOAD_NETWORK_DATA)
-        Call<RequestDataFormat.PreferencesBody> loadNetworkSettingPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
+        Call<RequestDataFormat.DeviceBody> loadNetworkSettingPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
@@ -65,7 +65,7 @@ public class Retrofit {
         Call<List<ResponseDataFormat.PatrolModeListType>> loadPatrolModeTypeListGet(@Header("Authorization") String auth); // 사용자 설정_순찰모드 설정
 
         @POST(RetrofitURL.SAVE_SETTING_DATA)
-        Call<ResponseDataFormat.SavePreferencesData> savePreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.PreferencesBody preferencesBody);
+        Call<ResponseDataFormat.SavePreferencesData> savePreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

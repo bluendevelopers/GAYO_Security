@@ -1,6 +1,7 @@
 package bluen.homein.gayo_security.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.widget.ImageView;
@@ -19,9 +20,11 @@ import bluen.homein.gayo_security.activity.visitHistory.VisitHistoryListActivity
 import bluen.homein.gayo_security.activity.workRecord.WorkRecordActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.databinding.ActivityMainBinding;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.rest.Retrofit;
+import bluen.homein.gayo_security.service.WebSocketService;
 import butterknife.BindView;
 import butterknife.OnClick;
 import retrofit2.Call;
@@ -141,6 +144,12 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initActivity(Bundle savedInstanceState) {
 
+        Intent serviceIntent = new Intent(this, WebSocketService.class);
+        if (Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
+            serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
+            serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
+            startService(serviceIntent);
+        }
         getCurrentWorkerInfo();
         getWeatherInfo();
 
@@ -157,8 +166,8 @@ public class MainActivity extends BaseActivity {
                 closeProgress();
                 if (response.body() != null) {
                     if (response.body().getMessage() == null) {
-                        tvWorkerName.setText(response.body().getWorkerName());
-                        tvWorkerPhoneNumber.setText(response.body().getWorkerPhoneNumber());
+                        tvWorkerName.setText(response.body().getWorkerName().isEmpty() ? "근무자" : response.body().getWorkerName());
+                        tvWorkerPhoneNumber.setText(response.body().getWorkerPhoneNumber().isEmpty() ? "정보 없음" : response.body().getWorkerPhoneNumber());
                     }
                 } else {
 

@@ -15,6 +15,7 @@ import bluen.homein.gayo_security.activity.MainActivity;
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.preference.Gayo_Preferences;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.rest.Retrofit;
@@ -145,17 +146,49 @@ public class IntroActivity extends BaseActivity {
     }
 
     private boolean permissionCheck() {
-        // 필수 권한 체크 - 카메라
+        // 필수 권한 체크 - 카메라?? (내 얼굴은 안나와서 필요없을 지도)
 
         return true;
     }
+
+    private void getDeviceData() {
+        Retrofit.LoginApi loginApi = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
+
+        Call<RequestDataFormat.DeviceBody> call = loginApi.loadDeviceDataPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode,buildingCode)); // test
+
+        call.enqueue(new Callback<RequestDataFormat.DeviceBody>() {
+            @Override
+            public void onResponse(Call<RequestDataFormat.DeviceBody> call, Response<RequestDataFormat.DeviceBody> response) {
+                closeProgress();
+                if (response.body() != null) {
+                    if (response.body().getResult() == null) {
+                        Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(mContext, response.body());
+                        goToMain();
+
+                    } else {
+
+                    }
+                } else {
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RequestDataFormat.DeviceBody> call, Throwable t) {
+                closeProgress();
+
+            }
+        });
+    }
+
 
     private void doLogin() {
         showProgress();
 
         Retrofit.LoginApi loginInterface = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
 
-        Call<ResponseDataFormat.LoginData> call = loginInterface.getAuthInfo(new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode,macAddress,ipAddress)); // test
+        Call<ResponseDataFormat.LoginData> call = loginInterface.getAuthInfo(new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode, macAddress, ipAddress)); // test
         call.enqueue(new Callback<ResponseDataFormat.LoginData>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.LoginData> call, Response<ResponseDataFormat.LoginData> response) {
@@ -163,11 +196,12 @@ public class IntroActivity extends BaseActivity {
                 if (response.body() != null) {
                     if (response.body().getAuthorization() != null) {
                         mPrefGlobal.setAuthorization(response.body().getAuthorization());
-                        goToMain();
-                    }else {
+//                        goToMain();
+                        getDeviceData();
+                    } else {
 
                     }
-                }else {
+                } else {
 
                 }
             }

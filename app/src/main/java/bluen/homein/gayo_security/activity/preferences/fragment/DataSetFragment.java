@@ -6,6 +6,10 @@ import androidx.fragment.app.Fragment;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.base.BaseFragment;
+import bluen.homein.gayo_security.rest.RequestDataFormat;
+import bluen.homein.gayo_security.rest.ResponseDataFormat;
+import bluen.homein.gayo_security.rest.Retrofit;
+import retrofit2.Call;
 
 public class DataSetFragment extends BaseFragment {
     @Override
@@ -21,5 +25,9 @@ public class DataSetFragment extends BaseFragment {
     @Override
     protected void initFragmentView(View v) {
 
+
+
     }
+
+
 }

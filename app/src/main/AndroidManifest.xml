@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -41,7 +42,7 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:exported="true"/>
+            android:exported="true" />
 
         <activity
             android:name=".activity.workRecord.WorkRecordActivity"
@@ -57,20 +58,21 @@
 
         <activity
             android:name=".activity.addFacilityContact.AddContactActivity"
-            android:exported="true"/>
+            android:exported="true" />
 
         <activity
             android:name=".activity.call.CallActivity"
-            android:exported="true"/>
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.preferences.PreferencesActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".activity.changeWorker.ChangeWorkerActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".activity.visitHistory.VisitHistoryListActivity"
-            android:exported="true"/>
+            android:exported="true" />
 
 
         <activity
@@ -81,6 +83,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".service.WebSocketService"
+            android:exported="false" />
     </application>
 
 </manifest>

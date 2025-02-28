@@ -21,5 +21,8 @@ public class NetworkSetFragment extends BaseFragment {
     @Override
     protected void initFragmentView(View v) {
 
+
     }
+
+
 }
