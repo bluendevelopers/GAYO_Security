@@ -4,27 +4,42 @@ import static bluen.homein.gayo_security.activity.addFacilityContact.AddContactA
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.os.VibrationEffect;
 import android.util.Log;
-import android.widget.ImageView;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.florent37.androidslidr.Slidr;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
 import org.webrtc.Camera2Enumerator;
+import org.webrtc.CameraEnumerator;
+import org.webrtc.DataChannel;
+import org.webrtc.DefaultVideoDecoderFactory;
+import org.webrtc.DefaultVideoEncoderFactory;
 import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
+import org.webrtc.MediaStream;
+import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.RendererCommon;
+import org.webrtc.RtpReceiver;
+import org.webrtc.RtpTransceiver;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceTextureHelper;
@@ -39,6 +54,7 @@ import java.util.List;
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.addFacilityContact.AddContactActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
+import bluen.homein.gayo_security.dialog.PopupDialog;
 import bluen.homein.gayo_security.service.WebSocketService;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -59,6 +75,13 @@ public class CallActivity extends BaseActivity {
     @BindView(R.id.lay_button)
     ConstraintLayout layButton;
 
+    @BindView(R.id.tv_call_message)
+    TextView tvCallMessage;
+    @BindView(R.id.tv_facility_name)
+    TextView tvFacilityName;
+
+    @BindView(R.id.tv_facility_info)
+    TextView tvFacilityInfo;
     @BindView(R.id.tv_apt_dong_number)
     TextView tvDongNumber;
     @BindView(R.id.tv_apt_dong)
@@ -75,48 +98,179 @@ public class CallActivity extends BaseActivity {
     ConstraintLayout layCallReceptionSelect;
     @BindView(R.id.lay_dong_ho_info)
     ConstraintLayout layDongHoInfo;
+    @BindView(R.id.lay_call_time)
+    ConstraintLayout layCallTime;
+    @BindView(R.id.lay_hang_up_btn)
+    LinearLayout layHangUpBtn;
 
-    @OnClick(R.id.lay_volume_up)
-    void onVolumeUpClick() {
-        //code
+    // 통화 상태 상수
+    public static final int CALL_STATUS_IDLE = 0;
+    public static final int CALL_STATUS_INCOMING = 1;
+    public static final int CALL_STATUS_CONNECTING = 2;
+    public static final int CALL_STATUS_ACTIVE = 3;
 
-    }
+    // 현재 상태
+    private int callStatus = CALL_STATUS_IDLE;
 
-    @OnClick(R.id.lay_volume_down)
-    void onVolumeDownClick() {
-        //code
+    // 발신/수신 구분
+    // isSender = true  => “전화를 거는 기기”(발신자) => Answer 생성
+    // isSender = false => “전화를 받는 기기”(수신자) => Offer 생성
+    private boolean isSender = false;
 
-    }
+    // 기타
+    private String currentRoomId = "";
+    private String currentClientId = "";
+    private String receivedSdp = "";
+    private String senderSerialCode = "";
+    private String recipientSerialCode = "";
+    boolean isWithGayoApp = false;
 
-    @OnClick(R.id.lay_call_btn)
-    void onCallBtnClick() {
-        // 테스트용 더미 데이터입니다. invite gogogogo
-        String recipientSerialCode = "testserialCode6";
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "invite",
-                recipientSerialCode, // reSerialCode
-                serialCode, // sender
-                "100",              // code
-                "guard"              // device
-        );
-
-        String jsonString = body.toJson();  // Gson이 자동으로 { "method":"invite", ... } 생성
-        WebSocketService.sendWebSocketMessage(jsonString);
-    }
 
     // WebRTC 관련
+    private EglBase rootEglBase;
     private PeerConnectionFactory peerConnectionFactory;
     private PeerConnection peerConnection;
     private VideoTrack localVideoTrack;
     private AudioTrack localAudioTrack;
-    private EglBase rootEglBase;
 
     @BindView(R.id.remote_view)
     SurfaceViewRenderer remoteView;
+    // @BindView(R.id.local_view)
+    // SurfaceViewRenderer localView;  // 필요하다면 추가
+
+    // ------------------------------------------------------
+    // Activity LifeCycle
+    // ------------------------------------------------------
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_call;
+    }
+
+    @Override
+    protected void initActivity(Bundle savedInstanceState) {
+        TAG = "CallActivity";
+        popupDialog.onCallBack(new PopupDialog.DialogCallback() {
+            @Override
+            public void onFinish() {
+                onHangUpBtnClick();
+                finish();
+            }
+
+            @Override
+            public void onNextStep() {
+
+            }
+        });
+
+        // 1) OpenGL 초기화
+        rootEglBase = EglBase.create();
+
+        // 2) SurfaceViewRenderer 설정 (remoteView만 사용 예시)
+        remoteView.init(rootEglBase.getEglBaseContext(), null);
+        remoteView.setMirror(false);
+        remoteView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
+
+        // (선택) localView도 쓰려면 init
+        // localView.init(rootEglBase.getEglBaseContext(), null);
+        // localView.setMirror(true);
+        // localView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
+
+        // 3) PeerConnectionFactory 초기화 (코덱 팩토리 설정 포함 권장)
+        initPeerConnectionFactory();
+
+        if (getIntent() != null && getIntent().getStringExtra("jsonText") != null) {
+            String msg = getIntent().getStringExtra("jsonText");
+
+            try {
+                Log.d(TAG, msg);
+
+                handleIntent(msg);
+
+            } catch (JSONException e) {
+                Log.e(TAG, "JSON 파싱 오류: " + e.getMessage());
+            }
+        }
+    }
+
+    // ------------------------------------------------------
+    // PeerConnectionFactory 초기화
+    // ------------------------------------------------------
+    private void initPeerConnectionFactory() {
+        // 전역 WebRTC 초기화
+        PeerConnectionFactory.InitializationOptions initOptions =
+                PeerConnectionFactory.InitializationOptions.builder(this)
+                        .createInitializationOptions();
+        PeerConnectionFactory.initialize(initOptions);
+
+        // (HW 가속 코덱 지원)
+        DefaultVideoEncoderFactory encoderFactory = new DefaultVideoEncoderFactory(
+                rootEglBase.getEglBaseContext(), /* enableIntelVp8Encoder */ true, /* enableH264HighProfile */ true
+        );
+        DefaultVideoDecoderFactory decoderFactory = new DefaultVideoDecoderFactory(rootEglBase.getEglBaseContext());
+
+        // Factory 옵션
+        PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
+
+        // 최종 Factory 생성
+        peerConnectionFactory = PeerConnectionFactory.builder()
+                .setOptions(options)
+                .setVideoEncoderFactory(encoderFactory)
+                .setVideoDecoderFactory(decoderFactory)
+                .createPeerConnectionFactory();
+    }
+
+    // ------------------------------------------------------
+    // 통화 버튼 (예: 발신 측)
+    // ------------------------------------------------------
+    @OnClick(R.id.lay_call_btn)
+    void onCallBtnClick() {
+        // “전화를 걸기” → 발신자 역할
+        // 이 기기(isSender = true) → Answer를 생성해야 하는 기기
+        isSender = true;
+        callStatus = CALL_STATUS_INCOMING;
+
+        // 예: 서버에 'invite' 전송
+        recipientSerialCode = "testserialCode6";
+        senderSerialCode = serialCode;
+
+        // 임의로 roomId 생성
+        int roomId = (int) (Math.random() * 90000000) + 10000000;
+        currentRoomId = String.valueOf(roomId);
+
+        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                "invite",
+                recipientSerialCode, // 수신자
+                senderSerialCode     // 발신자
+        );
+        body.setRoomId(currentRoomId);
+
+        // 실제 전송
+        String jsonString = body.toJson();
+        WebSocketService.sendWebSocketMessage(jsonString);
+
+        // UI 갱신 등
+        changeViewCalling();
+    }
+
+    @OnClick(R.id.lay_hang_up_btn)
+    void onHangUpBtnClick() {
+
+        if (callStatus < 2) {
+            hangUpCall("bye");
+        } else {
+            hangUpCall("call-bye");
+        }
+
+    }
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
-        finish();
+        if (callStatus == CALL_STATUS_INCOMING || callStatus == CALL_STATUS_ACTIVE) {
+            showPopupDialog("현재 통화중인데 나가면 통화 종료됨.", "확 인");
+        } else {
+            finish();
+
+        }
     }
 
     @OnClick(R.id.lay_add_contact_btn)
@@ -131,51 +285,17 @@ public class CallActivity extends BaseActivity {
         super.onNewIntent(intent);
         // 여기서 새로 들어온 인텐트 데이터 처리
         // (예: 다시 한 번 "전화 요청" 데이터가 왔을 때 UI 갱신 등)
-        String method = intent.getStringExtra("jsonText");
-        switch (method) {
-            case "invite":
-                onInviteReceived();
-                break;
-            case "OK":
-                break;
-            case "invite-ack": //상대방이 통화 요청이 잘 보내진 것을 확인
 
-                break;
-            case "accept":
-                break;
-            case "accept-ack":
-                break;
-            case "offer":
-                break;
-            case "answer":
-                break;
-            case "candidate":
-                break;
-            case "invite-away":
-                break;
-            case "bye":
-                break;
-            case "call-bye":
-                break;
-            case "no-answer":
-                break;
+        if (intent != null && intent.getStringExtra("jsonText") != null) {
+            String msg = intent.getStringExtra("jsonText");
 
-            //** 가요 앱으로 부터
-            case "gayo-invite":
-                break;
-            case "gayo-invite-away":
-                break;
-            case "gayo-invite-ack":
-                break;
-            case "gayo-accept-ack":
-                break;
-            case "gayo-bye":
-                break;
-            case "gayo-call-bye":
-                break;
-            case "gayo-no-answer":
-                break;
+            try {
+                Log.d(TAG, msg);
+                handleIntent(msg);
 
+            } catch (JSONException e) {
+                Log.e(TAG, "JSON 파싱 오류: " + e.getMessage());
+            }
         }
     }
 
@@ -193,111 +313,313 @@ public class CallActivity extends BaseActivity {
         hideNavigationBar();
     }
 
-    @Override
-    protected int getLayoutResId() {
-        return R.layout.activity_call;
-    }
+    // ------------------------------------------------------
+    // WebSocket 메시지 수신/처리
+    // ------------------------------------------------------
+    private void handleIntent(String msg) throws JSONException {
+        JSONObject json = new JSONObject(msg);
+        String method = json.optString("method", "");
+        String sdp = json.optString("sdp", "");
+        String code = json.optString("code", "");
+        String message = json.optString("message", "");
+        String roomId = json.optString("roomId", "");
+        String seSerialCode = json.optString("seSerialCode", "");
+        String clientId = json.optString("clientId", "");
+        String id = json.optString("id", "");
+        int label = json.optInt("label", -1);
+        String candidate = json.optString("candidate", "");
 
-    @Override
-    protected void initActivity(Bundle savedInstanceState) {
-        hideNavigationBar();
-        initViews();
-        initPeerConnectionFactory();  // WebRTC 초기화
-        createLocalMediaTracks();     // 로컬 오디오 트랙 생성
-        createPeerConnection();       // PeerConnection 생성
+        if (!method.isEmpty()) {
+            switch (method) {
+                case "OK":
+                    if (!clientId.isEmpty()) {
+                        currentClientId = clientId;
+                    }
+                    break;
+                case "invite":
+                    onInviteReceived(roomId, clientId, seSerialCode);
+                    break;
 
-    }
+                case "accept":
+                    if (isSender) {
+                        sendAcceptAck();
+                    }
+                    break;
 
-    private void initViews() {
+                case "accept-ack":
+                    callStatus = CALL_STATUS_ACTIVE;
+                    if (!isSender) {
+                        startCallOffer();
+                    }
+                    break;
 
-        // 1) EglBase (OpenGL) 초기화
-        rootEglBase = EglBase.create();
+                case "offer":
+                    if (!sdp.isEmpty()) {
+                        receivedSdp = sdp;
+                    }
+                    createLocalMediaTracks();
+                    createPeerConnection();
+                    createAnswer(); // (발신자)
+                    break;
 
-//        localView.init(rootEglBase.getEglBaseContext(), null);
-//        localView.setMirror(true);
-//        localView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
+                case "answer":
+                    // “수신자”가 만든 answer를 이 쪽(수신자= false)이 아니라
+                    // 원래는 caller가 answer를 만드는 게 일반적이지만
+                    // 여기서는 반대 구조이므로, offer 만든 기기가 answer를 수신
+                    if (!sdp.isEmpty()) {
+                        // 이 기기는 “offer를 보낸 기기” → “answer를 받아 setRemoteDescription”
+                        applyRemoteAnswer(sdp);
+                    }
+                    break;
 
-        remoteView.init(rootEglBase.getEglBaseContext(), null);
-        remoteView.setMirror(false);
-        remoteView.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FIT);
-    }
+                case "candidate":
+                    onRemoteIceCandidateReceived(id, label, candidate);
+                    break;
+                case "invite-away":  // 상대방이 받지 않음....(부재중)
+                case "no-answer":
+                case "call-bye":
+                case "invite-calling":
+                    isHangUpThePhone(method);
+                    break;
+                case "bye": // 통화걸었다가 바로 끊음
+                    break;
+                //** 가요 앱으로 부터
+                case "gayo-invite":
+                    break;
+                case "gayo-invite-away":
+                    break;
+                case "gayo-invite-ack":
+                    break;
+                case "gayo-accept-ack":
+                    break;
+                case "gayo-bye":
+                    break;
+                case "gayo-call-bye":
+                    break;
+                case "gayo-no-answer":
+                    break;
 
-    private void initPeerConnectionFactory() {
-        // 전역 초기화
-        PeerConnectionFactory.InitializationOptions initializationOptions =
-                PeerConnectionFactory.InitializationOptions.builder(this)
-                        .createInitializationOptions();
-        PeerConnectionFactory.initialize(initializationOptions);
-
-        // 옵션 설정
-        PeerConnectionFactory.Options options = new PeerConnectionFactory.Options();
-        // HW 가속 사용을 위한 encoder/decoder factory 등
-        peerConnectionFactory = PeerConnectionFactory.builder()
-                .setOptions(options)
-                .createPeerConnectionFactory();
-    }
-
-    private void createLocalMediaTracks() {
-        // 1) Audio
-        MediaConstraints audioConstraints = new MediaConstraints();
-        AudioSource audioSource = peerConnectionFactory.createAudioSource(audioConstraints);
-        localAudioTrack = peerConnectionFactory.createAudioTrack("AUDIO_TRACK_ID", audioSource);
-
-        // 2) Video
-//        VideoCapturer videoCapturer = createCameraCapturer();
-//        if (videoCapturer == null) {
-//            Log.d(TAG, "Failed to create VideoCapturer.");
-//            return;
-//        }
-//
-//        MediaConstraints videoConstraints = new MediaConstraints();
-//        VideoSource videoSource = peerConnectionFactory.createVideoSource(false);
-//        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
-//        videoCapturer.initialize(surfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
-
-        // 원하는 해상도/프레임
-//        try {
-//            videoCapturer.startCapture(640, 480, 30);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-        // 로컬은 영상은 아직 넣을 생각 없음.
-//        localVideoTrack = peerConnectionFactory.createVideoTrack("VIDEO_TRACK_ID", videoSource);
-//        // 로컬 프리뷰에 표시
-//        localVideoTrack.addSink(localView);
-    }
-
-    private VideoCapturer createCameraCapturer() {
-        // Camera2Enumerator 사용 가능 여부 체크
-        Camera2Enumerator enumerator = new Camera2Enumerator(this);
-        final String[] deviceNames = enumerator.getDeviceNames();
-
-        for (String deviceName : deviceNames) {
-            if (enumerator.isFrontFacing(deviceName)) {
-                return enumerator.createCapturer(deviceName, null);
             }
+        } else if (!code.equals("100")) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT);
         }
-        // 혹은 후면 카메라
-        for (String deviceName : deviceNames) {
-            if (!enumerator.isFrontFacing(deviceName)) {
-                return enumerator.createCapturer(deviceName, null);
-            }
-        }
-        return null;
     }
 
-    private void createPeerConnection() {
-        // ICE 서버 설정 (예: 구글 STUN 서버)
-        List<PeerConnection.IceServer> iceServers = new ArrayList<>();
-        iceServers.add(
-                PeerConnection.IceServer.builder("stun:stun.l.google.com:19302")
-                        .createIceServer()
+    private void sendAcceptAck() {
+        callStatus = CALL_STATUS_CONNECTING;
+        WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
+                "accept-ack",
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
         );
+
+        String jsonString = webSocketBody.toJson();
+        WebSocketService.sendWebSocketMessage(jsonString);
+    }
+
+    // ------------------------------------------------------
+    // 수신자가 초대(invite) 받았을 때 → Offer 생성 플로우
+    // ------------------------------------------------------
+    private void onInviteReceived(String roomId, String clientId, String seSerialCode) {
+        // 이 기기 = 수신자(Offer 만드는 쪽)
+        callStatus = CALL_STATUS_INCOMING;
+        currentRoomId = roomId;
+        currentClientId = clientId;
+        senderSerialCode = seSerialCode;
+        recipientSerialCode = serialCode;
+
+        // UI 갱신
+        changeViewCalling();
+        startRingMyBell();
+
+        // 서버에 “invite-ack” 보내는 예시
+        WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
+                "invite-ack",
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
+        );
+        WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
+
+        // 여기서 사용자가 “수락”을 누르면(예: onConnectCallBtnClick),
+        // createLocalMediaTracks → createPeerConnection → startCallOffer() 실행
+    }
+
+    private void startRingMyBell() {
+
+    }
+
+    @OnClick(R.id.tv_connect_call_btn)
+    void onConnectCallBtnClick() {
+        // 수신자가 실제로 “수락” 버튼을 누른 상황
+        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                "accept",
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
+        );
+        WebSocketService.sendWebSocketMessage(body.toJson());
+
+        // local 오디오/비디오 트랙 생성
+        createLocalMediaTracks();
+        // peerConnection 생성
+        createPeerConnection();
+
+        // **이제 수신자 입장에서 Offer 생성**
+        startCallOffer(); // (수신자)
+        callStatus = CALL_STATUS_CONNECTING;
+    }
+
+    // ------------------------------------------------------
+    // 수신자 쪽에서 Offer 생성
+    // ------------------------------------------------------
+    public void startCallOffer() {
+        // Offer 생성 - (수신자)
+        MediaConstraints sdpMediaConstraints = new MediaConstraints();
+        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+
+        peerConnection.createOffer(new SdpObserver() {
+            @Override
+            public void onCreateSuccess(SessionDescription sessionDescription) {
+                // 로컬 SDP 설정
+                peerConnection.setLocalDescription(new SimpleSdpObserver() {
+                    @Override
+                    public void onSetSuccess() {
+                        Log.d(TAG, "Local Offer set 성공");
+                    }
+                }, sessionDescription);
+
+                // 이 Offer를 서버로 전송
+                String offerSdp = sessionDescription.description;
+                WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
+                        "offer",
+                        recipientSerialCode,
+                        senderSerialCode,
+                        currentRoomId,
+                        currentClientId,
+                        buildingCode, "", "", // 필요 파라미터
+                        offerSdp
+                );
+                WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
+
+                runOnUiThread(() -> changeViewCallingStart());
+            }
+
+            @Override
+            public void onCreateFailure(String s) {
+            }
+
+            @Override
+            public void onSetSuccess() {
+            }
+
+            @Override
+            public void onSetFailure(String s) {
+            }
+        }, sdpMediaConstraints);
+    }
+
+    // ------------------------------------------------------
+    // 발신자 쪽에서 Answer 생성
+    // ------------------------------------------------------
+    public void createAnswer() {
+        // Answer 생성 - (발신자)
+        SessionDescription remoteOffer = new SessionDescription(SessionDescription.Type.OFFER, receivedSdp);
+        peerConnection.setRemoteDescription(new SimpleSdpObserver() {
+            @Override
+            public void onSetSuccess() {
+                // 이제 로컬에서 answer 생성
+                doCreateLocalAnswer();
+            }
+
+            @Override
+            public void onSetFailure(String s) {
+                Log.e(TAG, "setRemoteDescription 실패: " + s);
+            }
+        }, remoteOffer);
+    }
+
+    private void doCreateLocalAnswer() {
+        MediaConstraints sdpMediaConstraints = new MediaConstraints();
+        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true"));
+        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true"));
+
+        peerConnection.createAnswer(new SdpObserver() {
+            @Override
+            public void onCreateSuccess(SessionDescription sessionDescription) {
+                // 로컬 SDP 설정
+                peerConnection.setLocalDescription(new SimpleSdpObserver() {
+                    @Override
+                    public void onSetSuccess() {
+                        Log.d(TAG, "Local Answer set 성공");
+                    }
+                }, sessionDescription);
+
+                // 서버로 전송
+                String answerSdp = sessionDescription.description;
+                WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                        "answer",
+                        recipientSerialCode,
+                        senderSerialCode,
+                        currentRoomId,
+                        currentClientId,
+                        buildingCode, "", "", // 필요 파라미터
+                        answerSdp
+                );
+                WebSocketService.sendWebSocketMessage(body.toJson());
+
+                runOnUiThread(() -> changeViewCallingStart());
+            }
+
+            @Override
+            public void onCreateFailure(String error) {
+                Log.e(TAG, "Answer 생성 실패: " + error);
+            }
+
+            @Override
+            public void onSetSuccess() {
+            }
+
+            @Override
+            public void onSetFailure(String error) {
+            }
+        }, sdpMediaConstraints);
+    }
+
+    // ------------------------------------------------------
+    // “offer”를 보낸 쪽(수신자)이 “answer”를 받았을 때 적용
+    // ------------------------------------------------------
+    private void applyRemoteAnswer(String answerSdp) {
+        SessionDescription remoteAnswer = new SessionDescription(SessionDescription.Type.ANSWER, answerSdp);
+        peerConnection.setRemoteDescription(new SimpleSdpObserver() {
+            @Override
+            public void onSetSuccess() {
+                Log.d(TAG, "Remote Answer set 성공");
+                // 이제 서로 영상/오디오 교환 가능
+            }
+
+            @Override
+            public void onSetFailure(String s) {
+                Log.e(TAG, "Remote Answer set 실패: " + s);
+            }
+        }, remoteAnswer);
+    }
+
+    // ------------------------------------------------------
+    // PeerConnection 생성 & 로컬 트랙 추가
+    // ------------------------------------------------------
+    private void createPeerConnection() {
+        // ICE 서버
+        List<PeerConnection.IceServer> iceServers = new ArrayList<>();
+        iceServers.add(PeerConnection.IceServer.builder("stun:stun.l.google.com:19302").createIceServer());
 
         PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
         rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
-        // 필요 시 설정 추가 (tcpCandidatePolicy, bundlePolicy 등)
 
         peerConnection = peerConnectionFactory.createPeerConnection(rtcConfig, new PeerConnection.Observer() {
             @Override
@@ -318,9 +640,18 @@ public class CallActivity extends BaseActivity {
 
             @Override
             public void onIceCandidate(IceCandidate candidate) {
-                // --> 시그널 서버에 candidate 전송
-                // (candidate.sdpMid, candidate.sdpMLineIndex, candidate.sdp)
-
+                // 서버 전송
+                WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                        "candidate",
+                        recipientSerialCode,
+                        senderSerialCode,
+                        currentRoomId,
+                        currentClientId,
+                        candidate.sdpMLineIndex,
+                        candidate.sdpMid,
+                        candidate.sdp
+                );
+                WebSocketService.sendWebSocketMessage(body.toJson());
             }
 
             @Override
@@ -328,295 +659,204 @@ public class CallActivity extends BaseActivity {
             }
 
             @Override
-            public void onAddStream(org.webrtc.MediaStream mediaStream) {
+            public void onAddStream(MediaStream mediaStream) {
             }
 
             @Override
-            public void onRemoveStream(org.webrtc.MediaStream mediaStream) {
+            public void onRemoveStream(MediaStream mediaStream) {
+
             }
+            // Unified Plan에서는 onAddStream 대신 onTrack 콜백을 쓰는 경우가 많음.
 
             @Override
-            public void onDataChannel(org.webrtc.DataChannel dataChannel) {
+            public void onDataChannel(DataChannel dataChannel) {
             }
 
             @Override
             public void onRenegotiationNeeded() {
             }
 
+            // Unified Plan에서는 onTrack이 중요
             @Override
-            public void onAddTrack(org.webrtc.RtpReceiver rtpReceiver, org.webrtc.MediaStream[] mediaStreams) {
-                // Unified Plan일 경우 onAddTrack()이 들어옵니다.
-                // remoteTrack일 경우 -> remoteView에 붙이기
-                if (rtpReceiver.track() instanceof VideoTrack) {
-                    final VideoTrack remoteVideoTrack = (VideoTrack) rtpReceiver.track();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            remoteVideoTrack.addSink(remoteView);
-                        }
+            public void onTrack(RtpTransceiver transceiver) {
+                // 원격 트랙을 받았을 때 → remoteView에 붙이기
+                if (transceiver.getReceiver().track() instanceof VideoTrack) {
+                    VideoTrack remoteVideoTrack = (VideoTrack) transceiver.getReceiver().track();
+                    runOnUiThread(() -> {
+                        remoteVideoTrack.addSink(remoteView);
                     });
+                }
+                if (transceiver.getReceiver().track() instanceof AudioTrack) {
+                    // 필요 시 오디오 처리
                 }
             }
         });
 
-        // 오디오, 비디오 트랙 추가
-        // Unified Plan 기준으로 addTransceiver()를 쓰는 방법도 있음
-        peerConnection.addTrack(localAudioTrack);
-//        peerConnection.addTrack(localVideoTrack);
-    }
-
-
-    //** view Change
-
-    //전화 거는 중...
-    private void changeViewCalling() {
-
-    }
-
-    //전화 연결 완료...
-    private void changeViewCallingStart() {
-    }
-
-    //전화 통화 종료...
-    private void changeViewIdle() {
-    }
-
-    private void onInviteReceived() {
-        // 1) UI: 전화가 걸려오는 화면 보여주기
-        changeViewCalling();
-
-        // 2) Server로 invite-ack 보내기
-//        WebSocketService.WebSocketBody ackBody = new WebSocketService.WebSocketBody(
-//                "invite-ack",
-//                fromSerialCode,      // 보내 준 쪽 = A
-//                mySerialCode,        // 지금 이 단말 = B
-//                "someDataOrNull",
-//                "guard"
-//        );
-//        WebSocketService.sendWebSocketMessage(ackBody.toJson());
-    }
-
-    //--------------------------------------------------------------------------
-    // 시그널 서버에서 사용하는 Offer / Answer / ICE Candidate 교환
-    //--------------------------------------------------------------------------
-
-    /**
-     * Offer 생성 - (발신자)
-     **/
-    public void startCallOffer() {
-        MediaConstraints sdpMediaConstraints = new MediaConstraints();
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true")
+        // (1) 오디오 트랜시버
+        RtpTransceiver audioTransceiver = peerConnection.addTransceiver(
+                MediaStreamTrack.MediaType.MEDIA_TYPE_AUDIO,
+                new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
         );
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true")
+        if (localAudioTrack != null) {
+            audioTransceiver.getSender().setTrack(localAudioTrack, false);
+        }
+
+        // (2) 비디오 트랜시버
+        RtpTransceiver videoTransceiver = peerConnection.addTransceiver(
+                MediaStreamTrack.MediaType.MEDIA_TYPE_VIDEO,
+                new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
         );
-
-        peerConnection.createOffer(new SdpObserver() {
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                // 1) LocalDescription 설정
-                peerConnection.setLocalDescription(new SdpObserver() {
-                    @Override
-                    public void onCreateSuccess(SessionDescription sdp) {
-                    }
-
-                    @Override
-                    public void onSetSuccess() {
-                        // 2) 시그널 서버에 이 SDP를 전송 -> "invite" 메시지
-                        // sessionDescription.type = Type.OFFER
-                        // sessionDescription.description = SDP
-
-                        // 2) 시그널 서버에 "invite" 메시지로 Offer SDP 전송
-                        //    (서버 프로토콜에 맞춰서 key: "sdp", "type", etc.)
-
-                        String offerSdp = sessionDescription.description;  // 실제 SDP 문자열
-                        String recipientSerialCode = "testserialCode6";
-                        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                                "invite",
-                                recipientSerialCode, // seSerialCode
-                                serialCode, // sender
-                                "100",              // code
-                                "guard"              // device
-                        );
-                        // 추가로 SDP, type 등을 넣어야 하는 경우:
-                        body.setSdp(offerSdp);
-
-                        String jsonString = body.toJson();
-                        WebSocketService.sendWebSocketMessage(jsonString);
-
-                        // 3) UI를 "호출 중(Ringing)" 상태로 변경
-                        changeViewCalling();
-                    }
-
-                    @Override
-                    public void onCreateFailure(String s) {
-                    }
-
-                    @Override
-                    public void onSetFailure(String s) {
-                    }
-                }, sessionDescription);
-            }
-
-            @Override
-            public void onSetSuccess() {
-
-            }
-
-            @Override
-            public void onCreateFailure(String s) {
-
-            }
-
-            @Override
-            public void onSetFailure(String s) {
-
-            }
-        }, sdpMediaConstraints);
+        if (localVideoTrack != null) {
+            videoTransceiver.getSender().setTrack(localVideoTrack, false);
+        }
     }
 
+    // ------------------------------------------------------
+    // 로컬 오디오/비디오 트랙 생성
+    // ------------------------------------------------------
+    private void createLocalMediaTracks() {
+        // 오디오
+        AudioSource audioSource = peerConnectionFactory.createAudioSource(new MediaConstraints());
+        localAudioTrack = peerConnectionFactory.createAudioTrack("AUDIO_TRACK_ID", audioSource);
 
-    /**
-     * Answer 생성 - (수신자)
-     **/
-    public void createAnswer() {
-        MediaConstraints sdpMediaConstraints = new MediaConstraints();
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveAudio", "true")
-        );
-        sdpMediaConstraints.mandatory.add(
-                new MediaConstraints.KeyValuePair("OfferToReceiveVideo", "true")
-        );
+        // 비디오
+        VideoCapturer videoCapturer = createCameraCapturer();
+        VideoSource videoSource = peerConnectionFactory.createVideoSource(false);
 
-        peerConnection.createAnswer(new SdpObserver() {
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-                peerConnection.setLocalDescription(new SdpObserver() {
-                    @Override
-                    public void onSetSuccess() {
-                        // 시그널 서버에 answer SDP 보냄
-                        // 2) "answer" 메시지 + SDP를 서버로 전송
-                        String answerSdp = sessionDescription.description;
-                        String sender = "rtc:B@gayo-smarthome...";
-                        String receiver = "rtc:A@gayo-smarthome...";
+        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+        videoCapturer.initialize(surfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
+        try {
+            videoCapturer.startCapture(640, 480, 30);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        localVideoTrack = peerConnectionFactory.createVideoTrack("VIDEO_TRACK_ID", videoSource);
 
-                        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                                "answer",
-                                "testSerialA",
-                                sender,
-                                "100",
-                                "guard"
-                        );
-                        body.setSdp(answerSdp);
-
-                        String jsonString = body.toJson();
-                        WebSocketService.sendWebSocketMessage(jsonString);
-
-                        // 3) B 화면: “통화 연결됨(CallingStart)” UI
-                        changeViewCallingStart();
-                    }
-
-                    @Override
-                    public void onSetFailure(String s) {
-                    }
-
-                    @Override
-                    public void onCreateSuccess(SessionDescription sdp) {
-                    }
-
-                    @Override
-                    public void onCreateFailure(String s) {
-                    }
-                }, sessionDescription);
-            }
-
-            @Override
-            public void onSetSuccess() {
-
-            }
-
-            @Override
-            public void onCreateFailure(String s) {
-
-            }
-
-            @Override
-            public void onSetFailure(String s) {
-
-            }
-        }, sdpMediaConstraints);
+        // 필요하다면 localView에 자신의 영상 표시
+        // localVideoTrack.addSink(localView);
     }
 
-    /**
-     * 시그널 서버에서 받은 remoteOffer/remoteAnswer 를 적용
-     **/
+    private VideoCapturer createCameraCapturer() {
+        // Camera2Enumerator 예시
+        Camera2Enumerator enumerator = new Camera2Enumerator(this);
+        final String[] deviceNames = enumerator.getDeviceNames();
+        for (String deviceName : deviceNames) {
+            if (enumerator.isFrontFacing(deviceName)) {
+                return enumerator.createCapturer(deviceName, null);
+            }
+        }
+        // 후면 찾기
+        for (String deviceName : deviceNames) {
+            if (!enumerator.isFrontFacing(deviceName)) {
+                return enumerator.createCapturer(deviceName, null);
+            }
+        }
+        return null;
+    }
 
-    public void hangUpCall() {
-        // 1) 시그널 서버에 "bye" 보냄
+    // ------------------------------------------------------
+    // 통화 종료
+    // ------------------------------------------------------
+    public void hangUpCall(String method) {
+        // 시그널 서버에 통화 종료 알림
         WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "bye",
-                "testSerialB",
-                "rtc:A@gayo-smarthome-...",
-                "100",
-                "guard"
+                method,
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
         );
-        // 필요시 roomId, 또는 다른 정보도 포함
         WebSocketService.sendWebSocketMessage(body.toJson());
 
-        // 2) WebRTC PeerConnection 종료
+        // PeerConnection 종료
         if (peerConnection != null) {
             peerConnection.close();
             peerConnection = null;
         }
-        // 3) UI → 통화 종료 상태
-        changeViewIdle();
+        // UI 갱신 등
+        isHangUpThePhone(method);
+    }
+
+    // ------------------------------------------------------
+    // 콜백/헬퍼
+    // ------------------------------------------------------
+    private void changeViewCalling() {
+        layCallView.setVisibility(View.VISIBLE);
+
+        if (isSender) {
+            layCallBtn.setVisibility(View.INVISIBLE);
+            layHangUpBtn.setVisibility(View.VISIBLE);
+            tvCallMessage.setText("으로 통화를 걸고 있습니다.");
+        } else {
+            layCallReceptionSelect.setVisibility(View.VISIBLE);
+            layButton.setAlpha(0.3F);
+            tvCallMessage.setText("으로 부터 통화가 왔습니다.");
+        }
+    }
+
+    //전화 연결 완료...
+    private void changeViewCallingStart() {
+        remoteView.setVisibility(View.VISIBLE);
+        layCallTime.setVisibility(View.VISIBLE);
+        layCallReceptionSelect.setVisibility(View.GONE);
+
+//TODO 여기 세대호출인지 관리실 통화인지에 따라 tvFacilityInfo or lay_dong_ho_info 중 setVisibility(View.VISIBLE);
+        tvFacilityInfo.setVisibility(View.VISIBLE);
+        //** 현재 통화중인 세대 ? 또는 시설 명 보이게 끔하기 오른쪽뷰에
+
     }
 
 
-    public void onRemoteSessionReceived(String type, String sdp) {
-        // type = "offer" or "answer"
-        SessionDescription remoteDescription = new SessionDescription(
-                SessionDescription.Type.fromCanonicalForm(type),
-                sdp
-        );
+    private void isHangUpThePhone(String method) {
+        // 통화 상태 정리
+        callStatus = CALL_STATUS_IDLE;
+        isSender = false;
+        currentRoomId = "";
+        currentClientId = "";
+        senderSerialCode = "";
+        recipientSerialCode = "";
 
-        peerConnection.setRemoteDescription(new SdpObserver() {
-            @Override
-            public void onSetSuccess() {
-                // 만약 remoteOffer 였으면 -> createAnswer() 호출해서 보냄
-                // 만약 remoteAnswer 였으면 -> 연결 진행
-                // 예: remote가 "answer"면 통화 연결
-                if ("answer".equals(type)) {
-                    changeViewCallingStart();
-                }
-            }
-
-            @Override
-            public void onSetFailure(String s) {
-            }
-
-            @Override
-            public void onCreateSuccess(SessionDescription sessionDescription) {
-            }
-
-            @Override
-            public void onCreateFailure(String s) {
-            }
-        }, remoteDescription);
+        // UI 복원 등
+        changeViewIdle(method);
     }
 
-    /**
-     * 시그널 서버에서 수신한 ICE Candidate 적용
-     **/
-    public void onRemoteIceCandidateReceived(String sdpMid, int sdpMLineIndex, String candidate) {
-        IceCandidate iceCandidate = new IceCandidate(sdpMid, sdpMLineIndex, candidate);
-        peerConnection.addIceCandidate(iceCandidate);
+    private void changeViewIdle(String method) {
+        // 통화 종료 UI
+
+        remoteView.setVisibility(View.GONE);
+        switch (method) {
+            case "invite-away":
+            case "no-answer":
+            case "invite-norespone":
+                tvCallMessage.setText("과(와) 연결이 되지 않습니다.");
+                break;
+            case "invite-calling":
+                tvCallMessage.setText("이(가) 통화중 입니다.");
+                break;
+
+            case "call-bye":
+                tvCallMessage.setText("과(와) 통화가 종료 되었습니다.");
+                break;
+            default:
+                changeViewReset(); //부재중 ("bye")
+                break;
+
+        }
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
+
     }
 
-    //--------------------------------------------------------------------------
-    // Activity 종료시 정리
-    //--------------------------------------------------------------------------
+    private void changeViewReset() {
+        layCallBtn.setVisibility(View.VISIBLE);
+        remoteView.setVisibility(View.GONE);
+        layCallView.setVisibility(View.GONE);
+        layCallTime.setVisibility(View.GONE);
+        layHangUpBtn.setVisibility(View.GONE);
+        layCallReceptionSelect.setVisibility(View.GONE);
+        layButton.setAlpha(1);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -624,18 +864,41 @@ public class CallActivity extends BaseActivity {
             peerConnection.close();
             peerConnection = null;
         }
-//        if (localView != null) {
-//            localView.release();
-//        }
-        if (remoteView != null) {
-            remoteView.release();
-        }
         if (peerConnectionFactory != null) {
             peerConnectionFactory.dispose();
             peerConnectionFactory = null;
         }
         if (rootEglBase != null) {
             rootEglBase.release();
+        }
+    }
+
+    // ------------------------------------------------------
+    //  시그널 서버에서 수신한 ICE Candidate 적용
+    // ------------------------------------------------------
+    public void onRemoteIceCandidateReceived(String sdpMid, int sdpMLineIndex, String candidate) {
+        IceCandidate iceCandidate = new IceCandidate(sdpMid, sdpMLineIndex, candidate);
+        peerConnection.addIceCandidate(iceCandidate);
+    }
+
+    // ------------------------------------------------------
+    // 간단한 SdpObserver 구현 예시
+    // ------------------------------------------------------
+    private static class SimpleSdpObserver implements SdpObserver {
+        @Override
+        public void onCreateSuccess(SessionDescription sessionDescription) {
+        }
+
+        @Override
+        public void onSetSuccess() {
+        }
+
+        @Override
+        public void onCreateFailure(String s) {
+        }
+
+        @Override
+        public void onSetFailure(String s) {
         }
     }
 }

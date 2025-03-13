@@ -41,11 +41,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     public PopupDialog popupDialog;
     public String buildingCode = "0004";
 
-//    public String serialCode = "testserialcode1";
+//        public String serialCode = "testserialCode1"; //발신하는 기기
+    public String serialCode = "testserialCode6"; //수신
+//    되는 기기
     public String macAddress = "00-00-00-00"; //더미
     public String ipAddress = "192.168.0.102"; //더미
-
-    public String serialCode = "testserialCode6";
 
     protected abstract int getLayoutResId();
 

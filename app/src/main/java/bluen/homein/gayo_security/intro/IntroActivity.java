@@ -1,10 +1,13 @@
 package bluen.homein.gayo_security.intro;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,6 +17,8 @@ import java.io.InputStreamReader;
 import bluen.homein.gayo_security.activity.MainActivity;
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.base.BaseActivity;
+import bluen.homein.gayo_security.helper.PermissionsHelper;
+import bluen.homein.gayo_security.permission.PermissionInfo;
 import bluen.homein.gayo_security.preference.Gayo_Preferences;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -27,6 +32,8 @@ public class IntroActivity extends BaseActivity {
 
     private Intent intent;
     private static final int REQUEST_CODE_PERMISSION_CLEAR = 10;
+    private static final int PERMISSION_REQUEST_CODE_CAMERA = 4;
+    private boolean mPermissionIsDenied;
 
     @Override
     protected int getLayoutResId() {
@@ -66,33 +73,13 @@ public class IntroActivity extends BaseActivity {
         rootingCheck();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_CODE_PERMISSION_CLEAR) {
-            if (permissionCheck()) {
-                doLogin();
-//                goToMain();
-            } else {
-                mIsFinish = true;
-//                showPopupDialog(getString(R.string.permission_denied_2), getString(R.string.close), getString(R.string.confirm));
-            }
-        }
-    }
-
     private void rootingCheck() {
         if (getRootingDevice()) {
             mIsFinish = true;
 //                showPopupDialog(getString(R.string.rooting_error), false);
         } else {
-            if (!permissionCheck()) {
-//                        Intent intent = new Intent(IntroActivity.this, IntroPermissionGuideActivity.class);
-//                        intent.putExtra("gps_permission", PermissionInfo.GPS_PERMISSION);
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                            intent.putExtra("gps_bg_permission", PermissionInfo.GPS_BACKGROUND_PERMISSION);
-//                        }
-//                        startActivityForResult(intent, REQUEST_CODE_PERMISSION_CLEAR);
+            if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.CAMERA_PERMISSION)) {
+                requestPermissions(PermissionInfo.CAMERA_PERMISSION, PERMISSION_REQUEST_CODE_CAMERA);
             } else {
                 doLogin();
 
@@ -145,11 +132,6 @@ public class IntroActivity extends BaseActivity {
         return result;
     }
 
-    private boolean permissionCheck() {
-        // 필수 권한 체크 - 카메라?? (내 얼굴은 안나와서 필요없을 지도)
-
-        return true;
-    }
 
     private void getDeviceData() {
         Retrofit.LoginApi loginApi = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
@@ -214,7 +196,50 @@ public class IntroActivity extends BaseActivity {
         });
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if (requestCode == PERMISSION_REQUEST_CODE_CAMERA) {
+            boolean isGrantResult = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    isGrantResult = false;
+                    break;
+                }
+            }
+            if (isGrantResult) {
+                if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.CAMERA_PERMISSION)) {
+                    requestPermissions(PermissionInfo.CAMERA_PERMISSION, PERMISSION_REQUEST_CODE_CAMERA);
+                } else {
+                    doLogin();
+                }
+            } else {
+                boolean isCameraPermissionDenied = false;
+                for (String permission : permissions) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        isCameraPermissionDenied = true;
+                        break;
+                    }
+                }
+                continuouslyDenied(isCameraPermissionDenied, permissions);
+            }
+        }
+    }
+
+    private void continuouslyDenied(boolean isDenied, String[] permissions) {
+        if (!isDenied) {
+            mIsFinish = false;
+            mPermissionIsDenied = true;
+            showPopupDialog("권한 페이지로 이동하여\n카메라 권한을 허용해 주세요.","확 인");
+        } else {
+            mPermissionIsDenied = false;
+            if (!PermissionsHelper.isPermissionGranted(this, permissions)) {
+                mIsFinish = true;
+                showPopupDialog("카메라 권한을 허용해주세요","확 인");
+            }
+        }
+    }
     private void goToMain() {
         Log.e(TAG, "goToMain");
 

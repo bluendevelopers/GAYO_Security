@@ -7,13 +7,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +40,7 @@ public class WebSocketService extends Service {
     private OkHttpClient client;
     private String auth = "";
     private static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";
+    private RequestDataFormat.DeviceBody deviceBody;
 
     @Nullable
     @Override
@@ -56,12 +60,13 @@ public class WebSocketService extends Service {
         if (intent != null) {
             Log.d(TAG, "onStartCommand: startWebSocketConnection");
 
-            RequestDataFormat.DeviceBody deviceBody =
+            RequestDataFormat.DeviceBody _deviceBody =
                     (RequestDataFormat.DeviceBody) intent.getSerializableExtra("deviceBody");
+            deviceBody = _deviceBody;
             auth = intent.getStringExtra("authorization");
 
             if (!auth.isEmpty()) {
-                startWebSocketConnection(deviceBody);
+                startWebSocketConnection(_deviceBody);
             }
         }
         return START_STICKY;
@@ -103,7 +108,7 @@ public class WebSocketService extends Service {
             public void onMessage(WebSocket webSocket, String text) {
                 super.onMessage(webSocket, text);
                 // 수신부!!!!!
-                Log.d(TAG, "onMessage: " + text);
+                Log.d(TAG, "onMessage: " + text); //
 
                 try {
                     handleServerMessage(text);
@@ -123,6 +128,8 @@ public class WebSocketService extends Service {
             public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 Log.e(TAG, "onFailure: " + t.getMessage());
+                // 연결이 실패하면 일정 시간 후 재연결 시도
+                reconnectWebSocketWithDelay();
             }
 
             @Override
@@ -133,6 +140,14 @@ public class WebSocketService extends Service {
         });
 
         // 참고: client가 종료되지 않도록, onDestroy()에서 종료 처리
+    }
+
+    // 재연결 로직 메서드 추가
+    private void reconnectWebSocketWithDelay() {
+        Log.d(TAG, "WebSocket disconnected, trying to reconnect in 5 seconds...");
+
+        new Handler(Looper.getMainLooper())
+                .postDelayed(() -> startWebSocketConnection(deviceBody), 5000);
     }
 
     private void handleServerMessage(String jsonText) throws JSONException {
@@ -153,8 +168,6 @@ public class WebSocketService extends Service {
             return;
         }
 
-        JSONObject obj = new JSONObject(jsonText);
-        String method = obj.optString("method", "");
         // 2) 앱이 포그라운드인지 백그라운드인지 판단
         if (isAppInForeground(getApplicationContext())) {
             // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
@@ -226,42 +239,109 @@ public class WebSocketService extends Service {
      */
     public static void sendWebSocketMessage(String message) {
         if (webSocket != null) {
+            Log.d("WebSocketService", "웹소켓 전송 직전 JSON: " + message);
             webSocket.send(message);
         }
     }
 
     public static class WebSocketBody implements Serializable {
 
+        @SerializedName("method")
         private String method;
+        @SerializedName("reSerialCode")
         private String reSerialCode;
+        @SerializedName("seSerialCode")
         private String seSerialCode;
-        private String sender;
+        @SerializedName("sender")
+        private final String sender;
+        @SerializedName("receiver")
         private String receiver;
-        private String code;
-        private String device;
-        private int roomId;
+        @SerializedName("code")
+        private String code = "100";
+        @SerializedName("device")
+        private String device = "guard";
+        @SerializedName("roomId")
+        private String roomId;
+        @SerializedName("clientId")
         private String clientId;
+        @SerializedName("title")
         private String title;
+        @SerializedName("builCode")
         private String builCode;
+        @SerializedName("builDong")
         private String builDong;
+        @SerializedName("builHo")
         private String builHo;
+        @SerializedName("candidate")
         private String candidate;
+        @SerializedName("content")
         private String content;
+        @SerializedName("sdp")
         private String sdp;
+        @SerializedName("message")
         private String message;
+        @SerializedName("id")
+        private String id;
+        @SerializedName("label")
+        private int label;
 
+        public String getId() {
+            return id;
+        }
+
+        public int getLabel() {
+            return label;
+        }
 
         // 1) 기본 생성자, 혹은 필요한 생성자
 //경비실기 - 경비실기
-        public WebSocketBody(String method, String reSerialCode, String sender, String code, String device) {
+        public WebSocketBody(String method, String reSerialCode, String seSerialCode) {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.reSerialCode = reSerialCode;
-            this.sender = "rtc:" + sender + "@" + SIGNAL_SERVER_URL;
+            this.seSerialCode = seSerialCode;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.code = code;
-            this.device = device;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
-            this.roomId = (int) (Math.random() * 90000000) + 10000000;
+        }
+
+        public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId) {
+            this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
+            this.reSerialCode = reSerialCode;
+            this.seSerialCode = seSerialCode;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
+            this.roomId = roomId;
+            this.clientId = clientId;
+        }
+
+        public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId, int label, String id, String candidate) {
+            this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
+            this.reSerialCode = reSerialCode;
+            this.seSerialCode = seSerialCode;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
+            this.roomId = roomId;
+            this.clientId = clientId;
+            this.id = id;
+            this.label = label;
+            this.candidate = candidate;
+        }
+
+        public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId, String builCode, String builDong, String builHo, String sdp) {
+            this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
+            this.reSerialCode = reSerialCode;
+            this.seSerialCode = seSerialCode;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.roomId = roomId;
+            this.clientId = clientId;
+            this.builCode = builCode;
+            this.builDong = builDong;
+            this.builHo = builHo;
+            this.sdp = sdp;
+
         }
 
         public void setSdp(String sdp) {
@@ -270,10 +350,6 @@ public class WebSocketService extends Service {
 
         public String getSeSerialCode() {
             return seSerialCode;
-        }
-
-        public int getRoomId() {
-            return roomId;
         }
 
         public String getBuilCode() {
@@ -296,6 +372,9 @@ public class WebSocketService extends Service {
             return method;
         }
 
+        public void setRoomId(String roomId) {
+            this.roomId = roomId;
+        }
 
         public String getReSerialCode() {
             return reSerialCode;
@@ -322,11 +401,6 @@ public class WebSocketService extends Service {
             return device;
         }
 
-        public String getClientId() {
-            return clientId;
-        }
-
-
         public String getSdp() {
             return sdp;
         }
@@ -343,22 +417,8 @@ public class WebSocketService extends Service {
             return content;
         }
 
-        // 3) toJson(): 문자열로 직접 JSON 만들기
         public String toJson() {
-            // 단순히 문자열 연결로 JSON 생성 (필요하면 StringBuilder 사용)
-            // 실제 구현에서는 특수문자 이스케이핑 등에 주의해야 함
-            return "{" +
-                    "\"method\":\"" + method + "\"," +
-                    "\"seSerialCode\":\"" + reSerialCode + "\"," +
-                    "\"sender\":\"" + sender + "\"," +
-                    "\"receiver\":\"" + receiver + "\"," +
-                    "\"code\":\"" + code + "\"," +
-                    "\"device\":\"" + device + "\"," +
-                    "\"roomId\":\"" + roomId + "\"," +
-                    "\"clientId\":\"" + clientId + "\"," +
-                    "\"title\":\"" + title + "\"," +
-                    "\"content\":\"" + content + "\"" +
-                    "}";
+            return new Gson().toJson(this);
         }
     }
 }
