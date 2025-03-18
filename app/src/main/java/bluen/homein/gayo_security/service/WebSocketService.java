@@ -94,8 +94,7 @@ public class WebSocketService extends Service {
                 .addHeader("BuilCode", deviceBody.getBuildingCode())
                 .addHeader("SerialCode", deviceBody.getSerialCode())
                 .addHeader("MacAddr", deviceBody.getDeviceNetworkBody().getMacAddress())
-                .addHeader("IPAddr", deviceBody.getDeviceNetworkBody().getIpAddress())
-                .build();
+                .addHeader("IPAddr", deviceBody.getDeviceNetworkBody().getIpAddress()).build();
 
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override

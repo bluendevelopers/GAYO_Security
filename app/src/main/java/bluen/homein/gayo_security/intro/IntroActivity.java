@@ -33,6 +33,7 @@ public class IntroActivity extends BaseActivity {
     private Intent intent;
     private static final int REQUEST_CODE_PERMISSION_CLEAR = 10;
     private static final int PERMISSION_REQUEST_CODE_CAMERA = 4;
+    private static final int PERMISSION_REQUEST_CODE_AUDIO_RECORD = 5;
     private boolean mPermissionIsDenied;
 
     @Override
@@ -80,9 +81,11 @@ public class IntroActivity extends BaseActivity {
         } else {
             if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.CAMERA_PERMISSION)) {
                 requestPermissions(PermissionInfo.CAMERA_PERMISSION, PERMISSION_REQUEST_CODE_CAMERA);
+            } else if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.RECORD_PERMISSION)) {
+                requestPermissions(PermissionInfo.RECORD_PERMISSION, PERMISSION_REQUEST_CODE_AUDIO_RECORD);
+
             } else {
                 doLogin();
-
             }
         }
     }
@@ -136,7 +139,7 @@ public class IntroActivity extends BaseActivity {
     private void getDeviceData() {
         Retrofit.LoginApi loginApi = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
 
-        Call<RequestDataFormat.DeviceBody> call = loginApi.loadDeviceDataPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode,buildingCode)); // test
+        Call<RequestDataFormat.DeviceBody> call = loginApi.loadDeviceDataPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
 
         call.enqueue(new Callback<RequestDataFormat.DeviceBody>() {
             @Override
@@ -196,6 +199,7 @@ public class IntroActivity extends BaseActivity {
         });
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -212,7 +216,31 @@ public class IntroActivity extends BaseActivity {
                 if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.CAMERA_PERMISSION)) {
                     requestPermissions(PermissionInfo.CAMERA_PERMISSION, PERMISSION_REQUEST_CODE_CAMERA);
                 } else {
-                    doLogin();
+                    rootingCheck();
+                }
+            } else {
+                boolean isCameraPermissionDenied = false;
+                for (String permission : permissions) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
+                        isCameraPermissionDenied = true;
+                        break;
+                    }
+                }
+                continuouslyDenied(isCameraPermissionDenied, permissions);
+            }
+        } else if (requestCode == PERMISSION_REQUEST_CODE_AUDIO_RECORD) {
+            boolean isGrantResult = true;
+            for (int grantResult : grantResults) {
+                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                    isGrantResult = false;
+                    break;
+                }
+            }
+            if (isGrantResult) {
+                if (!PermissionsHelper.isPermissionGranted(this, PermissionInfo.CAMERA_PERMISSION)) {
+                    requestPermissions(PermissionInfo.RECORD_PERMISSION, PERMISSION_REQUEST_CODE_AUDIO_RECORD);
+                } else {
+                    rootingCheck();
                 }
             } else {
                 boolean isCameraPermissionDenied = false;
@@ -225,21 +253,23 @@ public class IntroActivity extends BaseActivity {
                 continuouslyDenied(isCameraPermissionDenied, permissions);
             }
         }
+
     }
 
     private void continuouslyDenied(boolean isDenied, String[] permissions) {
         if (!isDenied) {
             mIsFinish = false;
             mPermissionIsDenied = true;
-            showPopupDialog("권한 페이지로 이동하여\n카메라 권한을 허용해 주세요.","확 인");
+            showPopupDialog("권한 페이지로 이동하여\n카메라 권한을 허용해 주세요.", "확 인");
         } else {
             mPermissionIsDenied = false;
             if (!PermissionsHelper.isPermissionGranted(this, permissions)) {
                 mIsFinish = true;
-                showPopupDialog("카메라 권한을 허용해주세요","확 인");
+                showPopupDialog("카메라 권한을 허용해주세요", "확 인");
             }
         }
     }
+
     private void goToMain() {
         Log.e(TAG, "goToMain");
 

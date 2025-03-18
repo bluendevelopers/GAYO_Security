@@ -41,8 +41,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public PopupDialog popupDialog;
     public String buildingCode = "0004";
 
-//        public String serialCode = "testserialCode1"; //발신하는 기기
-    public String serialCode = "testserialCode6"; //수신
+//        public String serialCode = "testserialCode1"; //전화거는 기기
+    public String serialCode = "testserialCode6"; //전화받는 기기
 //    되는 기기
     public String macAddress = "00-00-00-00"; //더미
     public String ipAddress = "192.168.0.102"; //더미

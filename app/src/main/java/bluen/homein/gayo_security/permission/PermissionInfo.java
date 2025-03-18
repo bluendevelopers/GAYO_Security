@@ -11,4 +11,8 @@ public class PermissionInfo {
     public static final String[] CAMERA_PERMISSION = new String[]{
             Manifest.permission.CAMERA
     };
+
+    public static final String[] RECORD_PERMISSION = new String[]{
+            Manifest.permission.RECORD_AUDIO
+    };
 }
