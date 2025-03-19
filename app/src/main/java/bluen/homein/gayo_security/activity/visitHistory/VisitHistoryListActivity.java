@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -347,6 +348,7 @@ public class VisitHistoryListActivity extends BaseActivity {
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         finish();
     }
 

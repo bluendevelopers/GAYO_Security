@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +93,7 @@ public class CallRecordActivity extends BaseActivity {
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         finish();
     }
 
@@ -108,90 +110,6 @@ public class CallRecordActivity extends BaseActivity {
 
         }
     }
-
-//    @OnClick(R.id.lay_select_type)
-//    void selectType() {
-//        // BottomSheetDialog 생성 (필요시 테마를 지정할 수 있습니다)
-//        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
-//        // 커스텀 레이아웃 inflate 및 설정
-//        dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_select_base, null);
-//        bottomSheetDialog.setContentView(dialogView);
-//
-//        ImageView ivCloseBtn = dialogView.findViewById(R.id.iv_close_btn);
-//        Button btnComplete = dialogView.findViewById(R.id.btn_confirm);
-//        NumberPicker numberPicker = dialogView.findViewById(R.id.numberPicker);
-//
-//        // NumberPicker에 데이터 설정
-//        if (callTypeList != null && !callTypeList.isEmpty()) {
-//            String[] codeNames = new String[callTypeList.size()];
-//            for (int i = 0; i < callTypeList.size(); i++) {
-//                codeNames[i] = callTypeList.get(i).getCodeName();
-//            }
-//            numberPicker.setMinValue(0);
-//            numberPicker.setMaxValue(codeNames.length - 1);
-//            numberPicker.setDisplayedValues(codeNames);
-//            numberPicker.setValue(selectedTypeIndex);
-////            numberPicker.setTextSize(20);
-//        }
-//
-//        bottomSheetDialog.getWindow().getDecorView().setSystemUiVisibility(
-//                View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-//                        View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-//                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-//                        View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |       // 네비게이션바 숨김
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN |            // 상태바 숨김
-//                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY         // 몰입 모드 유지
-//        );
-////        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
-////        layoutParams.copyFrom(bottomSheetDialog.getWindow().getAttributes());
-////        layoutParams.gravity = Gravity.BOTTOM;
-////        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-////        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
-////        bottomSheetDialog.getWindow().setAttributes(layoutParams);
-//
-//        // 완료 버튼 클릭 시 선택 값 적용 후 다이얼로그 닫기
-//        btnComplete.setOnClickListener(v -> {
-//            int selectedIndex = numberPicker.getValue();
-//            String selectedCodeName = callTypeList.get(selectedIndex).getCodeName();
-//            selectedTypeIndex = selectedIndex;
-//            tvSelectedType.setText(selectedCodeName);
-//            bottomSheetDialog.dismiss();
-//        });
-//
-//        // 닫기 버튼 클릭 시 다이얼로그 닫기
-//        ivCloseBtn.setOnClickListener(v -> bottomSheetDialog.dismiss());
-//
-//        bottomSheetDialog.setOnShowListener(dialogInterface -> {
-//            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-//            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-//            if (bottomSheet != null) {
-//                bottomSheet.setBackgroundResource(R.drawable.background_radius_30_fill);
-//
-//                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-//
-//                behavior.setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels);
-//                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//
-//            }
-//        });
-//
-//
-//        bottomSheetDialog.setOnShowListener(dialogInterface -> {
-//            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-//            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
-//            if (bottomSheet != null) {
-//                // 커스텀 둥근 배경 적용
-//                bottomSheet.setBackgroundResource(R.drawable.background_radius_30_fill);
-//
-//                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
-//                behavior.setPeekHeight(Resources.getSystem().getDisplayMetrics().heightPixels);
-//                behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//
-//            }
-//
-//        });
-//        bottomSheetDialog.show();
-//    }
 
     @OnClick(R.id.lay_select_type)
     void selectType() {

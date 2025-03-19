@@ -7,15 +7,20 @@ import android.content.SharedPreferences;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import bluen.homein.gayo_security.rest.RequestDataFormat;
+import bluen.homein.gayo_security.rest.ResponseDataFormat;
 
 
 public class Gayo_SharedPreferences {
@@ -163,6 +168,24 @@ public class Gayo_SharedPreferences {
         }
     }
 
+    public void setContactsList(List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> list) {
+
+        // List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> 직렬화하기
+        Gson gson = new Gson();
+        String serializedList = gson.toJson(list);
+
+        putString(PrefKey.FACILITY_CONTACTS, serializedList);
+
+    }
+
+    public List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> getContactsList() {
+        Gson gson = new Gson();
+        String serializedList = getString(PrefKey.FACILITY_CONTACTS, null);
+        Type type = new TypeToken<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>>() {
+        }.getType();
+        return gson.fromJson(serializedList, type);
+
+    }
 
     //--------------------------------------------------- Class Get & Put
 
@@ -184,6 +207,7 @@ public class Gayo_SharedPreferences {
         }
 
     }
+ 
     //---------------------------------------- User Info
 
 
@@ -191,6 +215,7 @@ public class Gayo_SharedPreferences {
 
         private static final String AUTHORIZATION = "authorization";
         private static final String FIREBASE_TOKEN = "firebase_token";
+        private static final String FACILITY_CONTACTS = "facility_contacts";
 
     }
 

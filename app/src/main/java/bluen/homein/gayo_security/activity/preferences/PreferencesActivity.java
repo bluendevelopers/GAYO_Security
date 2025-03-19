@@ -61,7 +61,7 @@ public class PreferencesActivity extends BaseActivity {
     }
 
     @OnClick(R.id.lay_home_btn)
-    void clickHomeBtn() {
+    void clickHomeBtn() { vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         finish();
     }
 

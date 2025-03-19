@@ -52,6 +52,7 @@ public class WebSocketService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: Service started");
+
     }
 
     @Override
@@ -89,6 +90,7 @@ public class WebSocketService extends Service {
 
     private void startWebSocketConnection(RequestDataFormat.DeviceBody deviceBody) {
         client = new OkHttpClient();
+
         Request request = new Request.Builder().url(SIGNAL_SERVER_URL)
                 .addHeader("Authorization", auth)
                 .addHeader("BuilCode", deviceBody.getBuildingCode())
@@ -109,32 +111,39 @@ public class WebSocketService extends Service {
                 // 수신부!!!!!
                 Log.d(TAG, "onMessage: " + text); //
 
-                try {
-                    handleServerMessage(text);
-                } catch (JSONException e) {
-                    throw new RuntimeException(e);
+                if ("pong".equals(text)) {
+                    Log.d(TAG, "Heartbeat pong received");
+                } else {
+                    try {
+                        handleServerMessage(text);
+                    } catch (JSONException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
-            }
-
-            @Override
-            public void onMessage(WebSocket webSocket, ByteString bytes) {
-                // 필요 없으면 생략
-                super.onMessage(webSocket, bytes);
             }
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                // 연결이 실패하면 일정 시간 후 재연결 시도
                 reconnectWebSocketWithDelay();
+            }
+
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                super.onClosing(webSocket, code, reason);
+                Log.d(TAG, "onClosing: 연결 종료 예정, reason: " + reason);
+                reconnectWebSocketWithDelay();
+
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
                 Log.d(TAG, "onClosed: code=" + code + ", reason=" + reason);
+                reconnectWebSocketWithDelay();
+
             }
         });
 
@@ -156,16 +165,16 @@ public class WebSocketService extends Service {
 
         WebSocketBody body = new Gson().fromJson(jsonText, WebSocketBody.class);
 
-        String method = body.getMethod();    // null 일 수도 있음
-        String code = body.getCode();      // "Error"
-        String device = body.getDevice();    // "signalServer"
-        String msg = body.getMessage();   // "오류가 발생 했습니다." (필드 추가했다면)
+//        String method = body.getMethod();    // null 일 수도 있음
+//        String code = body.getCode();      // "Error"
+//        String device = body.getDevice();    // "signalServer"
+//        String msg = body.getMessage();   // "오류가 발생 했습니다."
 
-        if ("Error".equals(code)) {
-            Log.e(TAG, "서버에서 오류 수신: " + msg);
-            // 에러 로직 처리
-            return;
-        }
+//        if ("Error".equals(code)) {
+//            Log.e(TAG, "서버에서 오류 수신: " + msg);
+//            // 에러 로직 처리
+//            return;
+//        }
 
         // 2) 앱이 포그라운드인지 백그라운드인지 판단
         if (isAppInForeground(getApplicationContext())) {
@@ -236,10 +245,18 @@ public class WebSocketService extends Service {
     /**
      * 외부(예: CallActivity)에서 호출 가능한 send 메서드
      */
+
     public static void sendWebSocketMessage(String message) {
         if (webSocket != null) {
-            Log.d("WebSocketService", "웹소켓 전송 직전 JSON: " + message);
-            webSocket.send(message);
+            boolean isSent = webSocket.send(message);
+            if (isSent) {
+                Log.d("WebSocketService", "웹소켓 전송 성공 JSON: " + message);
+            } else {
+                Log.e("WebSocketService", "웹소켓 전송 실패 (연결 끊김): " + message);
+
+            }
+        } else {
+            Log.e("WebSocketService", "webSocket 객체가 null입니다. 연결되지 않음.");
         }
     }
 
@@ -284,6 +301,17 @@ public class WebSocketService extends Service {
         @SerializedName("label")
         private int label;
 
+        public WebSocketBody(String method, String recipientSerialCode, String senderSerialCode, String currentRoomId, String currentClientId, String receivedSdp) {
+            this.method = method;
+            this.reSerialCode = recipientSerialCode;
+            this.seSerialCode = senderSerialCode;
+            this.roomId = currentRoomId;
+            this.clientId = currentClientId;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sdp = receivedSdp;
+        }
+
         public String getId() {
             return id;
         }
@@ -294,10 +322,10 @@ public class WebSocketService extends Service {
 
         // 1) 기본 생성자, 혹은 필요한 생성자
 //경비실기 - 경비실기
-        public WebSocketBody(String method, String reSerialCode, String seSerialCode) {
+        public WebSocketBody(String method, String recipientSerialCode, String senderSerialCode) {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
-            this.reSerialCode = reSerialCode;
-            this.seSerialCode = seSerialCode;
+            this.reSerialCode = recipientSerialCode;
+            this.seSerialCode = senderSerialCode;
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위

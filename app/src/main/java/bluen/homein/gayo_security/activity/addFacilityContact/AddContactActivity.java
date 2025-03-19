@@ -2,6 +2,7 @@ package bluen.homein.gayo_security.activity.addFacilityContact;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -99,6 +100,7 @@ public class AddContactActivity extends BaseActivity {
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         setResult(RESULT_CODE_ADD_CONTACT);
         finish();
     }

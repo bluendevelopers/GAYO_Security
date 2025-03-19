@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.navigation.ui.AppBarConfiguration;
+
+import java.util.ArrayList;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.call.CallActivity;
@@ -71,6 +74,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -153,7 +157,48 @@ public class MainActivity extends BaseActivity {
         getCurrentWorkerInfo();
         getWeatherInfo();
 
+        if (mPrefGlobal.getContactsList() == null) {
+            getFacilityContactList();
+        }
+
     }
+
+
+    private void getFacilityContactList() {
+
+        showProgress();
+
+        Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
+
+        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.loadContactListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(serialCode, buildingCode, 1));
+
+        call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
+            @Override
+            public void onResponse(Call<ResponseDataFormat.FacilityContactListBody> call, Response<ResponseDataFormat.FacilityContactListBody> response) {
+                closeProgress();
+
+                if (response.body() != null) {
+
+                    if (response.body().getMessage() == null) {
+                        if (response.body().getFacilityContactList() != null) {
+                            mPrefGlobal.setContactsList(response.body().getFacilityContactList());
+                        } else {
+
+                        }
+                    }
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseDataFormat.FacilityContactListBody> call, Throwable t) {
+                closeProgress();
+            }
+        });
+
+    }
+
 
     private void getCurrentWorkerInfo() {
         showProgress();

@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Collections;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -54,8 +56,11 @@ import java.util.List;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.addFacilityContact.AddContactActivity;
+import bluen.homein.gayo_security.activity.changeWorker.ChangeWorkerActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
+import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.service.WebSocketService;
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -86,13 +91,13 @@ public class CallActivity extends BaseActivity {
     @BindView(R.id.tv_facility_info)
     TextView tvFacilityInfo;
     @BindView(R.id.tv_apt_dong_number)
-    TextView tvDongNumber;
+    TextView tvAptDongNumber;
     @BindView(R.id.tv_apt_dong)
-    TextView tvDong;
+    TextView tvAptDong;
     @BindView(R.id.tv_apt_ho_number)
-    TextView tvHoNumber;
+    TextView tvAptHoNumber;
     @BindView(R.id.tv_apt_ho)
-    TextView tvHo;
+    TextView tvAptHo;
     @BindView(R.id.slidr_volume)
     Slidr slidrVolume;
     @BindView(R.id.lay_call_btn)
@@ -106,12 +111,25 @@ public class CallActivity extends BaseActivity {
     @BindView(R.id.lay_hang_up_btn)
     LinearLayout layHangUpBtn;
 
+    // WebRTC 관련 변수
+    @BindView(R.id.remote_view)
+    SurfaceViewRenderer remoteView;
+    // @BindView(R.id.local_view)
+    // SurfaceViewRenderer localView;  // 필요하다면..?
+    private EglBase rootEglBase;
+    private MediaConstraints sdpMediaConstraints;
+    private PeerConnectionFactory peerConnectionFactory;
+    private PeerConnection peerConnection;
+    private VideoTrack localVideoTrack;
+    private AudioTrack localAudioTrack;
+    private VideoCapturer videoCapturer;
 
     // 통화 상태 상수
     public static final int CALL_STATUS_IDLE = 0;
     public static final int CALL_STATUS_INCOMING = 1;
-    public static final int CALL_STATUS_CONNECTING = 2;
-    public static final int CALL_STATUS_ACTIVE = 3;
+    public static final int CALL_STATUS_REJECTED = 2;
+    public static final int CALL_STATUS_CONNECTING = 3;
+    public static final int CALL_STATUS_ACTIVE = 4;
 
     // 현재 상태
     private int callStatus = CALL_STATUS_IDLE;
@@ -122,6 +140,8 @@ public class CallActivity extends BaseActivity {
     private boolean isSender = false;
 
     // 기타
+    private FacilityContactsListAdapter facilityContactsListAdapter;
+
     private String currentRoomId = "";
     private String currentClientId = "";
     private String receivedSdp = "";
@@ -129,37 +149,90 @@ public class CallActivity extends BaseActivity {
     private String recipientSerialCode = "";
     boolean isWithGayoApp = false;
 
+    private String dongNumber = "";
+    private String hoNumber = "";
+    private boolean isDongFinal = false;
+    private boolean isHoFinal = false;
 
-    // WebRTC 관련
-    private EglBase rootEglBase;
-    private MediaConstraints sdpMediaConstraints;
-    private PeerConnectionFactory peerConnectionFactory;
-    private PeerConnection peerConnection;
-    private VideoTrack localVideoTrack;
-    private AudioTrack localAudioTrack;
-    private VideoCapturer videoCapturer;
+    @OnClick({
+            R.id.tv_number_0_btn, R.id.tv_number_1_btn, R.id.tv_number_2_btn, R.id.tv_number_3_btn,
+            R.id.tv_number_4_btn, R.id.tv_number_5_btn, R.id.tv_number_6_btn, R.id.tv_number_7_btn,
+            R.id.tv_number_8_btn, R.id.tv_number_9_btn
+    })
+    void onNumberClick(TextView clickedView) {
+        String digit = clickedView.getText().toString();
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
-    @BindView(R.id.remote_view)
-    SurfaceViewRenderer remoteView;
-    // @BindView(R.id.local_view)
-    // SurfaceViewRenderer localView;  // 필요하다면 추가
+        // 아직 "동" 입력이 완료되지 않았다면, 동 번호에 숫자를 추가
+        if (!isDongFinal) {
+            // 동 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
+            if (dongNumber.length() < 4) {
+                dongNumber += digit;
+                tvAptDongNumber.setText(dongNumber);
 
-    @OnClick(R.id.tv_connect_call_btn)
-    void onConnectCallBtnClick() {
-        // 수신자가 실제로 “수락” 버튼을 누른 상황
+                // 동 번호가 4자리가 되면 자동으로 동 TextView를 visible, 동 입력 확정
+                if (dongNumber.length() == 4) {
+                    tvAptDong.setVisibility(View.VISIBLE);
+                    isDongFinal = true;
+                }
+            }
+        }
+        // "동" 입력이 끝난 상태라면 "호" 번호에 입력
+        else if (!isHoFinal) {
+            // 호 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
+            if (hoNumber.length() < 4) {
+                hoNumber += digit;
+                tvAptHoNumber.setText(hoNumber);
 
-        startCallAndReleaseResources();
+                // 호 번호가 4자리가 되면 자동으로 호 TextView를 visible, 호 입력 확정
+                if (hoNumber.length() == 4) {
+                    tvAptHo.setVisibility(View.VISIBLE);
+                    isHoFinal = true;
+                }
+            }
+        }
+        // isDongFinal과 isHoFinal 모두 true인 경우(동/호 모두 입력 완료) 더 이상 입력되지 않음
+    }
 
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "accept",
-                recipientSerialCode,
-                senderSerialCode,
-                currentRoomId,
-                currentClientId
-        );
+    @OnClick(R.id.tv_dong_btn)
+    void onDongBtnClick() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        // 동 번호가 비어있지 않으면서 아직 확정되지 않은 상태인 경우만
+        if (!dongNumber.isEmpty() && !isDongFinal) {
+            tvAptDong.setVisibility(View.VISIBLE);
+            isDongFinal = true;
+        }
+    }
 
-        WebSocketService.sendWebSocketMessage(body.toJson());
+    @OnClick(R.id.tv_ho_btn)
+    void onHoBtnClick() {
+        if (!hoNumber.isEmpty() && !isHoFinal) {
+            tvAptHo.setVisibility(View.VISIBLE);
+            isHoFinal = true;
+        }
+    }
 
+    @OnClick(R.id.lay_delete_btn)
+    void onDeleteClick() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+
+        if (!hoNumber.isEmpty()) {
+            hoNumber = hoNumber.substring(0, hoNumber.length() - 1);
+            tvAptHoNumber.setText(hoNumber);
+
+            if (hoNumber.length() < 4) {
+                tvAptHo.setVisibility(View.INVISIBLE);
+                isHoFinal = false;
+            }
+        } else if (!dongNumber.isEmpty()) {
+            dongNumber = dongNumber.substring(0, dongNumber.length() - 1);
+            tvAptDongNumber.setText(dongNumber);
+
+            if (dongNumber.length() < 4) {
+                tvAptDong.setVisibility(View.INVISIBLE);
+                isDongFinal = false;
+            }
+        }
     }
 
     // ------------------------------------------------------
@@ -167,10 +240,10 @@ public class CallActivity extends BaseActivity {
     // ------------------------------------------------------
     @OnClick(R.id.lay_call_btn)
     void onCallBtnClick() {
-        // “전화를 걸기” → 발신자 역할
-        // 이 기기(isSender = true) → Answer를 생성해야 하는 기기
+        Log.i(TAG, "onCallBtnClick()");
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+
         isSender = true;
-        callStatus = CALL_STATUS_INCOMING;
 
         // 예: 서버에 'invite' 전송
         recipientSerialCode = "testserialCode6"; // 임시
@@ -190,39 +263,83 @@ public class CallActivity extends BaseActivity {
         // 실제 전송
         String jsonString = body.toJson();
         WebSocketService.sendWebSocketMessage(jsonString);
-        startCallAndReleaseResources();
 
-        // UI 갱신 등
-        changeViewCalling();
+
     }
 
+    // ------------------------------------------------------
+    // 통화 받기 버튼 (예: 수신 측)
+    // ------------------------------------------------------
+    @OnClick(R.id.tv_connect_call_btn)
+    void onConnectCallBtnClick() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+
+        startCallAndReleaseResources();
+
+        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                "accept",
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
+        );
+
+        WebSocketService.sendWebSocketMessage(body.toJson());
+
+    }
+
+    // ------------------------------------------------------
+    // 통화 거절 버튼 (예: 수신 측)
+    // ------------------------------------------------------
+    @OnClick(R.id.tv_reject_call_btn)
+    void onRejectCallBtnClick() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        callStatus = CALL_STATUS_REJECTED;
+        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                "invite-away",
+                recipientSerialCode,
+                senderSerialCode,
+                currentRoomId,
+                currentClientId
+        );
+
+        WebSocketService.sendWebSocketMessage(body.toJson());
+    }
+
+    // ------------------------------------------------------
+    // 통화 종료 버튼 (예: 수신/발신 측)
+    // ------------------------------------------------------
     @OnClick(R.id.lay_hang_up_btn)
     void onHangUpBtnClick() {
-
-        if (callStatus < 2) {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        if (callStatus < 3) {
             hangUpCall("bye");
         } else {
-            hangUpCall("call-bye");
-
+            hangUpCall("call-bye"); // 통화 연결 중 끊기!
         }
 
     }
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         if (callStatus == CALL_STATUS_INCOMING || callStatus == CALL_STATUS_ACTIVE) {
             showPopupDialog("현재 통화중인데 나가면 통화 종료됨.", "확 인");
         } else {
             finish();
-
         }
     }
 
     @OnClick(R.id.lay_add_contact_btn)
     void clickAddContactBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        Intent intent = new Intent(CallActivity.this, AddContactActivity.class);
-        startActivityForResult(intent, REQUEST_CODE_ADD_CONTACT);
+
+        if (callStatus == CALL_STATUS_INCOMING || callStatus == CALL_STATUS_ACTIVE) {
+            showPopupDialog("현재 통화 중인데 나가면 통화 종료됨.", "확 인");
+        } else {
+            Intent intent = new Intent(CallActivity.this, AddContactActivity.class);
+            startActivityForResult(intent, REQUEST_CODE_ADD_CONTACT);
+        }
     }
 
 
@@ -303,6 +420,19 @@ public class CallActivity extends BaseActivity {
                 Log.e(TAG, "JSON 파싱 오류: " + e.getMessage());
             }
         }
+
+        if (mPrefGlobal.getContactsList() != null) {
+            facilityContactsListAdapter = new FacilityContactsListAdapter(CallActivity.this, R.layout.item_facility_list, new FacilityContactsListAdapter.OnContactsClickListener() {
+                @Override
+                public void clickContacts(ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo) {
+                    // call code
+                }
+            });
+
+            facilityContactsListAdapter.setItems(mPrefGlobal.getContactsList());
+            rvFacilityList.setAdapter(facilityContactsListAdapter);
+        }
+
     }
 
 
@@ -325,10 +455,24 @@ public class CallActivity extends BaseActivity {
 
         if (!method.isEmpty()) {
             switch (method) {
-                case "OK":
-                    if (!clientId.isEmpty()) {
-                        currentClientId = clientId;
+                case "OK": // 서버로 부터 응답
+                    if (isSender && callStatus == CALL_STATUS_IDLE) {
+                        if (!clientId.isEmpty()) {
+                            callStatus = CALL_STATUS_INCOMING;
+                            currentClientId = clientId;
+                            changeViewCalling();
+                        }
                     }
+
+                    if (!isSender && callStatus == CALL_STATUS_REJECTED) {
+                        callStatus = CALL_STATUS_IDLE;
+                        currentRoomId = "";
+                        currentClientId = "";
+                        senderSerialCode = "";
+                        recipientSerialCode = "";
+                        changeViewIdle(""); // 수신자 쪽에서 바로 끊는 것임.
+                    }
+
                     break;
                 case "invite":
                     onInviteReceived(roomId, clientId, seSerialCode);
@@ -336,6 +480,7 @@ public class CallActivity extends BaseActivity {
 
                 case "accept":
                     if (isSender) {
+                        startCallAndReleaseResources();
                         sendAcceptAck();
                     } else {
                         if (device.equals("signalServer") && code.equals("100")) {
@@ -376,6 +521,7 @@ public class CallActivity extends BaseActivity {
                     // 여기서는 반대 구조이므로, offer 만든 기기가 answer를 수신
                     if (!sdp.isEmpty()) {
                         // 이 기기는 “offer를 보낸 기기” → “answer를 받아 setRemoteDescription”
+                        receivedSdp = sdp;
                         applyRemoteAnswer(sdp);
                     }
                     break;
@@ -385,15 +531,13 @@ public class CallActivity extends BaseActivity {
                         if (!id.isEmpty() && label != -1) {
                             onRemoteIceCandidateReceived(id, label, candidate);
 
-                        } else {
-                            onRemoteIceCandidateReceived("0", 0, candidate);
-
                         }
                     }
                     break;
                 case "invite-away":  // 상대방이 받지 않음....(부재중)
                 case "no-answer":
-                case "call-bye":
+                case "call-bye": //상대가 끊었음.
+                    isHangUpThePhone(method);
                 case "invite-calling":
                     isHangUpThePhone(method);
                     break;
@@ -448,6 +592,8 @@ public class CallActivity extends BaseActivity {
 
         // UI 갱신
         changeViewCalling();
+
+        // 벨 울림 (미구현)
         startRingMyBell();
 
         // 서버에 “invite-ack” 보내는 예시
@@ -460,8 +606,6 @@ public class CallActivity extends BaseActivity {
         );
         WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
 
-        // 여기서 사용자가 “수락”을 누르면(예: onConnectCallBtnClick),
-        // createLocalMediaTracks → createPeerConnection → startCallOffer() 실행
     }
 
     private void startRingMyBell() {
@@ -490,7 +634,7 @@ public class CallActivity extends BaseActivity {
 
                 // 이 Offer를 서버로 전송
                 String offerSdp = sessionDescription.description;
-//
+
                 WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
                         "offer",
                         recipientSerialCode,
@@ -632,6 +776,9 @@ public class CallActivity extends BaseActivity {
     // ------------------------------------------------------
 
     private void createPeerConnection() {
+
+        Log.e(TAG, "createPeerConnection()");
+
         // 1) ICE 서버 설정
         List<PeerConnection.IceServer> iceServers = new ArrayList<>();
         iceServers.add(
@@ -639,11 +786,12 @@ public class CallActivity extends BaseActivity {
                         .createIceServer()
         );
 
+        List<String> mediaStreamList = Collections.singletonList("ARDAMS");
+
         // 2) RTCConfiguration
         PeerConnection.RTCConfiguration rtcConfig =
                 new PeerConnection.RTCConfiguration(iceServers);
         rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
-        // 필요하다면, 여기서 얼라이브 정책 등 추가 설정 가능.
 
         // 3) PeerConnection 생성
         peerConnection = peerConnectionFactory.createPeerConnection(
@@ -656,6 +804,20 @@ public class CallActivity extends BaseActivity {
                     @Override
                     public void onIceConnectionChange(PeerConnection.IceConnectionState newState) {
                         Log.d(TAG, "ICE Connection State: " + newState);
+                        switch (newState) {
+                            case DISCONNECTED:
+                            case FAILED:
+                                callStatus = CALL_STATUS_IDLE;
+                                break;
+                            case CONNECTED:
+                                callStatus = CALL_STATUS_ACTIVE;
+                                break;
+                            case CHECKING:
+                                callStatus = CALL_STATUS_CONNECTING;
+                                break;
+                        }
+
+
                     }
 
                     @Override
@@ -666,7 +828,7 @@ public class CallActivity extends BaseActivity {
                     public void onIceGatheringChange(PeerConnection.IceGatheringState newState) {
                     }
 
-                    // ICE Candidate가 생길 때마다 서버(신호서버)로 전송
+                    // ICE Candidate가 생길 때마다 시그널 서버로 전송
                     @Override
                     public void onIceCandidate(IceCandidate candidate) {
                         WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
@@ -679,6 +841,7 @@ public class CallActivity extends BaseActivity {
                                 candidate.sdpMid,
                                 candidate.sdp
                         );
+
                         WebSocketService.sendWebSocketMessage(body.toJson());
                     }
 
@@ -730,24 +893,38 @@ public class CallActivity extends BaseActivity {
         }
 
         // 4) 로컬 트랙을 보낼 Transceiver 추가 (오디오)
+//        if (localAudioTrack != null) {
+//            // sendrecv 모드로 audio 트랜시버 추가
+//            peerConnection.addTrack(localAudioTrack, mediaStreamList);
+//            peerConnection.addTransceiver(
+//                    localAudioTrack,
+//                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
+//            );
+//        } else {
+//            Log.e(TAG, "localAudioTrack이 null이라 추가 실패");
+//        }
+//
+//        // 5) 로컬 트랙을 보낼 Transceiver 추가 (비디오)
+//        if (localVideoTrack != null) {
+//            // sendrecv 모드로 video 트랜시버 추가
+//            peerConnection.addTrack(localVideoTrack, mediaStreamList);
+//            peerConnection.addTransceiver(
+//                    localVideoTrack,
+//                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
+//            );
+//        } else {
+//            Log.e(TAG, "localVideoTrack이 null이라 추가 실패");
+//        }
+
+        // 로컬 트랙 추가 (addTrack만 사용, addTransceiver는 사용X)
         if (localAudioTrack != null) {
-            // sendrecv 모드로 audio 트랜시버 추가
-            peerConnection.addTransceiver(
-                    localAudioTrack,
-                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
-            );
+            peerConnection.addTrack(localAudioTrack, mediaStreamList);
         } else {
             Log.e(TAG, "localAudioTrack이 null이라 추가 실패");
         }
 
-
-        // 5) 로컬 트랙을 보낼 Transceiver 추가 (비디오)
         if (localVideoTrack != null) {
-            // sendrecv 모드로 video 트랜시버 추가
-            peerConnection.addTransceiver(
-                    localVideoTrack,
-                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
-            );
+            peerConnection.addTrack(localVideoTrack, mediaStreamList);
         } else {
             Log.e(TAG, "localVideoTrack이 null이라 추가 실패");
         }
@@ -822,7 +999,6 @@ public class CallActivity extends BaseActivity {
 
     }
 
-
     private VideoCapturer createCameraCapturer() {
         // Camera2Enumerator 예시
         Camera2Enumerator enumerator = new Camera2Enumerator(this);
@@ -842,18 +1018,28 @@ public class CallActivity extends BaseActivity {
     // ------------------------------------------------------
     public void hangUpCall(String method) {
         // 시그널 서버에 통화 종료 알림
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                method,
-                recipientSerialCode,
-                senderSerialCode,
-                currentRoomId,
-                currentClientId
-        );
+        WebSocketService.WebSocketBody body;
+        if (method.equals("call-bye")) {
+            body = new WebSocketService.WebSocketBody(
+                    method,
+                    isSender ? recipientSerialCode : "",
+                    isSender ? "" : senderSerialCode,
+                    currentRoomId,
+                    currentClientId,
+                    receivedSdp
+            );
+        } else {
+            body = new WebSocketService.WebSocketBody(
+                    method,
+                    recipientSerialCode,
+                    senderSerialCode,
+                    currentRoomId,
+                    currentClientId
+            );
+        }
         WebSocketService.sendWebSocketMessage(body.toJson());
 
-        // PeerConnection 종료
-        endCallAndReleaseResources();
-        // UI 갱신 등
+        // UI 갱신 및 WebRTC 초기화 등
         isHangUpThePhone(method);
     }
 
@@ -891,15 +1077,16 @@ public class CallActivity extends BaseActivity {
 
 
     private void isHangUpThePhone(String method) {
-        // 통화 상태 정리
         callStatus = CALL_STATUS_IDLE;
+
+        // 통화 상태 정리
         isSender = false;
         currentRoomId = "";
         currentClientId = "";
         senderSerialCode = "";
         recipientSerialCode = "";
+        receivedSdp = "";
 
-        //webRTC 초기화
         endCallAndReleaseResources();
 
         // UI 복원 등
@@ -915,21 +1102,22 @@ public class CallActivity extends BaseActivity {
             case "no-answer":
             case "invite-norespone":
                 tvCallMessage.setText("과(와) 연결이 되지 않습니다.");
+                new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
                 break;
             case "invite-calling":
                 tvCallMessage.setText("이(가) 통화중 입니다.");
+                new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
                 break;
 
             case "call-bye":
                 tvCallMessage.setText("과(와) 통화가 종료 되었습니다.");
+                new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
                 break;
             default:
                 changeViewReset(); //부재중 ("bye")
                 break;
 
         }
-
-        new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
 
     }
 
@@ -1013,8 +1201,10 @@ public class CallActivity extends BaseActivity {
     //  시그널 서버에서 수신한 ICE Candidate 적용
     // ------------------------------------------------------
     public void onRemoteIceCandidateReceived(String sdpMid, int sdpMLineIndex, String candidate) {
-        IceCandidate iceCandidate = new IceCandidate("video", 0, candidate);
-        peerConnection.addIceCandidate(iceCandidate);
+        IceCandidate iceCandidate = new IceCandidate(sdpMid, sdpMLineIndex, candidate);
+        if (peerConnection != null) {
+            peerConnection.addIceCandidate(iceCandidate);
+        }
     }
 
     // ------------------------------------------------------

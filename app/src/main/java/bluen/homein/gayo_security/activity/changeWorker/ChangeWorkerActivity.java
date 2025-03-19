@@ -3,6 +3,7 @@ package bluen.homein.gayo_security.activity.changeWorker;
 import static bluen.homein.gayo_security.activity.MainActivity.RESULT_CHANGED_WORKER;
 
 import android.os.Bundle;
+import android.os.VibrationEffect;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -70,6 +71,7 @@ public class ChangeWorkerActivity extends BaseActivity {
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
+        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         finish();
     }
 
