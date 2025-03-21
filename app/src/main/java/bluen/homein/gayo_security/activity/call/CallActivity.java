@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.os.VibrationEffect;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 
 import java.util.Collections;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,7 +26,6 @@ import org.json.JSONObject;
 import org.webrtc.AudioSource;
 import org.webrtc.AudioTrack;
 import org.webrtc.Camera2Enumerator;
-import org.webrtc.CameraEnumerator;
 import org.webrtc.DataChannel;
 import org.webrtc.DefaultVideoDecoderFactory;
 import org.webrtc.DefaultVideoEncoderFactory;
@@ -36,11 +33,9 @@ import org.webrtc.EglBase;
 import org.webrtc.IceCandidate;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
-import org.webrtc.MediaStreamTrack;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionFactory;
 import org.webrtc.RendererCommon;
-import org.webrtc.RtpReceiver;
 import org.webrtc.RtpTransceiver;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
@@ -51,15 +46,12 @@ import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.addFacilityContact.AddContactActivity;
-import bluen.homein.gayo_security.activity.changeWorker.ChangeWorkerActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.dialog.PopupDialog;
-import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.service.WebSocketService;
 import butterknife.BindView;
@@ -140,7 +132,7 @@ public class CallActivity extends BaseActivity {
     private boolean isSender = false;
 
     // 기타
-    private FacilityContactsListAdapter facilityContactsListAdapter;
+    private FacilityContactsButtonListAdapter facilityContactsButtonListAdapter;
 
     private String currentRoomId = "";
     private String currentClientId = "";
@@ -422,15 +414,15 @@ public class CallActivity extends BaseActivity {
         }
 
         if (mPrefGlobal.getContactsList() != null) {
-            facilityContactsListAdapter = new FacilityContactsListAdapter(CallActivity.this, R.layout.item_facility_list, new FacilityContactsListAdapter.OnContactsClickListener() {
+            facilityContactsButtonListAdapter = new FacilityContactsButtonListAdapter(CallActivity.this, R.layout.item_facility_list, new FacilityContactsButtonListAdapter.OnContactsClickListener() {
                 @Override
                 public void clickContacts(ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo) {
                     // call code
                 }
             });
 
-            facilityContactsListAdapter.setItems(mPrefGlobal.getContactsList());
-            rvFacilityList.setAdapter(facilityContactsListAdapter);
+            facilityContactsButtonListAdapter.setItems(mPrefGlobal.getContactsList());
+            rvFacilityList.setAdapter(facilityContactsButtonListAdapter);
         }
 
     }
@@ -892,31 +884,6 @@ public class CallActivity extends BaseActivity {
             return;
         }
 
-        // 4) 로컬 트랙을 보낼 Transceiver 추가 (오디오)
-//        if (localAudioTrack != null) {
-//            // sendrecv 모드로 audio 트랜시버 추가
-//            peerConnection.addTrack(localAudioTrack, mediaStreamList);
-//            peerConnection.addTransceiver(
-//                    localAudioTrack,
-//                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
-//            );
-//        } else {
-//            Log.e(TAG, "localAudioTrack이 null이라 추가 실패");
-//        }
-//
-//        // 5) 로컬 트랙을 보낼 Transceiver 추가 (비디오)
-//        if (localVideoTrack != null) {
-//            // sendrecv 모드로 video 트랜시버 추가
-//            peerConnection.addTrack(localVideoTrack, mediaStreamList);
-//            peerConnection.addTransceiver(
-//                    localVideoTrack,
-//                    new RtpTransceiver.RtpTransceiverInit(RtpTransceiver.RtpTransceiverDirection.SEND_RECV)
-//            );
-//        } else {
-//            Log.e(TAG, "localVideoTrack이 null이라 추가 실패");
-//        }
-
-        // 로컬 트랙 추가 (addTrack만 사용, addTransceiver는 사용X)
         if (localAudioTrack != null) {
             peerConnection.addTrack(localAudioTrack, mediaStreamList);
         } else {
@@ -933,6 +900,7 @@ public class CallActivity extends BaseActivity {
     // ------------------------------------------------------
     // PeerConnectionFactory 초기화
     // ------------------------------------------------------
+
     private void initPeerConnectionFactory() {
         // 전역 WebRTC 초기화
         PeerConnectionFactory.InitializationOptions initOptions =

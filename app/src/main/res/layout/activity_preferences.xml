@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pretendard_medium"
-            android:text="사용자 설정 _ 화면 설정"
+            android:text="사용자 설정"
             android:textColor="#333333"
             android:textSize="32dp"
             android:textStyle="bold"
@@ -69,7 +69,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/lay_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -77,130 +77,105 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="20dp"
-        android:layout_weight="1"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_screen_set_btn"
+        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayout10" />
+        app:layout_constraintTop_toBottomOf="@id/constraintLayout10">
 
-    <TextView
-        android:id="@+id/tv_screen_set_btn"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lay_password"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/background_radius_15_fill"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="250dp"
+                android:layout_marginTop="220dp"
+                android:background="@drawable/btn_border_radius_15"
+                android:fontFamily="@font/pretendard_regular"
+                android:hint="비밀번호 입력"
+                android:padding="15dp"
+                android:textAlignment="center"
+                android:textColor="#b5b5b5"
+                android:textSize="35dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="#b5b5b5"
+                android:textSize="27dp"
+                android:textStyle="normal"
+                app:layout_constraintEnd_toEndOf="@+id/et_password"
+                app:layout_constraintStart_toStartOf="@+id/et_password"
+                app:layout_constraintTop_toBottomOf="@+id/et_password"
+                android:text="* 초기 비밀번호는 0000 입니다." />
+
+            <Button
+                android:id="@+id/btn_password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/btn_blue_fill_border_radius_15"
+                android:fontFamily="@font/pretendard_semibold"
+                android:paddingVertical="10dp"
+                android:text="@string/confirm"
+                android:textColor="@color/white"
+                android:textSize="35dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/background_radius_15_fill"
-        android:backgroundTint="@color/main_color"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="화면 설정"
-        android:textColor="#ffffff"
-        android:textSize="25dp"
-        android:textStyle="normal"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_volume_set_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@id/lay_container" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/tv_volume_set_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_radius_15_fill"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="음량 조절"
-        android:textColor="#333333"
-        android:textSize="25dp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toStartOf="@id/tv_sleep_mode_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_screen_set_btn" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_sleep_mode_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_radius_15_fill"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="슬립모드 설정"
-        android:textColor="#333333"
-        android:textSize="25dp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toStartOf="@id/tv_network_set_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_volume_set_btn" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_button_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/item_pref_button_list" />
 
-    <TextView
-        android:id="@+id/tv_network_set_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_radius_15_fill"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="네트워크 설정"
-        android:textColor="#333333"
-        android:textSize="25dp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toStartOf="@id/tv_data_set_btn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/tv_sleep_mode_btn" />
 
-    <TextView
-        android:id="@+id/tv_data_set_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:background="@drawable/background_radius_15_fill"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="데이터 설정"
-        android:textColor="#333333"
-        android:textSize="25dp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toStartOf="@id/tv_patrol_mode_btn"
-        app:layout_constraintStart_toEndOf="@id/tv_network_set_btn" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/tv_patrol_mode_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_radius_15_fill"
-        android:elevation="3dp"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="순찰모드 설정"
-        android:textColor="#333333"
-        android:textSize="25dp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toEndOf="@id/lay_container"
-        app:layout_constraintStart_toEndOf="@id/tv_data_set_btn" />
+
+    </HorizontalScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
