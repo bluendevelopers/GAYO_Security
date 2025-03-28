@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_data_load"
+        android:id="@+id/tv_load_data_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="250dp"
@@ -19,12 +19,12 @@
         android:textColor="#333333"
         android:textSize="28dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toTopOf="@id/data_export"
+        app:layout_constraintBottom_toTopOf="@id/tv_export_data_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/data_export"
+        android:id="@+id/tv_export_data_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="250dp"

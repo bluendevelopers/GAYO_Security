@@ -29,6 +29,7 @@ import androidx.multidex.MultiDexApplication;
 
 public class GlobalApplication extends MultiDexApplication {
     private static final String TAG = "GlobalApplication";
+    public static boolean isSecurityMode = false;
 
     @Override
     public void onCreate() {

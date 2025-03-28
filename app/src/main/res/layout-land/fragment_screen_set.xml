@@ -35,10 +35,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_bright_min"
-        app:layout_constraintEnd_toStartOf="@+id/iv_bright_max"
+        app:layout_constraintBottom_toBottomOf="@id/iv_bright_min"
+        app:layout_constraintEnd_toStartOf="@id/iv_bright_max"
         app:layout_constraintStart_toEndOf="@id/iv_bright_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_bright_min">
+        app:layout_constraintTop_toTopOf="@id/iv_bright_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_brightness"
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_option_right"
         app:layout_constraintBottom_toBottomOf="@id/tv_screen_set_btn"
-        app:layout_constraintEnd_toEndOf="@+id/iv_bright_max"
+        app:layout_constraintEnd_toEndOf="@id/iv_bright_max"
         app:layout_constraintTop_toTopOf="@id/tv_screen_set_btn" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -138,12 +138,12 @@
         android:textSize="35dp"
         android:fontFamily="@font/pretendard_semibold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_save"
+        app:layout_constraintEnd_toStartOf="@id/tv_save_btn"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="@id/lay_empty" />
 
     <TextView
-        android:id="@+id/tv_save"
+        android:id="@+id/tv_save_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"

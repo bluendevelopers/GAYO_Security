@@ -36,10 +36,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_intercom_volume_min"
+        app:layout_constraintBottom_toBottomOf="@id/iv_intercom_volume_min"
         app:layout_constraintEnd_toStartOf="@id/iv_intercom_volume_max"
         app:layout_constraintStart_toEndOf="@id/iv_intercom_volume_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_intercom_volume_min">
+        app:layout_constraintTop_toTopOf="@id/iv_intercom_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_intercom_volume"
@@ -138,10 +138,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_phone_volume_min"
+        app:layout_constraintBottom_toBottomOf="@id/iv_phone_volume_min"
         app:layout_constraintEnd_toStartOf="@id/iv_phone_volume_max"
         app:layout_constraintStart_toEndOf="@id/iv_phone_volume_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_phone_volume_min">
+        app:layout_constraintTop_toTopOf="@id/iv_phone_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_phone"
@@ -240,10 +240,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_common_volume_min"
+        app:layout_constraintBottom_toBottomOf="@id/iv_common_volume_min"
         app:layout_constraintEnd_toStartOf="@id/iv_common_volume_max"
         app:layout_constraintStart_toEndOf="@id/iv_common_volume_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_common_volume_min">
+        app:layout_constraintTop_toTopOf="@id/iv_common_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_common"
@@ -342,10 +342,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_alarm_volume_min"
+        app:layout_constraintBottom_toBottomOf="@id/iv_alarm_volume_min"
         app:layout_constraintEnd_toStartOf="@id/iv_alarm_volume_max"
         app:layout_constraintStart_toEndOf="@id/iv_alarm_volume_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_alarm_volume_min">
+        app:layout_constraintTop_toTopOf="@id/iv_alarm_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_alarm"
@@ -408,10 +408,10 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_system_volume_min"
+        app:layout_constraintBottom_toBottomOf="@id/iv_system_volume_min"
         app:layout_constraintEnd_toStartOf="@id/iv_system_volume_max"
         app:layout_constraintStart_toEndOf="@id/iv_system_volume_min"
-        app:layout_constraintTop_toTopOf="@+id/iv_system_volume_min">
+        app:layout_constraintTop_toTopOf="@id/iv_system_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
             android:id="@+id/slidr_system"
@@ -465,12 +465,12 @@
         android:textColor="#333333"
         android:textSize="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_save"
+        app:layout_constraintEnd_toStartOf="@id/tv_save_btn"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="@id/lay_empty" />
 
     <TextView
-        android:id="@+id/tv_save"
+        android:id="@+id/tv_save_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"

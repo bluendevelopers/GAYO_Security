@@ -23,6 +23,7 @@ import bluen.homein.gayo_security.activity.visitHistory.VisitHistoryListActivity
 import bluen.homein.gayo_security.activity.workRecord.WorkRecordActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.databinding.ActivityMainBinding;
+import bluen.homein.gayo_security.global.GlobalApplication;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
@@ -66,6 +67,21 @@ public class MainActivity extends BaseActivity {
     TextView tvRegionInfo;
     @BindView(R.id.iv_weather_img)
     ImageView ivWeatherImg;
+
+    @OnClick(R.id.iv_power_btn)
+    void clickSecurityOnOffBtn() {
+        GlobalApplication.isSecurityMode = !GlobalApplication.isSecurityMode;
+
+        if (GlobalApplication.isSecurityMode) {
+            ivPowerBtn.setImageResource(R.drawable.on_icon);
+            tvSecurityState1.setText("경비실기 - 순찰 중");
+            tvSecurityState2.setText("순찰 ON");
+        } else {
+            ivPowerBtn.setImageResource(R.drawable.off_icon);
+            tvSecurityState1.setText("경비실기 - 근무 중");
+            tvSecurityState2.setText("순찰 OFF");
+        }
+    }
 
     @OnClick(R.id.lay_back_btn)
     void clickBackBtn() {

@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="34dp"
                     android:layout_marginTop="25dp"
-                    app:layout_constraintEnd_toStartOf="@+id/constraintLayout11"
+                    app:layout_constraintEnd_toStartOf="@id/lay_security_on_off_btn"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -140,7 +140,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout11"
+                    android:id="@+id/lay_security_on_off_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="88dp"
                     android:layout_marginTop="25dp"
@@ -152,7 +152,7 @@
 
                     <ImageView
                         android:id="@+id/iv_power_btn"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:src="@drawable/off_icon"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -165,7 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:fontFamily="@font/pretendard_semibold"
-                        android:text="경비 OFF"
+                        android:text="순찰 OFF"
                         android:textColor="#222222"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -268,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/weather_01"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/constraintLayout7"
+                        app:layout_constraintEnd_toStartOf="@id/constraintLayout7"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 

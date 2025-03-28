@@ -5,7 +5,7 @@ public class RetrofitURL {
 
     public final static String BASE_URL = "https://gayo-smarthome-guard.bluen.co.kr/ "; // REAL SERVER
     public final static String BASE_TEST_URL = "https://gayo-smarthome-guard-dev.azurewebsites.net/"; // TEST SERVER
-//    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER???
+    //    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER???
     public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";// WebSocket Signal Server
 
     //** 로그인 및 메인
@@ -18,7 +18,8 @@ public class RetrofitURL {
     public final static String LOAD_SETTING_DATA = "device/setting/info";
 
     //* 설정
-    public final static String SAVE_SETTING_DATA = "device/update/setting";
+    public final static String EXPORT_SETTING_DATA = "device/update/setting";
+    public final static String CHANGE_PASSWORD = "device/update/pwd";
 
     //** 연락처 추가
     public final static String DELETE_FACILITY_CONTACT = "device/my/conn/device/del"; //연락처(시설명) 삭제

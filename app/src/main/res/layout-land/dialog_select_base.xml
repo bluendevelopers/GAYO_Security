@@ -44,7 +44,7 @@
             android:layout_marginEnd="390dp"
             android:descendantFocusability="blocksDescendants"
             android:theme="@style/AppTheme.NumberPicker"
-            app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
+            app:layout_constraintBottom_toTopOf="@id/btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -1,15 +1,20 @@
 package bluen.homein.gayo_security.base;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import butterknife.ButterKnife;
 
 public abstract class BaseFragment extends Fragment {
@@ -18,6 +23,10 @@ public abstract class BaseFragment extends Fragment {
 
     protected Context appContext = null;
     protected Context fragmentContext = null;
+    protected String serialCode = "";
+    protected String buildingCode = "";
+    protected String myPassword = "";
+    protected Gayo_SharedPreferences mPrefGlobal = null;
 
     protected abstract int getLayoutResId();
 
@@ -35,6 +44,9 @@ public abstract class BaseFragment extends Fragment {
 
         if (activity != null) {
             appContext = activity.getApplicationContext();
+            serialCode = activity.serialCode;
+            buildingCode = activity.buildingCode;
+            mPrefGlobal = activity.mPrefGlobal;
         }
 
         initFragment();
@@ -57,5 +69,12 @@ public abstract class BaseFragment extends Fragment {
         initFragmentView(v);
 
         return v;
+    }
+
+
+    public void hideAndClearFocus(Context _context, EditText _editText) {
+        InputMethodManager inputManager = (InputMethodManager) _context.getSystemService(INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(_editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        _editText.clearFocus();
     }
 }

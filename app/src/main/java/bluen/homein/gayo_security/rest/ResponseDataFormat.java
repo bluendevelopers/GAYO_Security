@@ -49,6 +49,36 @@ public class ResponseDataFormat {
         }
     }
 
+    public static class PasswordDataBody extends MyGson implements Serializable {
+
+        //response
+        @SerializedName("result")
+        private String result;
+        @SerializedName("message")
+        private String message;
+
+        //request
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String builCode;
+        @SerializedName("pwd")
+        private String pwd;
+        @SerializedName("rePwd")
+        private String rePwd;
+
+        public String getResult() {
+            return result;
+        }
+
+        public PasswordDataBody(String serialCode, String builCode, String pwd, String rePwd) {
+            this.serialCode = serialCode;
+            this.builCode = builCode;
+            this.pwd = pwd;
+            this.rePwd = rePwd;
+        }
+    }
+
     public static class SavePreferencesData extends MyGson implements Serializable {
 
         @SerializedName("result")

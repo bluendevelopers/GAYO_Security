@@ -22,7 +22,7 @@
             android:id="@+id/lay_alert_msg"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/dialog_btn_confirm"
+            app:layout_constraintBottom_toTopOf="@id/dialog_btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -31,7 +31,7 @@
                 android:id="@+id/lay_empty_2"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/dialog_tv_additional_msg"
+                app:layout_constraintBottom_toTopOf="@id/dialog_tv_additional_msg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -51,8 +51,8 @@
                 android:textSize="28dp"
                 android:textStyle="bold"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@+id/dialog_tv_main_content"
-                app:layout_constraintTop_toBottomOf="@+id/lay_empty_2"
+                app:layout_constraintBottom_toTopOf="@id/dialog_tv_main_content"
+                app:layout_constraintTop_toBottomOf="@id/lay_empty_2"
                 app:layout_constraintVertical_weight="0.5" />
 
             <TextView
@@ -68,8 +68,8 @@
                 android:textColor="@color/main_color"
                 android:textSize="45dp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/dialog_tv_msg"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_tv_additional_msg"
+                app:layout_constraintBottom_toTopOf="@id/dialog_tv_msg"
+                app:layout_constraintTop_toBottomOf="@id/dialog_tv_additional_msg"
                 app:layout_constraintVertical_weight="1.5" />
 
             <TextView
@@ -86,7 +86,7 @@
                 android:textSize="28dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dialog_tv_main_content"
+                app:layout_constraintTop_toBottomOf="@id/dialog_tv_main_content"
                 app:layout_constraintVertical_weight="1.2" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/dialog_btn_confirm"
+            app:layout_constraintBottom_toTopOf="@id/dialog_btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -104,7 +104,7 @@
                 android:id="@+id/lay_empty_3"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/lay_warning_content"
+                app:layout_constraintBottom_toTopOf="@id/lay_warning_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -114,10 +114,10 @@
                 android:id="@+id/lay_warning_content"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintBottom_toTopOf="@+id/lay_empty_4"
+                app:layout_constraintBottom_toTopOf="@id/lay_empty_4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lay_empty_3"
+                app:layout_constraintTop_toBottomOf="@id/lay_empty_3"
                 app:layout_constraintVertical_weight="11">
 
                 <ImageView
@@ -145,7 +145,7 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_fail_icon"
+                    app:layout_constraintTop_toBottomOf="@id/iv_fail_icon"
                     app:layout_goneMarginTop="100dp" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -157,7 +157,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lay_warning_content"
+                app:layout_constraintTop_toBottomOf="@id/lay_warning_content"
                 app:layout_constraintVertical_weight="4" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -46,6 +46,15 @@ public class Gayo_SharedPreferences {
 
     }
 
+    public void setDevicePassword(String _value) {
+        putString(PrefKey.DEVICE_PASSWORD, _value);
+    }
+
+    public String getDevicePassword() {
+        return getString(PrefKey.DEVICE_PASSWORD, "0000");
+
+    }
+
     public String getFirebaseToken() {
         return getString(PrefKey.FIREBASE_TOKEN, null);
 
@@ -216,6 +225,7 @@ public class Gayo_SharedPreferences {
         private static final String AUTHORIZATION = "authorization";
         private static final String FIREBASE_TOKEN = "firebase_token";
         private static final String FACILITY_CONTACTS = "facility_contacts";
+        private static final String DEVICE_PASSWORD = "device_password";
 
     }
 

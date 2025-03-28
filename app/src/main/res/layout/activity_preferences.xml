@@ -79,7 +79,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/background_radius_15_fill"
         android:elevation="3dp"
-        app:layout_constraintBottom_toTopOf="@id/horizontalScrollView"
+        app:layout_constraintBottom_toTopOf="@id/rv_button_list"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintLayout10">
@@ -89,41 +89,69 @@
             android:id="@+id/lay_password"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/background_radius_15_fill"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/et_password"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="250dp"
-                android:layout_marginTop="220dp"
-                android:background="@drawable/btn_border_radius_15"
-                android:fontFamily="@font/pretendard_regular"
-                android:hint="비밀번호 입력"
-                android:padding="15dp"
-                android:textAlignment="center"
-                android:textColor="#b5b5b5"
-                android:textSize="35dp"
+                app:layout_constraintBottom_toTopOf="@id/btn_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/pretendard_regular"
-                android:textColor="#b5b5b5"
-                android:textSize="27dp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="@+id/et_password"
-                app:layout_constraintStart_toStartOf="@+id/et_password"
-                app:layout_constraintTop_toBottomOf="@+id/et_password"
-                android:text="* 초기 비밀번호는 0000 입니다." />
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_border_radius_15"
+                    android:hint="비밀번호 입력"
+                    android:inputType="numberPassword"
+                    android:maxLength="4"
+                    android:maxLines="1"
+                    android:textColorHint="#b5b5b5"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:singleLine="true"
+                    android:padding="15dp"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="35dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_wrong_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:fontFamily="@font/pretendard_medium"
+                    android:text="비밀번호가 맞지 않습니다."
+                    android:textColor="@color/Main_reverse_Color"
+                    android:visibility="invisible"
+                    android:textSize="23dp"
+                    app:layout_constraintEnd_toEndOf="@id/et_password"
+                    app:layout_constraintTop_toBottomOf="@id/et_password" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:text="* 초기 비밀번호는 0000 입니다."
+                    android:textColor="#b5b5b5"
+                    android:textSize="27dp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="@id/et_password"
+                    app:layout_constraintStart_toStartOf="@id/et_password"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_wrong_password" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Button
                 android:id="@+id/btn_password"
@@ -145,37 +173,17 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <HorizontalScrollView
-        android:id="@+id/horizontalScrollView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_button_list"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
+        android:layout_marginEnd="28dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_button_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/item_pref_button_list" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </HorizontalScrollView>
+        app:layout_constraintStart_toStartOf="parent"
+        tools:listitem="@layout/item_pref_button_list" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,7 +45,7 @@
             android:id="@+id/lay_empty_1"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/lay_select_door_open_mode"
+            app:layout_constraintBottom_toTopOf="@id/lay_select_door_open_mode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lay_empty_1"
+            app:layout_constraintTop_toBottomOf="@id/lay_empty_1"
             app:layout_constraintVertical_weight="37">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -97,10 +97,10 @@
                 android:id="@+id/lay_call_patrolman"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lay_auto_open">
+                app:layout_constraintTop_toBottomOf="@id/lay_auto_open">
 
                 <ImageView
                     android:id="@+id/iv_call_patrolman"
@@ -129,10 +129,10 @@
                 android:id="@+id/lay_call_main_contact"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/lay_call_patrolman">
+                app:layout_constraintStart_toStartOf="@+id/lay_call_patrolman"
+                app:layout_constraintTop_toBottomOf="@id/lay_call_patrolman">
 
                 <ImageView
                     android:id="@+id/iv_call_main_contact"
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="50dp"
                     android:fontFamily="@font/pretendard_regular"
-                    android:text="호출 시 자동 문열림"
+                    android:text="호출 시 대표 전화 문열림(지원 예정)"
                     android:textColor="#4a4a4a"
                     android:textSize="28dp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_call_main_contact"
@@ -177,7 +177,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_border_radius_10"
+        android:background="@drawable/btn_border_radius_15"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -186,12 +186,12 @@
         android:textColor="#333333"
         android:textSize="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_save"
+        app:layout_constraintEnd_toStartOf="@id/tv_save_btn"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="@id/lay_empty" />
 
     <TextView
-        android:id="@+id/tv_save"
+        android:id="@+id/tv_save_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"

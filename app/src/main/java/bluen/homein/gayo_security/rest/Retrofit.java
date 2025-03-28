@@ -64,8 +64,11 @@ public class Retrofit {
         @GET(RetrofitURL.LOAD_PATROL_MODE_TYPE_LIST)
         Call<List<ResponseDataFormat.PatrolModeListType>> loadPatrolModeTypeListGet(@Header("Authorization") String auth); // 사용자 설정_순찰모드 설정
 
-        @POST(RetrofitURL.SAVE_SETTING_DATA)
-        Call<ResponseDataFormat.SavePreferencesData> savePreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
+        @POST(RetrofitURL.EXPORT_SETTING_DATA)
+        Call<ResponseDataFormat.SavePreferencesData> exportPreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
+
+        @POST(RetrofitURL.CHANGE_PASSWORD)
+        Call<ResponseDataFormat.PasswordDataBody> changePassword(@Header("Authorization") String auth, @Body ResponseDataFormat.PasswordDataBody passwordDataBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

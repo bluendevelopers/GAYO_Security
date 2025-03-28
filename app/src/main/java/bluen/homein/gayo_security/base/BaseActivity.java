@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -39,12 +38,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     public String TAG = "";
     public Vibrator vibrator;
     public PopupDialog popupDialog;
-    public String buildingCode = "0004";
 
-//  public String serialCode = "testserialCode1"; //전화 거는 기기
+    //** 나중에 로그인 시 변동될 값들
+    public String buildingCode = "0004";
+    //  public String serialCode = "testserialCode1"; //전화 거는 기기
     public String serialCode = "testserialCode6"; //전화 받는 기기
 
-//    되는 기기
+    //    되는 기기
     public String macAddress = "00-00-00-00"; //더미
     public String ipAddress = "192.168.0.102"; //더미
 

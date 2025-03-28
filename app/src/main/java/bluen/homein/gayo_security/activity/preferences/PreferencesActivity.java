@@ -3,8 +3,12 @@ package bluen.homein.gayo_security.activity.preferences;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.VibrationEffect;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -12,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import bluen.homein.gayo_security.R;
+import bluen.homein.gayo_security.activity.preferences.fragment.ChangePasswordFragment;
 import bluen.homein.gayo_security.activity.preferences.fragment.DataSetFragment;
 import bluen.homein.gayo_security.activity.preferences.fragment.NetworkSetFragment;
 import bluen.homein.gayo_security.activity.preferences.fragment.PatrolModeSetFragment;
@@ -27,23 +33,18 @@ import bluen.homein.gayo_security.activity.preferences.fragment.ScreenSetFragmen
 import bluen.homein.gayo_security.activity.preferences.fragment.SleepModeSetFragment;
 import bluen.homein.gayo_security.activity.preferences.fragment.VolumeSetFragment;
 import bluen.homein.gayo_security.base.BaseActivity;
-import bluen.homein.gayo_security.databinding.FragmentDataSetBinding;
-import bluen.homein.gayo_security.databinding.FragmentNetworkSetBinding;
-import bluen.homein.gayo_security.databinding.FragmentPatrolModeSetBinding;
-import bluen.homein.gayo_security.databinding.FragmentSleepModeSetBinding;
-import bluen.homein.gayo_security.databinding.FragmentVolumeSetBinding;
 import bluen.homein.gayo_security.dialog.PopupDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
-import butterknife.OnTouch;
 
 public class PreferencesActivity extends BaseActivity {
-
 
     @BindView(R.id.tv_page_title)
     TextView tvPageTitle;
     @BindView(R.id.lay_container)
     ConstraintLayout layContainer;
+    @BindView(R.id.tv_wrong_password)
+    TextView tvWrongPassword;
     @BindView(R.id.et_password)
     EditText etPassword;
     @BindView(R.id.lay_password)
@@ -52,13 +53,9 @@ public class PreferencesActivity extends BaseActivity {
     RecyclerView rvButtonList;
 
     private PrefButtonListAdapter prefButtonListAdapter;
-    private FragmentDataSetBinding fragmentDataSetBinding;
-    private FragmentNetworkSetBinding fragmentNetworkSetBinding;
-    private FragmentPatrolModeSetBinding fragmentPatrolModeSetBinding;
-    private FragmentSleepModeSetBinding fragmentSleepModeSetBinding;
-    private FragmentVolumeSetBinding fragmentVolumeSetBinding;
     private List<String> prefItemList = new ArrayList<>();
-
+    private String clickedBtnName = "";
+    public boolean isRefresh = false;
 
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
@@ -66,11 +63,6 @@ public class PreferencesActivity extends BaseActivity {
         finish();
     }
 
-    @OnTouch(R.id.et_password)
-    void clickEditText() {
-        etPassword.setFocusableInTouchMode(true);
-        etPassword.setFocusable(true);
-    }
 
     @OnClick(R.id.lay_password)
     void clickLayPassword() {
@@ -79,13 +71,14 @@ public class PreferencesActivity extends BaseActivity {
 
     @OnClick(R.id.btn_password)
     void clickBtnPassword() {
-
         //code
-        if (etPassword.getText().toString().equals("0000")) {
+        if (etPassword.getText().toString().equals(mPrefGlobal.getDevicePassword())) {
             prefButtonListAdapter.setAccessible(true);
             hideAndClearFocus(PreferencesActivity.this, etPassword);
             hideNavigationBar();
             layPassword.setVisibility(View.GONE);
+            prefButtonListAdapter.selectedPosition = 0;
+            prefButtonListAdapter.notifyDataSetChanged();
             Fragment selectedFragment = new ScreenSetFragment();
 
             if (selectedFragment != null) {
@@ -94,12 +87,17 @@ public class PreferencesActivity extends BaseActivity {
                         .replace(R.id.lay_container, selectedFragment)
                         .commit();
             }
+        } else {
+            etPassword.setBackgroundDrawable(getDrawable(R.drawable.btn_border_radius_15_stroke_red));
+            tvWrongPassword.setVisibility(View.VISIBLE);
+
         }
     }
 
     public void onTextViewClicked(View view) {
         TextView clickedTextView = (TextView) view;
         String tvStr = ((TextView) view).getText().toString();
+        clickedBtnName = tvStr;
 
         int mainColor = ContextCompat.getColor(this, R.color.main_color);
 
@@ -128,7 +126,7 @@ public class PreferencesActivity extends BaseActivity {
                 selectedFragment = new PatrolModeSetFragment();
                 break;
             case "비밀번호 변경":
-//                selectedFragment = new ChangePassword();
+                selectedFragment = new ChangePasswordFragment();
                 break;
         }
         tvPageTitle.setText("사용자 설정 _" + tvStr);
@@ -143,12 +141,10 @@ public class PreferencesActivity extends BaseActivity {
 
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
         hideNavigationBar();
-
 
     }
 
@@ -160,18 +156,6 @@ public class PreferencesActivity extends BaseActivity {
     @Override
     protected void initActivity(Bundle savedInstanceState) {
         hideNavigationBar();
-        prefItemList = Arrays.asList("화면 설정", "음량 조절", "슬립모드 설정", "네트워크 설정", "데이터 설정", "순찰모드 설정", "비밀번호 변경");
-
-        prefButtonListAdapter = new PrefButtonListAdapter(PreferencesActivity.this, R.layout.item_pref_button_list, new PrefButtonListAdapter.OnPrefButtonClickListener() {
-            @Override
-            public void clickButton(TextView textView) {
-                if (layPassword.getVisibility() != View.VISIBLE) {
-                    onTextViewClicked(textView);
-                }
-            }
-        });
-        prefButtonListAdapter.setItems(prefItemList);
-        rvButtonList.setAdapter(prefButtonListAdapter);
 
         popupDialog.onCallBack(new PopupDialog.DialogCallback() {
             @Override
@@ -185,6 +169,58 @@ public class PreferencesActivity extends BaseActivity {
             }
         });
 
+        prefItemList = Arrays.asList("화면 설정", "음량 조절", "슬립모드 설정", "네트워크 설정", "데이터 설정", "순찰모드 설정", "비밀번호 변경");
+
+        prefButtonListAdapter = new PrefButtonListAdapter(PreferencesActivity.this, R.layout.item_pref_button_list, new PrefButtonListAdapter.OnPrefButtonClickListener() {
+            @Override
+            public void clickButton(TextView textView) {
+                if (layPassword.getVisibility() != View.VISIBLE) {
+                    onTextViewClicked(textView);
+                }
+            }
+        });
+
+        prefButtonListAdapter.setItems(prefItemList);
+        rvButtonList.setAdapter(prefButtonListAdapter);
+
+        Typeface originalTypeface = ResourcesCompat.getFont(PreferencesActivity.this, R.font.pretendard_regular);
+
+        etPassword.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    clickBtnPassword();
+                    return true;
+                } else {
+                    return false;
+                }
+
+            }
+        });
+
+        etPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Typeface currentTypeface = etPassword.getTypeface();
+
+                if (s.length() > 0) {
+                    etPassword.setTypeface(originalTypeface, Typeface.BOLD);
+                } else {
+                    etPassword.setTypeface(originalTypeface, Typeface.NORMAL);
+                }
+                etPassword.setBackgroundDrawable(getDrawable(R.drawable.btn_border_radius_15));
+                tvWrongPassword.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
     }
 
