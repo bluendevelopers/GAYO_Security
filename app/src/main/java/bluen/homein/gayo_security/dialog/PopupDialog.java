@@ -114,11 +114,11 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
             if (_confirm != null) {
                 confirm.setText(_confirm);
-                confirm.setOnClickListener(this);
-//                confirm.setOnClickListener(v -> {
-//                    dismiss();
-//                    dialogListener.onNextStep();
-//                });
+//                confirm.setOnClickListener(this);
+                confirm.setOnClickListener(v -> {
+                    dismiss();
+                    dialogListener.onNextStep();
+                });
             } else {
                 confirm.setVisibility(View.GONE);
             }
@@ -187,12 +187,11 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
             if (_confirm != null) {
                 confirm.setText(_confirm);
-                confirm.setOnClickListener(this);
-//                confirm.setOnClickListener(v -> {
-//                    dismiss();
-//                    dialogListener.onNextStep();
-//
-//                });
+                confirm.setOnClickListener(v -> {
+                    dismiss();
+                    dialogListener.onNextStep();
+
+                });
             } else {
                 confirm.setVisibility(View.GONE);
             }
@@ -218,7 +217,8 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
             laySuccess.setVisibility(View.GONE);
             layWarning.setVisibility(View.VISIBLE);
-            cancel.setVisibility(View.GONE);
+            confirm.setVisibility(View.VISIBLE);
+            cancel.setVisibility(View.VISIBLE);
 
             if (_confirm != null) {
                 confirm.setText(_confirm);
@@ -298,6 +298,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
 
             if (_confirm != null) {
                 confirm.setText(_confirm);
+                confirm.setVisibility(View.VISIBLE);
                 confirm.setOnClickListener(v -> {
                     dismiss();
                     dialogListener.onNextStep();
@@ -306,8 +307,13 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
                 confirm.setVisibility(View.GONE);
             }
 
-            cancel.setText(_cancel);
-            cancel.setOnClickListener(this);
+            if (_cancel != null) {
+                cancel.setVisibility(View.VISIBLE);
+                cancel.setText(_cancel);
+                cancel.setOnClickListener(this);
+            } else {
+                cancel.setVisibility(View.GONE);
+            }
 
             if (_title != null) {
                 title.setText(_title);

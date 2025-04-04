@@ -11,16 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.base.BaseRecyclerAdapter;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 
 public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButtonListAdapter.ViewHolder> {
     private OnPrefButtonClickListener listener;  // 콜백 인터페이스 변수
     private Context context;
     private boolean isAccessible = false;
     public int selectedPosition = 999;
+    public Gayo_SharedPreferences mPrefGlobal = null;
 
-    public PrefButtonListAdapter(Context context, int resource, OnPrefButtonClickListener listener) {
+    public PrefButtonListAdapter(Context context, int resource, Gayo_SharedPreferences mPrefGlobal, OnPrefButtonClickListener listener) {
         super(context, resource);
         this.context = context;
+        this.mPrefGlobal = mPrefGlobal;
         this.listener = listener;
     }
 
@@ -71,17 +74,22 @@ public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButto
         }
 
         holder.layBtnBackground.setOnClickListener(view -> {
-            if (isAccessible) {
-                int previousSelected = selectedPosition;
-                selectedPosition = position; // 현재 클릭한 position을 선택 상태로 저장
+            if (mPrefGlobal.getAuthorization() != null) {
+                if (isAccessible) {
+                    int previousSelected = selectedPosition;
+                    selectedPosition = position; // 현재 클릭한 position을 선택 상태로 저장
 
-                notifyItemChanged(previousSelected);
-                notifyItemChanged(selectedPosition);
+                    notifyItemChanged(previousSelected);
+                    notifyItemChanged(selectedPosition);
 
-                listener.clickButton(holder.tvPrefName);
+                    listener.clickButton(holder.tvPrefName);
+                } else {
+                    ((PreferencesActivity) context)
+                            .showPopupDialog("비밀번호 입력 후\n사용 가능합니다.", "확 인");
+                }
             } else {
                 ((PreferencesActivity) context)
-                        .showPopupDialog("비밀번호 입력 후 사용 가능합니다.", "확 인");
+                        .showPopupDialog("데이터 세팅 또는 데이터 불러오기\n완료 후 사용 가능합니다.", "확 인");
             }
         });
     }

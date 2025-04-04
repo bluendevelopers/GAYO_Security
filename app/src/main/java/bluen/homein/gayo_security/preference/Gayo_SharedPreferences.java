@@ -34,7 +34,6 @@ public class Gayo_SharedPreferences {
         this.mPrefs = context.getSharedPreferences(info, Context.MODE_PRIVATE);
     }
 
-
     //----------------------------------------- auth
 
     public void setAuthorization(String _value) {
@@ -43,6 +42,15 @@ public class Gayo_SharedPreferences {
 
     public String getAuthorization() {
         return getString(PrefKey.AUTHORIZATION, null);
+
+    }
+
+    public void setPatrolDoorOpen(int _value) {
+        putInteger(PrefKey.PATROL_DOOR_OPEN, _value);
+    }
+
+    public int getPatrolDoorOpen() {
+        return getInteger(PrefKey.PATROL_DOOR_OPEN, 0);
 
     }
 
@@ -198,6 +206,25 @@ public class Gayo_SharedPreferences {
 
     //--------------------------------------------------- Class Get & Put
 
+//    public static class PrefDeviceData {
+//        public static final String PREF_DEVICE_KEY = "device_data_key";
+//        public static final String PREF_DEVICE_VALUE = "device_data_value";
+//
+//        public static RequestDataFormat.DeviceBody prefItem;
+//
+//        public static void setPrefDeviceData(Context _context, RequestDataFormat.DeviceBody _prefItem) {
+//            _context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE).edit()
+//                    .putString(PREF_DEVICE_VALUE, new Gson().toJson(_prefItem, RequestDataFormat.DeviceBody.class)).commit();
+//            prefItem = getDeviceData(_context);
+//        }
+//
+//        public static RequestDataFormat.DeviceBody getDeviceData(Context _context) {
+//            return new Gson().fromJson(_context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE)
+//                    .getString(PREF_DEVICE_VALUE, ""), RequestDataFormat.DeviceBody.class);
+//        }
+//
+//    }
+
     public static class PrefDeviceData {
         public static final String PREF_DEVICE_KEY = "device_data_key";
         public static final String PREF_DEVICE_VALUE = "device_data_value";
@@ -205,16 +232,34 @@ public class Gayo_SharedPreferences {
         public static RequestDataFormat.DeviceBody prefItem;
 
         public static void setPrefDeviceData(Context _context, RequestDataFormat.DeviceBody _prefItem) {
+            String json = new Gson().toJson(_prefItem, RequestDataFormat.DeviceBody.class);
             _context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE).edit()
-                    .putString(PREF_DEVICE_VALUE, new Gson().toJson(_prefItem, RequestDataFormat.DeviceBody.class)).commit();
-            prefItem = getDeviceData(_context);
+                    .putString(PREF_DEVICE_VALUE, json)
+                    .apply();
+
+            prefItem = _prefItem;
         }
 
         public static RequestDataFormat.DeviceBody getDeviceData(Context _context) {
-            return new Gson().fromJson(_context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE)
-                    .getString(PREF_DEVICE_VALUE, ""), RequestDataFormat.DeviceBody.class);
+            String json = _context.getSharedPreferences(PREF_DEVICE_KEY, Context.MODE_PRIVATE)
+                    .getString(PREF_DEVICE_VALUE, null);
+
+            if (json == null || json.isEmpty()) {
+                return null;
+            }
+
+            try {
+                return new Gson().fromJson(json, RequestDataFormat.DeviceBody.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
+        // 앱 시작 시 초기화 호출 (필수!)
+        public static void initPrefDeviceData(Context context) {
+            prefItem = getDeviceData(context);
+        }
     }
  
     //---------------------------------------- User Info
@@ -223,6 +268,7 @@ public class Gayo_SharedPreferences {
     static private class PrefKey {
 
         private static final String AUTHORIZATION = "authorization";
+        private static final String PATROL_DOOR_OPEN = "patrol_door_open";
         private static final String FIREBASE_TOKEN = "firebase_token";
         private static final String FACILITY_CONTACTS = "facility_contacts";
         private static final String DEVICE_PASSWORD = "device_password";

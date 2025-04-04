@@ -23,6 +23,7 @@ import bluen.homein.gayo_security.activity.visitHistory.VisitHistoryListActivity
 import bluen.homein.gayo_security.activity.workRecord.WorkRecordActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.databinding.ActivityMainBinding;
+import bluen.homein.gayo_security.dialog.PopupDialog;
 import bluen.homein.gayo_security.global.GlobalApplication;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_MAIN = 1;
     public static final int RESULT_CHANGED_WORKER = 2;
+    private static final int REQUEST_CODE_FIRST_SETTING = 3;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -149,9 +151,28 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        getWeatherInfo();
-        if (resultCode == RESULT_CHANGED_WORKER) {
-            getCurrentWorkerInfo();
+        if (requestCode == REQUEST_CODE_FIRST_SETTING) {
+            if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
+                // initActivity Code
+                Intent serviceIntent = new Intent(this, WebSocketService.class);
+                serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
+                serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
+
+                startService(serviceIntent);
+                getCurrentWorkerInfo();
+                getWeatherInfo();
+                getFacilityContactList();
+            } else {
+                showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는\n데이터를 불러와주세요. (임시 문구)", getString(R.string.confirm));
+            }
+            return;
+        }
+
+        if (mPrefGlobal.getAuthorization() != null) {
+            getWeatherInfo();
+            if (resultCode == RESULT_CHANGED_WORKER) {
+                getCurrentWorkerInfo();
+            }
         }
     }
 
@@ -162,19 +183,41 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setResult(-1);
+    }
+
+    @Override
     protected void initActivity(Bundle savedInstanceState) {
 
-        Intent serviceIntent = new Intent(this, WebSocketService.class);
-        if (Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
+        popupDialog.onCallBack(new PopupDialog.DialogCallback() {
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onNextStep() {
+                if (mPrefGlobal.getAuthorization() == null || Gayo_SharedPreferences.PrefDeviceData.prefItem == null) {
+                    Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
+                    startActivityForResult(intent, REQUEST_CODE_FIRST_SETTING);
+                }
+            }
+        });
+
+        if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
+            Intent serviceIntent = new Intent(this, WebSocketService.class);
             serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
             serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
-            startService(serviceIntent);
-        }
-        getCurrentWorkerInfo();
-        getWeatherInfo();
 
-        if (mPrefGlobal.getContactsList() == null) {
+            startService(serviceIntent);
+            getCurrentWorkerInfo();
+            getWeatherInfo();
             getFacilityContactList();
+
+        } else {
+            showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는 데이터를 불러와주세요. (임시 문구)", getString(R.string.confirm));
         }
 
     }

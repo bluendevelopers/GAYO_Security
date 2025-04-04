@@ -31,7 +31,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected static Context mContext = null;
     public final String API_RESULT_OK = "O";
-    public GlobalApplication application;
     public ProgressDialog progressDialog;
     public Gayo_SharedPreferences mPrefGlobal = null;
     public boolean mIsFinish;
@@ -67,8 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getLayoutResId());
 
         ButterKnife.bind(this);
-
-        application = (GlobalApplication) getApplicationContext();
 
         if (null == mPrefGlobal) {
             mPrefGlobal = new Gayo_SharedPreferences(getApplicationContext(), Gayo_Preferences.GLOBAL_INFO);

@@ -3,6 +3,7 @@ package bluen.homein.gayo_security.rest;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class RequestDataFormat {
 
@@ -71,6 +72,7 @@ public class RequestDataFormat {
             return message;
         }
 
+
         public DeviceBody(String serialCode, String buildingCode, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
@@ -103,6 +105,22 @@ public class RequestDataFormat {
         public DeviceNetworkBody getDeviceNetworkBody() {
             return deviceNetworkBody;
         }
+
+        public void setDeviceNetworkBody(DeviceNetworkBody deviceNetworkBody) {
+            this.deviceNetworkBody = deviceNetworkBody;
+        }
+
+        public void setDeviceSleepModeBody(DeviceSleepModeBody deviceSleepModeBody) {
+            this.deviceSleepModeBody = deviceSleepModeBody;
+        }
+
+        public void setDeviceSoundBody(DeviceSoundBody deviceSoundBody) {
+            this.deviceSoundBody = deviceSoundBody;
+        }
+
+        public void setDeviceUIBody(DeviceUIBody deviceUIBody) {
+            this.deviceUIBody = deviceUIBody;
+        }
     }
 
     public static class DeviceSoundBody implements Serializable {
@@ -123,6 +141,17 @@ public class RequestDataFormat {
         private int notiSound;
         @SerializedName("systemSound")
         private int systemSound;
+
+        public DeviceSoundBody(int intercomSound, String intercomBell, int callSound, String callBell, int entranceSound, String entranceBell, int notiSound, int systemSound) {
+            this.intercomSound = intercomSound;
+            this.intercomBell = intercomBell;
+            this.callSound = callSound;
+            this.callBell = callBell;
+            this.entranceSound = entranceSound;
+            this.entranceBell = entranceBell;
+            this.notiSound = notiSound;
+            this.systemSound = systemSound;
+        }
 
         public int getIntercomSound() {
             return intercomSound;
@@ -161,10 +190,19 @@ public class RequestDataFormat {
         @SerializedName("ipAddress")
         private String ipAddress;
 
+        public IpAddressBody(String ipAddress) {
+            this.ipAddress = ipAddress;
+        }
+
         public String getIpAddress() {
             return ipAddress;
         }
+
+        public void setIpAddress(String ipAddress) {
+            this.ipAddress = ipAddress;
+        }
     }
+
 
     public static class DeviceNetworkBody implements Serializable {
         @SerializedName("facilityName")
@@ -182,7 +220,7 @@ public class RequestDataFormat {
         @SerializedName("serverPort")
         private int serverPort;
         @SerializedName("ipPermission")
-        private IpAddressBody[] ipPermissionArray;
+        private List<IpAddressBody> allowedIpList;
 
         public String getFacilityName() {
             return facilityName;
@@ -212,8 +250,19 @@ public class RequestDataFormat {
             return serverPort;
         }
 
-        public IpAddressBody[] getIpPermissionArray() {
-            return ipPermissionArray;
+        public List<IpAddressBody> getAllowedIpList() {
+            return allowedIpList;
+        }
+
+        public DeviceNetworkBody(String facilityName, String ipAddress, String macAddress, String gateWayIP, String subNet, String serverIP, int serverPort, List<IpAddressBody> allowedIpList) {
+            this.facilityName = facilityName;
+            this.ipAddress = ipAddress;
+            this.macAddress = macAddress;
+            this.gateWayIP = gateWayIP;
+            this.subNet = subNet;
+            this.serverIP = serverIP;
+            this.serverPort = serverPort;
+            this.allowedIpList = allowedIpList;
         }
     }
 

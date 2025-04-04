@@ -19,12 +19,6 @@ public class Retrofit {
         @POST(RetrofitURL.LOGIN_URL)
         Call<ResponseDataFormat.LoginData> getAuthInfo(@Body RequestDataFormat.DeviceInfoBody body);
 
-        @POST(RetrofitURL.LOAD_SETTING_DATA)
-        Call<RequestDataFormat.DeviceBody> loadDeviceDataPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
-
-        @POST(RetrofitURL.LOAD_NETWORK_DATA)
-        Call<RequestDataFormat.DeviceBody> loadNetworkSettingPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
-
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -66,6 +60,12 @@ public class Retrofit {
 
         @POST(RetrofitURL.EXPORT_SETTING_DATA)
         Call<ResponseDataFormat.SavePreferencesData> exportPreferencesPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
+
+        @POST(RetrofitURL.LOAD_SETTING_DATA)
+        Call<RequestDataFormat.DeviceBody> loadDeviceDataPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
+
+        @POST(RetrofitURL.LOAD_NETWORK_DATA)
+        Call<RequestDataFormat.DeviceBody> loadNetworkSettingPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceInfoBody body);
 
         @POST(RetrofitURL.CHANGE_PASSWORD)
         Call<ResponseDataFormat.PasswordDataBody> changePassword(@Header("Authorization") String auth, @Body ResponseDataFormat.PasswordDataBody passwordDataBody);

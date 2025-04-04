@@ -124,42 +124,21 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/tv_cancel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_border_radius_15"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="취 소"
-        android:textColor="#333333"
-        android:textSize="35dp"
-        android:fontFamily="@font/pretendard_semibold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_save_btn"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/lay_empty" />
-
-    <TextView
         android:id="@+id/tv_save_btn"
-        android:layout_width="0dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/btn_blue_fill_border_radius_15"
+        android:fontFamily="@font/pretendard_regular"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:fontFamily="@font/pretendard_regular"
         android:text="저장 하기"
         android:textColor="@color/white"
         android:textSize="35dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@id/tv_cancel" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

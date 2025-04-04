@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/tv_intercom_option"
+        android:id="@+id/tv_inter_phone_option"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -19,30 +19,30 @@
         app:layout_constraintVertical_weight="1" />
 
     <ImageView
-        android:id="@+id/iv_intercom_volume_min"
+        android:id="@+id/iv_inter_phone_volume_min"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="60dp"
         android:src="@drawable/ic_volume_min"
-        app:layout_constraintBottom_toBottomOf="@id/tv_intercom_option"
-        app:layout_constraintStart_toEndOf="@id/tv_intercom_option"
-        app:layout_constraintTop_toTopOf="@id/tv_intercom_option" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_inter_phone_option"
+        app:layout_constraintStart_toEndOf="@id/tv_inter_phone_option"
+        app:layout_constraintTop_toTopOf="@id/tv_inter_phone_option" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/lay_intercom_volume_bar"
+        android:id="@+id/lay_inter_phone_volume_bar"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/btn_border_radius_10_stroke_gray"
-        app:layout_constraintBottom_toBottomOf="@id/iv_intercom_volume_min"
-        app:layout_constraintEnd_toStartOf="@id/iv_intercom_volume_max"
-        app:layout_constraintStart_toEndOf="@id/iv_intercom_volume_min"
-        app:layout_constraintTop_toTopOf="@id/iv_intercom_volume_min">
+        app:layout_constraintBottom_toBottomOf="@id/iv_inter_phone_volume_min"
+        app:layout_constraintEnd_toStartOf="@id/iv_inter_phone_volume_max"
+        app:layout_constraintStart_toEndOf="@id/iv_inter_phone_volume_min"
+        app:layout_constraintTop_toTopOf="@id/iv_inter_phone_volume_min">
 
         <com.github.florent37.androidslidr.Slidr
-            android:id="@+id/slidr_intercom_volume"
+            android:id="@+id/slidr_inter_phone_volume"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -63,26 +63,26 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
-        android:id="@+id/iv_intercom_volume_max"
+        android:id="@+id/iv_inter_phone_volume_max"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_volume_max"
-        app:layout_constraintBottom_toBottomOf="@id/tv_intercom_option"
-        app:layout_constraintEnd_toStartOf="@id/iv_intercom_left"
-        app:layout_constraintTop_toTopOf="@id/tv_intercom_option" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_inter_phone_option"
+        app:layout_constraintEnd_toStartOf="@id/iv_inter_phone_left"
+        app:layout_constraintTop_toTopOf="@id/tv_inter_phone_option" />
 
     <ImageView
-        android:id="@+id/iv_intercom_left"
+        android:id="@+id/iv_inter_phone_left"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginStart="50dp"
         android:src="@drawable/ic_option_left"
-        app:layout_constraintBottom_toBottomOf="@id/tv_intercom_option"
-        app:layout_constraintStart_toEndOf="@id/iv_intercom_volume_max"
-        app:layout_constraintTop_toTopOf="@id/tv_intercom_option" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_inter_phone_option"
+        app:layout_constraintStart_toEndOf="@id/iv_inter_phone_volume_max"
+        app:layout_constraintTop_toTopOf="@id/tv_inter_phone_option" />
 
     <TextView
-        android:id="@+id/tv_intercom_sound"
+        android:id="@+id/tv_inter_phone_sound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="100dp"
@@ -90,22 +90,22 @@
         android:textColor="#4a4a4a"
         android:textSize="28dp"
         android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="@id/tv_intercom_option"
-        app:layout_constraintEnd_toStartOf="@id/iv_intercom_right"
-        app:layout_constraintStart_toEndOf="@id/iv_intercom_left"
-        app:layout_constraintTop_toTopOf="@id/tv_intercom_option" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_inter_phone_option"
+        app:layout_constraintEnd_toStartOf="@id/iv_inter_phone_right"
+        app:layout_constraintStart_toEndOf="@id/iv_inter_phone_left"
+        app:layout_constraintTop_toTopOf="@id/tv_inter_phone_option" />
 
     <ImageView
-        android:id="@+id/iv_intercom_right"
+        android:id="@+id/iv_inter_phone_right"
         android:layout_width="55dp"
         android:layout_height="55dp"
         android:layout_marginStart="100dp"
         android:layout_marginEnd="50dp"
         android:src="@drawable/ic_option_right"
-        app:layout_constraintBottom_toBottomOf="@id/tv_intercom_option"
+        app:layout_constraintBottom_toBottomOf="@id/tv_inter_phone_option"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_intercom_sound"
-        app:layout_constraintTop_toTopOf="@id/tv_intercom_option" />
+        app:layout_constraintStart_toEndOf="@id/tv_inter_phone_sound"
+        app:layout_constraintTop_toTopOf="@id/tv_inter_phone_option" />
 
     <TextView
         android:id="@+id/tv_phone_option"
@@ -118,7 +118,7 @@
         android:textSize="28dp"
         app:layout_constraintBottom_toTopOf="@id/tv_common_option"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_intercom_option"
+        app:layout_constraintTop_toBottomOf="@id/tv_inter_phone_option"
         app:layout_constraintVertical_weight="1" />
 
     <ImageView
@@ -127,7 +127,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_volume_min"
         app:layout_constraintBottom_toBottomOf="@id/tv_phone_option"
-        app:layout_constraintStart_toStartOf="@id/iv_intercom_volume_min"
+        app:layout_constraintStart_toStartOf="@id/iv_inter_phone_volume_min"
         app:layout_constraintTop_toTopOf="@id/tv_phone_option" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -229,7 +229,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_volume_min"
         app:layout_constraintBottom_toBottomOf="@id/tv_common_option"
-        app:layout_constraintStart_toStartOf="@id/iv_intercom_volume_min"
+        app:layout_constraintStart_toStartOf="@id/iv_inter_phone_volume_min"
         app:layout_constraintTop_toTopOf="@id/tv_common_option" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -331,7 +331,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_volume_min"
         app:layout_constraintBottom_toBottomOf="@id/tv_alarm_option"
-        app:layout_constraintStart_toStartOf="@id/iv_intercom_volume_min"
+        app:layout_constraintStart_toStartOf="@id/iv_inter_phone_volume_min"
         app:layout_constraintTop_toTopOf="@id/tv_alarm_option" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -386,7 +386,7 @@
         android:text="시스템음"
         android:textColor="#4a4a4a"
         android:textSize="28dp"
-        app:layout_constraintBottom_toTopOf="@id/tv_cancel"
+        app:layout_constraintBottom_toTopOf="@id/tv_save_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_alarm_option"
         app:layout_constraintVertical_weight="1" />
@@ -397,7 +397,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_volume_min"
         app:layout_constraintBottom_toBottomOf="@id/tv_system_option"
-        app:layout_constraintStart_toStartOf="@id/iv_intercom_volume_min"
+        app:layout_constraintStart_toStartOf="@id/iv_inter_phone_volume_min"
         app:layout_constraintTop_toTopOf="@id/tv_system_option" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -451,27 +451,8 @@
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
-        android:id="@+id/tv_cancel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/btn_border_radius_15"
-        android:fontFamily="@font/pretendard_semibold"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="취 소"
-        android:textColor="#333333"
-        android:textSize="35dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tv_save_btn"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintStart_toStartOf="@id/lay_empty" />
-
-    <TextView
         android:id="@+id/tv_save_btn"
-        android:layout_width="0dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="20dp"
@@ -485,7 +466,5 @@
         android:textSize="35dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_weight="2"
-        app:layout_constraintStart_toEndOf="@id/tv_cancel" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

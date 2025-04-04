@@ -2,6 +2,8 @@ package bluen.homein.gayo_security.base;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
+import static bluen.homein.gayo_security.base.BaseActivity.mContext;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -43,7 +45,7 @@ public abstract class BaseFragment extends Fragment {
         activity = (BaseActivity) getActivity();
 
         if (activity != null) {
-            appContext = activity.getApplicationContext();
+            appContext = mContext;
             serialCode = activity.serialCode;
             buildingCode = activity.buildingCode;
             mPrefGlobal = activity.mPrefGlobal;

@@ -85,7 +85,8 @@ public class IntroActivity extends BaseActivity {
                 requestPermissions(PermissionInfo.RECORD_PERMISSION, PERMISSION_REQUEST_CODE_AUDIO_RECORD);
 
             } else {
-                doLogin();
+                Gayo_SharedPreferences.PrefDeviceData.initPrefDeviceData(mContext);
+                goToMain();
             }
         }
     }
@@ -135,9 +136,8 @@ public class IntroActivity extends BaseActivity {
         return result;
     }
 
-
     private void getDeviceData() {
-        Retrofit.LoginApi loginApi = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
+        Retrofit.PreferencesApi loginApi = Retrofit.PreferencesApi.retrofit.create(Retrofit.PreferencesApi.class);
 
         Call<RequestDataFormat.DeviceBody> call = loginApi.loadDeviceDataPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
 
@@ -182,7 +182,8 @@ public class IntroActivity extends BaseActivity {
                     if (response.body().getAuthorization() != null) {
                         mPrefGlobal.setAuthorization(response.body().getAuthorization());
 //                        goToMain();
-                        getDeviceData();
+                        Gayo_SharedPreferences.PrefDeviceData.initPrefDeviceData(mContext);
+                        goToMain();
                     } else {
 
                     }

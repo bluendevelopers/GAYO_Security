@@ -130,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/pretendard_semibold"
-                        android:text="010-9999-8888"
+                        android:text="000-0000-0000"
                         android:textColor="#222222"
                         android:textSize="30dp"
                         app:layout_constraintEnd_toEndOf="parent"

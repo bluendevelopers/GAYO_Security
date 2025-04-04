@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lay_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/et_allow_ip_1"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="@drawable/btn_border_radius_15"
+        android:gravity="center"
+        android:hint="255"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="#b5b5b5"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/et_allow_ip_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_allow_ip_2"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/btn_border_radius_15"
+        android:gravity="center"
+        android:hint="255"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="#b5b5b5"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/et_allow_ip_1"
+        app:layout_constraintEnd_toStartOf="@id/et_allow_ip_3"
+        app:layout_constraintStart_toEndOf="@id/et_allow_ip_1"
+        app:layout_constraintTop_toTopOf="@id/et_allow_ip_1" />
+
+    <EditText
+        android:id="@+id/et_allow_ip_3"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/btn_border_radius_15"
+        android:gravity="center"
+        android:hint="255"
+        android:imeOptions="actionNext"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="#b5b5b5"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/et_allow_ip_1"
+        app:layout_constraintEnd_toStartOf="@id/et_allow_ip_4"
+        app:layout_constraintStart_toEndOf="@id/et_allow_ip_2"
+        app:layout_constraintTop_toTopOf="@id/et_allow_ip_1" />
+
+    <EditText
+        android:id="@+id/et_allow_ip_4"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/btn_border_radius_15"
+        android:gravity="center"
+        android:hint="255"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:maxLength="3"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColorHint="#b5b5b5"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="@id/et_allow_ip_1"
+        app:layout_constraintEnd_toStartOf="@id/tv_allow_add"
+        app:layout_constraintStart_toEndOf="@id/et_allow_ip_3"
+        app:layout_constraintTop_toTopOf="@id/et_allow_ip_1" />
+
+    <TextView
+        android:id="@+id/tv_allow_add"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/btn_border_radius_15"
+        app:layout_constraintBottom_toBottomOf="@id/et_allow_ip_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/et_allow_ip_4"
+        app:layout_constraintTop_toTopOf="@id/et_allow_ip_1" />
+
+    <ImageView
+        android:id="@+id/iv_btn_type"
+        android:layout_width="38dp"
+        android:layout_height="40dp"
+        android:layout_margin="20dp"
+        android:src="@drawable/minus_b"
+        app:layout_constraintBottom_toBottomOf="@id/tv_allow_add"
+        app:layout_constraintEnd_toEndOf="@id/tv_allow_add"
+        app:layout_constraintStart_toStartOf="@id/tv_allow_add"
+        app:layout_constraintTop_toTopOf="@id/tv_allow_add" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

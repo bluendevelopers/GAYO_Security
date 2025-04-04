@@ -20,7 +20,7 @@ public class DataSetFragment extends BaseFragment {
     void getDeviceData() {
         ((PreferencesActivity) activity).showProgress();
 
-        Retrofit.LoginApi loginApi = Retrofit.LoginApi.retrofit.create(Retrofit.LoginApi.class);
+        Retrofit.PreferencesApi loginApi = Retrofit.PreferencesApi.retrofit.create(Retrofit.PreferencesApi.class);
 
         Call<RequestDataFormat.DeviceBody> call = loginApi.loadDeviceDataPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
 
@@ -31,7 +31,7 @@ public class DataSetFragment extends BaseFragment {
                 if (response.body() != null) {
                     if (response.body().getResult() == null) {
                         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, response.body());
-                        ((PreferencesActivity) activity).showPopupDialog(null, "데이터 불러오기에 성공하였습니다.", "확 인");
+                        ((PreferencesActivity) activity).showPopupDialog(null, "데이터 불러 오기에 성공하였습니다.", "확 인");
 
                     } else {
 

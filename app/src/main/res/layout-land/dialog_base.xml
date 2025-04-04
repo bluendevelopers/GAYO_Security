@@ -87,13 +87,13 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dialog_tv_main_content"
-                app:layout_constraintVertical_weight="1.2" />
+                app:layout_constraintVertical_weight="1.5" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/lay_warning_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/dialog_btn_confirm"
             app:layout_constraintEnd_toEndOf="parent"
@@ -108,7 +108,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_weight="3" />
+                app:layout_constraintVertical_weight="2" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/lay_warning_content"
@@ -158,7 +158,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/lay_warning_content"
-                app:layout_constraintVertical_weight="4" />
+                app:layout_constraintVertical_weight="3" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
