@@ -54,22 +54,22 @@ public class ChangePasswordFragment extends BaseFragment {
 
         if (etCurrentPassword.getText().toString().isEmpty()) {
             //popup
-            ((PreferencesActivity) activity).showPopupDialog(null, "현재 비밀번호를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "현재 비밀번호를 입력해주세요.", "확 인");
             return;
         }
         if (etNewPassword.getText().toString().isEmpty()) {
-            ((PreferencesActivity) activity).showPopupDialog(null, "새 비밀번호를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "새 비밀번호를 입력해주세요.", "확 인");
             return;
         }
         if (etNewPasswordRe.getText().toString().isEmpty()) {
-            ((PreferencesActivity) activity).showPopupDialog(null, "새 비밀번호 확인을 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "새 비밀번호 확인을 입력해주세요.", "확 인");
             return;
         }
 
         if (mPrefGlobal.getDevicePassword().equals(etCurrentPassword.getText().toString())) {
 
             if (etNewPasswordRe.getText().toString().equals(etCurrentPassword.getText().toString())) {
-                ((PreferencesActivity) activity).showPopupDialog(null, "현재 비밀번호와 새 비밀번호가 같습니다.", "확 인");
+                activity.showPopupDialog(null, "현재 비밀번호와 새 비밀번호가 같습니다.", "확 인");
                 return;
             }
 
@@ -78,7 +78,7 @@ public class ChangePasswordFragment extends BaseFragment {
 
                     //api
                     Retrofit.PreferencesApi preferencesApi = Retrofit.PreferencesApi.retrofit.create(Retrofit.PreferencesApi.class);
-                    Call<ResponseDataFormat.PasswordDataBody> call = preferencesApi.changePassword(mPrefGlobal.getAuthorization(), new ResponseDataFormat.PasswordDataBody(serialCode, buildingCode, etNewPassword.getText().toString(), etNewPasswordRe.getText().toString()));
+                    Call<ResponseDataFormat.PasswordDataBody> call = preferencesApi.changePassword(mPrefGlobal.getAuthorization(), new ResponseDataFormat.PasswordDataBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), etNewPassword.getText().toString(), etNewPasswordRe.getText().toString()));
 
 
                     call.enqueue(new Callback<ResponseDataFormat.PasswordDataBody>() {
@@ -91,7 +91,7 @@ public class ChangePasswordFragment extends BaseFragment {
                                     etCurrentPassword.setText("");
                                     etNewPassword.setText("");
                                     etNewPasswordRe.setText("");
-                                    ((PreferencesActivity) activity).showPopupDialog(null, "비밀번호 변경에 성공하였습니다.", "확 인");
+                                    activity.showPopupDialog(null, "비밀번호 변경에 성공하였습니다.", "확 인");
                                 } else {
                                     // 실패 ui
                                     etNewPassword.setBackgroundDrawable(appContext.getDrawable(R.drawable.btn_border_radius_15_stroke_red));

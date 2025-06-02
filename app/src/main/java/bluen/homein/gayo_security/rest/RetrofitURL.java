@@ -5,7 +5,7 @@ public class RetrofitURL {
 
     public final static String BASE_URL = "https://gayo-smarthome-guard.bluen.co.kr/ "; // REAL SERVER
     public final static String BASE_TEST_URL = "https://gayo-smarthome-guard-dev.azurewebsites.net/"; // TEST SERVER
-    //    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER???
+    //    public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard.bluen.co.kr/ws "; // WebSocket SERVER
     public final static String WEBSOCKET_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";// WebSocket Signal Server
 
     //** 로그인 및 메인
@@ -13,18 +13,20 @@ public class RetrofitURL {
     public final static String WEATHER_INFO_URL = "device/wt/info";
     public final static String CURRENT_WORKER_INFO = "main/work/manager/info";
 
-    //** 앱 부팅시 필요한 데이터
-    public final static String LOAD_NETWORK_DATA = "device/network/info";
-    public final static String LOAD_SETTING_DATA = "device/setting/info";
-
     //* 설정
     public final static String EXPORT_SETTING_DATA = "device/update/setting";
     public final static String CHANGE_PASSWORD = "device/update/pwd";
+    public final static String SAVE_NETWORK_DATA = "device/update/network";
+    public final static String LOAD_NETWORK_DATA = "device/network/info";
+    public final static String LOAD_SETTING_DATA = "device/setting/info";
 
     //** 연락처 추가
     public final static String DELETE_FACILITY_CONTACT = "device/my/conn/device/del"; //연락처(시설명) 삭제
     public final static String ADD_FACILITY_CONTACT = "device/my/conn/device/prod"; //연락처(시설명) 추가
     public final static String LOAD_FACILITY_CONTACT_LIST = "device/my/conn/list"; //연락처(시설명) 목록
+    public final static String LOAD_FACILITY_ALL_CONTACT_LIST = "device/my/conn/list/all"; //연락처(시설명) 전체 목록
+    public final static String LOAD_ALL_DEVICE_LIST = "dev/device/list";
+
 
     //** 근무자 변경
     public final static String WORKER_LIST = "work/manager/list";

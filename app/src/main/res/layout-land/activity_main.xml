@@ -93,7 +93,7 @@
                 app:layout_constraintVertical_weight="24">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout4"
+                    android:id="@+id/lay_worker_info"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="34dp"
@@ -141,7 +141,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_security_on_off_btn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="88dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginEnd="24dp"

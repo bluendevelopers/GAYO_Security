@@ -18,6 +18,7 @@ import java.util.List;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -32,6 +33,7 @@ import retrofit2.Response;
 public class AddContactActivity extends BaseActivity {
 
     public static final int RESULT_CODE_ADD_CONTACT = 3;
+    public static final int RESULT_CODE_ADD_CONTACT_REFRESH = 4;
 
     @BindView(R.id.lay_before_btn)
     LinearLayout layBeforeBtn;
@@ -45,37 +47,52 @@ public class AddContactActivity extends BaseActivity {
     TextView tvEmptyView;
     @BindView(R.id.et_facility_name)
     EditText etFacilityName;
-    @BindView(R.id.et_ip_address)
-    EditText etIpAddress;
+    @BindView(R.id.et_ip_address_1)
+    EditText etIpAddress1;
+    @BindView(R.id.et_ip_address_2)
+    EditText etIpAddress2;
+    @BindView(R.id.et_ip_address_3)
+    EditText etIpAddress3;
+    @BindView(R.id.et_ip_address_4)
+    EditText etIpAddress4;
 
     private FacilityContactListAdapter facilityContactListAdapter;
     private PageNumberListAdapter pageNumberListAdapter;
     private List<String> pageList;
     private int currentPageNumber = 1; //default
     private int currentTotalPageCount = 0; //default
-    private boolean mIsAdd = false;
-    boolean mIsDelete = false;
+    public int STATUS_CODE = 0;
+    public final int STATUS_ADD_CONTACT = 1;
+    public final int STATUS_DELETE_CONTACT = 2;
+    public final int STATUS_LOAD_ALL_CONTACT = 3;
+
     ResponseDataFormat.FacilityContactListBody.FacilityContactInfo deleteItem = null;
     private List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> currentContactList;
 
     @OnClick(R.id.lay_top)
     void clickLayTop() {
         hideAndClearFocus(this, etFacilityName);
-        hideAndClearFocus(this, etIpAddress);
+        hideAndClearFocus(this, etIpAddress1);
+        hideAndClearFocus(this, etIpAddress2);
+        hideAndClearFocus(this, etIpAddress3);
+        hideAndClearFocus(this, etIpAddress4);
 
     }
 
     @OnClick(R.id.lay_filter)
     void clickLayFilter() {
         hideAndClearFocus(this, etFacilityName);
-        hideAndClearFocus(this, etIpAddress);
+        hideAndClearFocus(this, etIpAddress1);
+        hideAndClearFocus(this, etIpAddress2);
+        hideAndClearFocus(this, etIpAddress3);
+        hideAndClearFocus(this, etIpAddress4);
 
     }
 
     @OnClick(R.id.btn_add_contact)
     void clickAddContract() {
         clickLayTop();
-        mIsAdd = true;
+        STATUS_CODE = STATUS_ADD_CONTACT;
         showPopupDialog(etFacilityName.getText().toString() + "\n", "연락처를 추가 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
 
     }
@@ -83,6 +100,8 @@ public class AddContactActivity extends BaseActivity {
     @OnClick(R.id.btn_load_contact)
     void clickLoadContact() {
         //code
+        STATUS_CODE = STATUS_LOAD_ALL_CONTACT;
+        showWarningDialog("서버 클라우드를 연결하여\n" + "모든 연락처를 불러옵니다.\n(기존 등록된 연락처 정보는 덮어 씌워집니다.)", "취 소", "진행 하기");
     }
 
     @OnClick(R.id.lay_before_btn)
@@ -107,6 +126,7 @@ public class AddContactActivity extends BaseActivity {
 
     @OnClick(R.id.lay_back_btn)
     void clickBackBtn() {
+        setResult(RESULT_CODE_ADD_CONTACT_REFRESH);
         finish();
     }
 
@@ -123,45 +143,64 @@ public class AddContactActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
+
         hideNavigationBar();
+
         popupDialog.onCallBack(new PopupDialog.DialogCallback() {
             @Override
             public void onFinish() {
-                if (mIsAdd) {
-                    mIsAdd = false;
+                if (STATUS_CODE == STATUS_ADD_CONTACT) {
+                    STATUS_CODE = 0;
                     getFacilityContactList();
-                } else if (mIsDelete) {
-                    mIsDelete = false;
+                } else if (STATUS_CODE == STATUS_DELETE_CONTACT) {
+                    STATUS_CODE = 0;
                     if (deleteItem == null) {
                         getFacilityContactList();
                     } else {
                         deleteItem = null;
                     }
+                } else {
+                    STATUS_CODE = 0;
                 }
             }
 
             @Override
             public void onNextStep() {
-                if (mIsAdd) {
+                if (STATUS_CODE == STATUS_ADD_CONTACT) {
 
                     if (etFacilityName.getText().toString().trim().isEmpty()) {
                         showWarningDialog("시설 명을 입력해주세요.", getString(R.string.confirm));
                         return;
                     }
-                    if (etIpAddress.getText().toString().trim().isEmpty()) {
+                    if (etIpAddress1.getText().toString().trim().isEmpty()) {
+                        showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
+                        return;
+                    }
+                    if (etIpAddress2.getText().toString().trim().isEmpty()) {
+                        showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
+                        return;
+                    }
+                    if (etIpAddress3.getText().toString().trim().isEmpty()) {
+                        showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
+                        return;
+                    }
+                    if (etIpAddress4.getText().toString().trim().isEmpty()) {
                         showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
                         return;
                     }
                     addContactItem();
 
-                } else if (mIsDelete) {
+                } else if (STATUS_CODE == STATUS_DELETE_CONTACT) {
                     if (deleteItem != null) {
                         deleteContactItem();
                     } else {
-                        mIsDelete = false;
+                        STATUS_CODE = 0;
                         getFacilityContactList();
                     }
+                } else if (STATUS_CODE == STATUS_LOAD_ALL_CONTACT) {
+                    loadAllContactList();
                 } else {
+                    getFacilityContactList();
 
                 }
             }
@@ -179,13 +218,113 @@ public class AddContactActivity extends BaseActivity {
         getFacilityContactList();
     }
 
-    private void addContactItem() {
+    private void loadAllContactList() {
         showProgress();
 
-        String facilityName = etFacilityName.getText().toString().trim();
-        String ipAddress = etIpAddress.getText().toString().trim();
+        if (mPrefGlobal.getAllDeviceList() != null) {
+            if (!mPrefGlobal.getAllDeviceList().isEmpty()) {
+
+                List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> list = new ArrayList<>();
+
+                for (int i = 0; i < mPrefGlobal.getAllDeviceList().size(); i++) {
+                    RequestDataFormat.DeviceNetworkBody item = mPrefGlobal.getAllDeviceList().get(i);
+
+                    if (item.getIpAddress().equals(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceNetworkBody().getIpAddress())) {
+                        continue;
+                    }
+                    ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo =
+                            new ResponseDataFormat.FacilityContactListBody.FacilityContactInfo(i, item.getFacilityName(), item.getIpAddress(), item.getSerialCode());
+                    showProgress();
+                    if (i == mPrefGlobal.getAllDeviceList().size() - 1) {
+                        addContactItem(facilityContactInfo, true);
+                    } else {
+                        addContactItem(facilityContactInfo, false);
+                    }
+                    list.add(facilityContactInfo);
+                }
+
+                mPrefGlobal.setContactsList(list);
+                getFacilityContactList();
+
+            } else {
+
+            }
+        }
+        closeProgress();
+    }
+
+    private void addContactItem(ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo, boolean finalIndex) {
+
         Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
-        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.addContactPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(serialCode, buildingCode, facilityName, ipAddress));
+        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.addContactPost(mPrefGlobal.getAuthorization(),
+                new RequestDataFormat.ContactBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()
+                        , facilityContactInfo.getFacilityName(), facilityContactInfo.getFacilityIPAddress()));
+
+        call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
+
+            @Override
+            public void onResponse(Call<ResponseDataFormat.FacilityContactListBody> call, Response<ResponseDataFormat.FacilityContactListBody> response) {
+                if (finalIndex) {
+                    closeProgress();
+                }
+                hideNavigationBar();
+                if (response.body() != null) {
+                    if (response.body().getResult().equals("OK")) {
+
+                    }
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
+
+                } else {
+                    STATUS_CODE = 0;
+
+                    //code
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseDataFormat.FacilityContactListBody> call, Throwable t) {
+                closeProgress();
+                hideNavigationBar();
+                //code
+
+            }
+        });
+
+    }
+
+    private void addContactItem() {
+        String facilityName = etFacilityName.getText().toString().trim();
+        String ipAddress = etIpAddress1.getText().toString().trim() + etIpAddress2.getText().toString().trim() + etIpAddress3.getText().toString().trim() + etIpAddress4.getText().toString().trim();
+
+        RequestDataFormat.ContactBody contactBody = null;
+
+        if (!mPrefGlobal.getAllDeviceList().isEmpty()) {
+            for (RequestDataFormat.DeviceNetworkBody item : mPrefGlobal.getAllDeviceList()) {
+                if (ipAddress.equals(item.getIpAddress())) {
+                    contactBody = new RequestDataFormat.ContactBody(
+                            Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), facilityName, ipAddress);
+                    contactBody.setConnSerialCode(item.getSerialCode());
+                    break;
+                }
+            }
+        }
+
+        if (contactBody == null) {
+            showWarningDialog("해당 ip 주소와 일치하는\n시설이 존재하지 않습니다.", getString(R.string.confirm));
+            return;
+        }
+        showProgress();
+
+        Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
+        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.addContactPost(mPrefGlobal.getAuthorization(), contactBody);
         call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
 
             @Override
@@ -197,24 +336,26 @@ public class AddContactActivity extends BaseActivity {
                         if (currentContactList.size() == 4 && currentPageNumber == currentTotalPageCount) {
                             currentPageNumber = currentTotalPageCount + 1;
                         }
+                        STATUS_CODE = 0;
+                        //여기에 setSerialCode 추가!!!!!
                         showPopupDialog(facilityName, "연락처가 추가 되었습니다.", getString(R.string.confirm));
                     } else {
-                        mIsAdd = false;
+                        STATUS_CODE = 0;
+
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                     }
                 } else if (response.errorBody() != null) {
                     String error = "";
                     try {
                         error = response.errorBody().string();
-                        // "response.errorBody().string();" will return the correct value ONLY ONCE.
-                        // So store the value in a variable with the first call.
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
 
                 } else {
-                    mIsAdd = false;
+                    STATUS_CODE = 0;
+
                     //code
 
                 }
@@ -235,7 +376,9 @@ public class AddContactActivity extends BaseActivity {
         showProgress();
 
         Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
-        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.deleteContactPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(serialCode, buildingCode, deleteItem.getFacilityName(), deleteItem.getFacilityIPAddress()));
+        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.deleteContactPost(mPrefGlobal.getAuthorization()
+                , new RequestDataFormat.ContactBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()
+                        , deleteItem.getFacilityName(), deleteItem.getFacilityIPAddress()));
 
         call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
             @Override
@@ -245,19 +388,39 @@ public class AddContactActivity extends BaseActivity {
                 if (response.body() != null) {
                     if (response.body().getResult().equals("OK")) {
                         String facilityName = deleteItem.getFacilityName();
+
+                        for (ResponseDataFormat.FacilityContactListBody.FacilityContactInfo item : mPrefGlobal.getContactsList()) {
+                            if (item.getFacilityIPAddress().equals(deleteItem.getFacilityIPAddress())) {
+                                mPrefGlobal.getContactsList().remove(item);
+                                mPrefGlobal.setContactsList(mPrefGlobal.getContactsList());
+                                break;
+                            }
+                        }
                         deleteItem = null;
                         if (currentContactList.size() == 1 && currentPageNumber > 1) {
                             currentPageNumber--;
                         }
+
                         showPopupDialog(facilityName, "연락처가 삭제 되었습니다.", getString(R.string.confirm));
 
                     } else {
-                        mIsDelete = false;
+                        STATUS_CODE = 0;
+
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                         //code
                     }
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
+
                 } else {
-                    mIsDelete = false;
+                    STATUS_CODE = 0;
+
                     //code
                 }
             }
@@ -278,7 +441,7 @@ public class AddContactActivity extends BaseActivity {
 
         Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
 
-        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.loadContactListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(serialCode, buildingCode, currentPageNumber));
+        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.loadContactListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber));
 
         call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
             @Override
@@ -286,8 +449,14 @@ public class AddContactActivity extends BaseActivity {
                 closeProgress();
                 etFacilityName.setFocusableInTouchMode(true);
                 etFacilityName.setFocusable(true);
-                etIpAddress.setFocusableInTouchMode(true);
-                etIpAddress.setFocusable(true);
+                etIpAddress1.setFocusableInTouchMode(true);
+                etIpAddress1.setFocusable(true);
+                etIpAddress2.setFocusableInTouchMode(true);
+                etIpAddress2.setFocusable(true);
+                etIpAddress3.setFocusableInTouchMode(true);
+                etIpAddress3.setFocusable(true);
+                etIpAddress4.setFocusableInTouchMode(true);
+                etIpAddress4.setFocusable(true);
 
                 hideNavigationBar();
 
@@ -341,8 +510,14 @@ public class AddContactActivity extends BaseActivity {
                 closeProgress();
                 etFacilityName.setFocusableInTouchMode(true);
                 etFacilityName.setFocusable(true);
-                etIpAddress.setFocusableInTouchMode(true);
-                etIpAddress.setFocusable(true);
+                etIpAddress1.setFocusableInTouchMode(true);
+                etIpAddress1.setFocusable(true);
+                etIpAddress2.setFocusableInTouchMode(true);
+                etIpAddress2.setFocusable(true);
+                etIpAddress3.setFocusableInTouchMode(true);
+                etIpAddress3.setFocusable(true);
+                etIpAddress4.setFocusableInTouchMode(true);
+                etIpAddress4.setFocusable(true);
                 hideNavigationBar();
 
             }

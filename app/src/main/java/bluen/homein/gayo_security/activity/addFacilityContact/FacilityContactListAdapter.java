@@ -87,7 +87,7 @@ public class FacilityContactListAdapter extends BaseAdapter {
 
         layDeleteBtn.setOnClickListener(v -> {
             //code
-            ((AddContactActivity) context).mIsDelete = true;
+            ((AddContactActivity) context).STATUS_CODE = ((AddContactActivity) context).STATUS_DELETE_CONTACT;
             ((AddContactActivity) context).deleteItem = itemsList.get(position);
             ((AddContactActivity) context).showPopupDialog(itemsList.get(position).getFacilityName() + "\n", "연락처를 삭제 하시겠습니까?", context.getString(R.string.cancel), context.getString(R.string.confirm));
 

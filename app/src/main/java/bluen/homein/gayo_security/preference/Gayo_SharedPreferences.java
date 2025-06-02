@@ -13,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,12 +44,22 @@ public class Gayo_SharedPreferences {
 
     }
 
-    public void setPatrolDoorOpen(int _value) {
-        putInteger(PrefKey.PATROL_DOOR_OPEN, _value);
+
+    // 밝기 저장
+    public void setBrightness(float brightness) {
+        putFloat(PrefKey.KEY_BRIGHTNESS, brightness);
     }
 
-    public int getPatrolDoorOpen() {
-        return getInteger(PrefKey.PATROL_DOOR_OPEN, 0);
+    public float getBrightness() {
+        return getFloat(PrefKey.KEY_BRIGHTNESS, 1.0f);
+    }
+
+    public void setPatrolDoorOpenType(int _value) {
+        putInteger(PrefKey.PATROL_DOOR_OPEN_TYPE, _value);
+    }
+
+    public int getPatrolDoorOpenType() {
+        return getInteger(PrefKey.PATROL_DOOR_OPEN_TYPE, 0);
 
     }
 
@@ -80,6 +89,10 @@ public class Gayo_SharedPreferences {
 
     public int getInteger(String key, Integer _defValue) {
         return mPrefs.getInt(key, _defValue);
+    }
+
+    public float getFloat(String key, Float _defValue) {
+        return mPrefs.getFloat(key, _defValue);
     }
 
     public boolean getBoolean(String key, boolean _defValue) {
@@ -132,6 +145,12 @@ public class Gayo_SharedPreferences {
     public void putInteger(String key, Integer _defValue) {
         synchronized (context) {
             mPrefs.edit().putInt(key, _defValue).commit();
+        }
+    }
+
+    public void putFloat(String key, Float _defValue) {
+        synchronized (context) {
+            mPrefs.edit().putFloat(key, _defValue).commit();
         }
     }
 
@@ -204,6 +223,24 @@ public class Gayo_SharedPreferences {
 
     }
 
+    public void setAllDeviceList(List<RequestDataFormat.DeviceNetworkBody> list) {
+
+        Gson gson = new Gson();
+        String serializedList = gson.toJson(list);
+
+        putString(PrefKey.ALL_DEVICE_LIST, serializedList);
+
+    }
+
+    public List<RequestDataFormat.DeviceNetworkBody> getAllDeviceList() {
+        Gson gson = new Gson();
+        String serializedList = getString(PrefKey.ALL_DEVICE_LIST, null);
+        Type type = new TypeToken<List<RequestDataFormat.DeviceNetworkBody>>() {
+        }.getType();
+        return gson.fromJson(serializedList, type);
+
+    }
+
     //--------------------------------------------------- Class Get & Put
 
 //    public static class PrefDeviceData {
@@ -261,17 +298,20 @@ public class Gayo_SharedPreferences {
             prefItem = getDeviceData(context);
         }
     }
- 
+
     //---------------------------------------- User Info
 
 
     static private class PrefKey {
 
         private static final String AUTHORIZATION = "authorization";
-        private static final String PATROL_DOOR_OPEN = "patrol_door_open";
+        private static final String PATROL_DOOR_OPEN_TYPE = "patrol_door_open_type";
         private static final String FIREBASE_TOKEN = "firebase_token";
         private static final String FACILITY_CONTACTS = "facility_contacts";
+        private static final String ALL_DEVICE_LIST = "all_device_list";
         private static final String DEVICE_PASSWORD = "device_password";
+        private static final String PREF_NAME = "app_brightness_pref";
+        private static final String KEY_BRIGHTNESS = "key_brightness";
 
     }
 

@@ -66,9 +66,7 @@ public class WebSocketService extends Service {
             deviceBody = _deviceBody;
             auth = intent.getStringExtra("authorization");
 
-            if (!auth.isEmpty()) {
-                startWebSocketConnection(_deviceBody);
-            }
+            startDeviceWebSocketConnection(_deviceBody);
         }
         return START_STICKY;
     }
@@ -88,7 +86,7 @@ public class WebSocketService extends Service {
         return false;
     }
 
-    private void startWebSocketConnection(RequestDataFormat.DeviceBody deviceBody) {
+    private void startDeviceWebSocketConnection(RequestDataFormat.DeviceBody deviceBody) {
         client = new OkHttpClient();
 
         Request request = new Request.Builder().url(SIGNAL_SERVER_URL)
@@ -153,9 +151,9 @@ public class WebSocketService extends Service {
     // 재연결 로직 메서드 추가
     private void reconnectWebSocketWithDelay() {
         Log.d(TAG, "WebSocket disconnected, trying to reconnect in 5 seconds...");
-
         new Handler(Looper.getMainLooper())
-                .postDelayed(() -> startWebSocketConnection(deviceBody), 5000);
+                .postDelayed(() -> startDeviceWebSocketConnection(deviceBody), 5000);
+
     }
 
     private void handleServerMessage(String jsonText) throws JSONException {
@@ -269,7 +267,7 @@ public class WebSocketService extends Service {
         @SerializedName("seSerialCode")
         private String seSerialCode;
         @SerializedName("sender")
-        private final String sender;
+        private String sender;
         @SerializedName("receiver")
         private String receiver;
         @SerializedName("code")
@@ -288,6 +286,8 @@ public class WebSocketService extends Service {
         private String builDong;
         @SerializedName("builHo")
         private String builHo;
+        @SerializedName("userIdx")
+        private String userIdx;
         @SerializedName("candidate")
         private String candidate;
         @SerializedName("content")
@@ -300,6 +300,11 @@ public class WebSocketService extends Service {
         private String id;
         @SerializedName("label")
         private int label;
+
+        public WebSocketBody(String method, String reSerialCode) {
+            this.method = method;
+            this.reSerialCode = reSerialCode;
+        }
 
         public WebSocketBody(String method, String recipientSerialCode, String senderSerialCode, String currentRoomId, String currentClientId, String receivedSdp) {
             this.method = method;
@@ -369,6 +374,22 @@ public class WebSocketService extends Service {
             this.builHo = builHo;
             this.sdp = sdp;
 
+        }
+
+        public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId, String builCode, String builDong, String builHo) {
+            this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.roomId = roomId;
+            this.clientId = clientId;
+            this.builCode = builCode;
+            this.builDong = builDong;
+            this.builHo = builHo;
+        }
+
+
+        public void setUserIdx(String userIdx) {
+            this.userIdx = userIdx;
         }
 
         public void setSdp(String sdp) {

@@ -1,18 +1,29 @@
 package bluen.homein.gayo_security.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.VibrationEffect;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import java.util.ArrayList;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.call.CallActivity;
@@ -70,6 +81,14 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.iv_weather_img)
     ImageView ivWeatherImg;
 
+    private final BroadcastReceiver dateChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateDateTexts();
+            getWeatherInfo();
+        }
+    };
+
     @OnClick(R.id.iv_power_btn)
     void clickSecurityOnOffBtn() {
         GlobalApplication.isSecurityMode = !GlobalApplication.isSecurityMode;
@@ -90,6 +109,11 @@ public class MainActivity extends BaseActivity {
         onBackPressed();
     }
 
+    @OnClick(R.id.lay_worker_info)
+    void clickLayWorkerInfo() {
+        clickChangeWorkerBtn();
+    }
+
     @OnClick(R.id.lay_home_btn)
     void clickHomeBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
@@ -99,8 +123,8 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    @OnClick(R.id.iv_power_btn)
-    void clickWorkPowerBtn() {
+    @OnClick(R.id.lay_security_on_off_btn)
+    void clickWorkToggleBtn() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         toggleSecurity();
     }
@@ -161,7 +185,7 @@ public class MainActivity extends BaseActivity {
                 startService(serviceIntent);
                 getCurrentWorkerInfo();
                 getWeatherInfo();
-                getFacilityContactList();
+                getFacilityAllContactList();
             } else {
                 showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는\n데이터를 불러와주세요. (임시 문구)", getString(R.string.confirm));
             }
@@ -180,6 +204,25 @@ public class MainActivity extends BaseActivity {
     protected int getLayoutResId() {
         return R.layout.activity_main;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // 날짜가 바뀌면 알림을 받음
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_DATE_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        registerReceiver(dateChangeReceiver, filter);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(dateChangeReceiver);
     }
 
     @Override
@@ -206,64 +249,131 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        if (mPrefGlobal.getFirebaseToken() == null || !mPrefGlobal.getFirebaseToken().equals(token)) {
+                            mPrefGlobal.setFirebaseToken(token);
+
+                        }
+
+                    }
+                });
+
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy년 MM월", Locale.KOREA);
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.KOREA);
+        SimpleDateFormat weekdayFormat = new SimpleDateFormat("E", Locale.KOREA);
+
+        tvYearAndMonth.setText(yearMonthFormat.format(today));
+        tvDayNumber.setText(dayFormat.format(today));
+        tvWeekDay.setText("일 (" + weekdayFormat.format(today) + ")");
+
         if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
             Intent serviceIntent = new Intent(this, WebSocketService.class);
             serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
             serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
 
             startService(serviceIntent);
+            getDeviceList();
+            getFacilityAllContactList();
             getCurrentWorkerInfo();
             getWeatherInfo();
-            getFacilityContactList();
+
 
         } else {
-            showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는 데이터를 불러와주세요. (임시 문구)", getString(R.string.confirm));
+            showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는 데이터를 불러와주세요.", getString(R.string.confirm));
         }
 
     }
 
 
-    private void getFacilityContactList() {
+    private void getFacilityAllContactList() {
 
         showProgress();
 
         Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
 
-        Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.loadContactListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(serialCode, buildingCode, 1));
+        Call<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>> call = facilityContactApi.loadAllContactListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.ContactBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), 1));
 
-        call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
+        call.enqueue(new Callback<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>>() {
             @Override
-            public void onResponse(Call<ResponseDataFormat.FacilityContactListBody> call, Response<ResponseDataFormat.FacilityContactListBody> response) {
-                closeProgress();
-
+            public void onResponse(Call<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>> call, Response<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>> response) {
                 if (response.body() != null) {
+                    mPrefGlobal.setContactsList(response.body());
 
-                    if (response.body().getMessage() == null) {
-                        if (response.body().getFacilityContactList() != null) {
-                            mPrefGlobal.setContactsList(response.body().getFacilityContactList());
-                        } else {
+                } else {
+                    //code
+                }
 
-                        }
-                    }
+            }
+
+            @Override
+            public void onFailure(Call<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>> call, Throwable t) {
+
+            }
+        });
+
+        closeProgress();
+
+
+    }
+
+    private void updateDateTexts() {
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy년 MM월", Locale.KOREA);
+        SimpleDateFormat dayFormat = new SimpleDateFormat("dd", Locale.KOREA);
+        SimpleDateFormat weekdayFormat = new SimpleDateFormat("E", Locale.KOREA);
+
+        tvYearAndMonth.setText(yearMonthFormat.format(today));
+        tvDayNumber.setText(dayFormat.format(today));
+        tvWeekDay.setText("일 (" + weekdayFormat.format(today) + ")");
+    }
+
+    private void getDeviceList() {
+        showProgress();
+
+        Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
+
+        Call<List<RequestDataFormat.DeviceNetworkBody>> call = facilityContactApi.loadAllDeviceListPost(mPrefGlobal.getAuthorization());
+        call.enqueue(new Callback<List<RequestDataFormat.DeviceNetworkBody>>() {
+            @Override
+            public void onResponse(Call<List<RequestDataFormat.DeviceNetworkBody>> call, Response<List<RequestDataFormat.DeviceNetworkBody>> response) {
+                if (response.body() != null) {
+//                    if (!response.body().isEmpty()) {}
+                    mPrefGlobal.setAllDeviceList(response.body());
+
                 } else {
 
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseDataFormat.FacilityContactListBody> call, Throwable t) {
-                closeProgress();
+            public void onFailure(Call<List<RequestDataFormat.DeviceNetworkBody>> call, Throwable t) {
+
             }
         });
 
     }
 
-
     private void getCurrentWorkerInfo() {
         showProgress();
         Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
-        Call<ResponseDataFormat.CurrentWorkerInfo> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(serialCode, buildingCode)); // test
+        Call<ResponseDataFormat.CurrentWorkerInfo> call = mainInfoApi.currentWorkerPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceInfoBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()));
         call.enqueue(new Callback<ResponseDataFormat.CurrentWorkerInfo>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.CurrentWorkerInfo> call, Response<ResponseDataFormat.CurrentWorkerInfo> response) {
@@ -289,7 +399,7 @@ public class MainActivity extends BaseActivity {
     private void getWeatherInfo() {
         Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
-        Call<ResponseDataFormat.WeatherData> call = mainInfoApi.weatherInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WeatherBody(buildingCode)); // test
+        Call<ResponseDataFormat.WeatherData> call = mainInfoApi.weatherInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WeatherBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode())); // test
         call.enqueue(new Callback<ResponseDataFormat.WeatherData>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WeatherData> call, Response<ResponseDataFormat.WeatherData> response) {

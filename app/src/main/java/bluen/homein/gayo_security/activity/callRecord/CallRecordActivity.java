@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -433,7 +434,7 @@ public class CallRecordActivity extends BaseActivity {
     private void deleteCallRecordItem() {
         showProgress();
         Retrofit.CallRecordApi callRecordApi = Retrofit.CallRecordApi.retrofit.create(Retrofit.CallRecordApi.class);
-        Call<ResponseDataFormat.CallRecordListBody> call = callRecordApi.deleteCallRecordPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.CallRecordListBody(serialCode, buildingCode, deleteItem.getCallSeq()));
+        Call<ResponseDataFormat.CallRecordListBody> call = callRecordApi.deleteCallRecordPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.CallRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), deleteItem.getCallSeq()));
 
         call.enqueue(new Callback<ResponseDataFormat.CallRecordListBody>() {
             @Override
@@ -500,7 +501,8 @@ public class CallRecordActivity extends BaseActivity {
         showProgress();
         Retrofit.CallRecordApi callRecordApi = Retrofit.CallRecordApi.retrofit.create(Retrofit.CallRecordApi.class);
 
-        Call<ResponseDataFormat.CallRecordListBody> call = callRecordApi.callRecordListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.CallRecordListBody(serialCode, buildingCode, currentPageNumber, startDate, endDate, callTypeList.get(selectedTypeIndex).getCodeNumber()));
+        Call<ResponseDataFormat.CallRecordListBody> call = callRecordApi.callRecordListPost(mPrefGlobal.getAuthorization(),
+                new RequestDataFormat.CallRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber, startDate, endDate, callTypeList.get(selectedTypeIndex).getCodeNumber()));
 
         call.enqueue(new Callback<ResponseDataFormat.CallRecordListBody>() {
             @Override

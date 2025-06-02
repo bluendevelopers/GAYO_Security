@@ -56,16 +56,20 @@ public class PreferencesActivity extends BaseActivity {
     private List<String> prefItemList = new ArrayList<>();
     private String clickedBtnName = "";
     private int fragmentRequestedNumber = 0;
-    public final int REQUEST_REFRESH_NUMBER = 1;
-    public final int REQUEST_SETTING_SUCCESS_NUMBER = 2;
+    public final int REQUEST_REFRESH = 1;
+    public final int REQUEST_SETTING_SUCCESS = 2;
     public final int REQUEST_SAVE_DATA = 3;
     public final int REQUEST_GET_TOKEN = 4;
     public final int REQUEST_GET_NETWORK_DATA = 5;
+    public final int SLEEP_MODE_REFRESH = 6;
 
     public interface NetworkInterface {
         void refreshFragment();
+
         void saveData();
+
         void getNetworkData();
+
         void getToken();
     }
 
@@ -96,6 +100,7 @@ public class PreferencesActivity extends BaseActivity {
             Fragment selectedFragment = new ScreenSetFragment();
 
             if (selectedFragment != null) {
+                tvPageTitle.setText("사용자 설정 _화면 설정");
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.lay_container, selectedFragment)
@@ -106,7 +111,6 @@ public class PreferencesActivity extends BaseActivity {
             tvWrongPassword.setVisibility(View.VISIBLE);
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -136,8 +140,12 @@ public class PreferencesActivity extends BaseActivity {
                 if (currentFragment != null) {
 
                     switch (fragmentRequestedNumber) {
-                        case REQUEST_REFRESH_NUMBER:
+                        case REQUEST_REFRESH:
                             ((NetworkInterface) currentFragment).refreshFragment();
+                            fragmentRequestedNumber = 0;
+                            break;
+                        case SLEEP_MODE_REFRESH:
+                            onResume();
                             fragmentRequestedNumber = 0;
                             break;
                         case REQUEST_GET_TOKEN:
@@ -152,7 +160,7 @@ public class PreferencesActivity extends BaseActivity {
                             ((NetworkInterface) currentFragment).getNetworkData();
                             fragmentRequestedNumber = 0;
                             break;
-                        case REQUEST_SETTING_SUCCESS_NUMBER:
+                        case REQUEST_SETTING_SUCCESS:
                             finish();
                             break;
 
@@ -172,6 +180,7 @@ public class PreferencesActivity extends BaseActivity {
                 }
             }
         });
+
         prefButtonListAdapter.setItems(prefItemList);
         rvButtonList.setAdapter(prefButtonListAdapter);
 
@@ -214,6 +223,12 @@ public class PreferencesActivity extends BaseActivity {
                 public void afterTextChanged(Editable s) {
                 }
             });
+
+            //get 벨소리 리스트
+            //get ui 바탕화면 리스트
+            // 필요 없으면 굳이 안써도 될듯
+
+
         } else {
             Fragment selectedFragment = new NetworkSetFragment();
             layPassword.setVisibility(View.GONE);

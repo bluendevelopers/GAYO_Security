@@ -34,6 +34,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,7 +111,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
+                android:background="@drawable/btn_border_radius_10_gray">
 
                 <EditText
                     android:id="@+id/et_facility_name"
@@ -122,12 +123,16 @@
                     android:background="@color/transparent"
                     android:focusable="false"
                     android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text=""
                     android:textAlignment="textStart"
                     android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -138,14 +143,15 @@
         <LinearLayout
             android:id="@+id/lay_ip_address"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginStart="20dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/lay_facility_name"
             app:layout_constraintEnd_toStartOf="@id/view2"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="1.5"
             app:layout_constraintStart_toEndOf="@id/lay_facility_name"
-            app:layout_constraintTop_toTopOf="@id/lay_facility_name">
+            app:layout_constraintTop_toTopOf="@+id/lay_facility_name">
+
 
             <TextView
                 android:id="@+id/tv_start_date"
@@ -159,31 +165,103 @@
                 android:textStyle="bold" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_ip_address_2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/et_ip_address"
+                    android:id="@+id/et_ip_address_1"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="7dp"
-                    android:layout_marginEnd="12dp"
-                    android:layout_marginBottom="7dp"
-                    android:background="@color/transparent"
+                    android:layout_height="0dp"
+                    android:background="@drawable/btn_border_radius_10_gray"
                     android:focusable="false"
                     android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:text=""
-                    android:textAlignment="textStart"
+                    android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="22dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/et_ip_address_2"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <EditText
+                    android:id="@+id/et_ip_address_2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/btn_border_radius_10_gray"
+                    android:focusable="false"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_ip_address_1"
+                    app:layout_constraintEnd_toStartOf="@+id/et_ip_address_3"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/et_ip_address_1"
+                    app:layout_constraintTop_toTopOf="@+id/et_ip_address_1" />
+
+                <EditText
+                    android:id="@+id/et_ip_address_3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/btn_border_radius_10_gray"
+                    android:focusable="false"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_ip_address_1"
+                    app:layout_constraintEnd_toStartOf="@+id/et_ip_address_4"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/et_ip_address_2"
+                    app:layout_constraintTop_toTopOf="@+id/et_ip_address_1" />
+
+                <EditText
+                    android:id="@+id/et_ip_address_4"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/btn_border_radius_10_gray"
+                    android:focusable="false"
+                    android:fontFamily="@font/pretendard_regular"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_ip_address_1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/et_ip_address_3"
+                    app:layout_constraintTop_toTopOf="@+id/et_ip_address_1" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </LinearLayout>
 
@@ -193,7 +271,7 @@
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="@id/lay_ip_address"
             app:layout_constraintEnd_toStartOf="@id/btn_add_contact"
-            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintHorizontal_weight="0.8"
             app:layout_constraintStart_toEndOf="@id/lay_ip_address"
             app:layout_constraintTop_toTopOf="@id/lay_ip_address" />
 
@@ -203,7 +281,7 @@
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginEnd="40dp"
-            android:background="@drawable/btn_blue_fill_border_radius_10"
+            android:background="@drawable/btn_fill_border_radius_10_blue"
             android:fontFamily="@font/pretendard_semibold"
             android:text="추가"
             android:textColor="@color/white"
@@ -335,7 +413,7 @@
             android:background="#d1d1d1"
             app:layout_constraintBottom_toTopOf="@id/lay_list_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"  />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

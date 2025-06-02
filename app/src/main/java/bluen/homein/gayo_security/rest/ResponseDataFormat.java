@@ -262,11 +262,21 @@ public class ResponseDataFormat {
         private PageCountInfo pageCountInfo;
         @SerializedName("connDeviceList")
         List<FacilityContactInfo> facilityContactList;
+        @SerializedName("connSerialCode")
+        private String connSerialCode;
 
         @SerializedName("result")
         private String result;
         @SerializedName("message")
         private String message;
+
+        public String getConnSerialCode() {
+            return connSerialCode;
+        }
+
+        public void setConnSerialCode(String connSerialCode) {
+            this.connSerialCode = connSerialCode;
+        }
 
         public String getResult() {
             return result;
@@ -294,6 +304,25 @@ public class ResponseDataFormat {
 
             @SerializedName("connDeviceIP")
             private String facilityIPAddress;
+
+
+            @SerializedName("connSerialCode") // 추가 예정
+            private String connSerialCode;
+
+            public FacilityContactInfo(int rowNum, String facilityName, String facilityIPAddress, String connSerialCode) {
+                this.rowNum = rowNum;
+                this.facilityName = facilityName;
+                this.facilityIPAddress = facilityIPAddress;
+                this.connSerialCode = connSerialCode;
+            }
+
+            public String getConnSerialCode() {
+                return connSerialCode;
+            }
+
+            public void setConnSerialCode(String connSerialCode) {
+                this.connSerialCode = connSerialCode;
+            }
 
             public int getRowNum() {
                 return rowNum;

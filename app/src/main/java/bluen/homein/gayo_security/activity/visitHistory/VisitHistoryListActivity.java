@@ -31,6 +31,7 @@ import java.util.Locale;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -428,7 +429,7 @@ public class VisitHistoryListActivity extends BaseActivity {
     private void deleteCallRecordItem() {
         showProgress();
         Retrofit.VisitorHistoryApi visitorHistoryApi = Retrofit.VisitorHistoryApi.retrofit.create(Retrofit.VisitorHistoryApi.class);
-        Call<ResponseDataFormat.VisitHistoryListBody> call = visitorHistoryApi.deleteCallRecordPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.VisitorRecordListBody(serialCode, buildingCode, deleteItem.getHisSeq()));
+        Call<ResponseDataFormat.VisitHistoryListBody> call = visitorHistoryApi.deleteCallRecordPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.VisitorRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), deleteItem.getHisSeq()));
         call.enqueue(new Callback<ResponseDataFormat.VisitHistoryListBody>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.VisitHistoryListBody> call, Response<ResponseDataFormat.VisitHistoryListBody> response) {
@@ -492,7 +493,7 @@ public class VisitHistoryListActivity extends BaseActivity {
     private void getVisitHistoryList() {
         Retrofit.VisitorHistoryApi visitorHistoryApi = Retrofit.VisitorHistoryApi.retrofit.create(Retrofit.VisitorHistoryApi.class);
 
-        Call<ResponseDataFormat.VisitHistoryListBody> call = visitorHistoryApi.visitHistoryListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.VisitorRecordListBody(serialCode, buildingCode, currentPageNumber, startDate, endDate, visitTypeList.get(selectedTypeIndex).getEntranceCode()));
+        Call<ResponseDataFormat.VisitHistoryListBody> call = visitorHistoryApi.visitHistoryListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.VisitorRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber, startDate, endDate, visitTypeList.get(selectedTypeIndex).getEntranceCode()));
 
         call.enqueue(new Callback<ResponseDataFormat.VisitHistoryListBody>() {
             @Override

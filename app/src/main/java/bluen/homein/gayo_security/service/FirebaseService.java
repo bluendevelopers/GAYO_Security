@@ -28,7 +28,7 @@ public class FirebaseService extends FirebaseMessagingService {
         if (null == mPrefGlobal) {
             mPrefGlobal = new Gayo_SharedPreferences(getApplicationContext(), Gayo_Preferences.GLOBAL_INFO);
         }
-        mPrefGlobal.setAuthorization(token);
+        mPrefGlobal.setFirebaseToken(token);
 
         Log.i(TAG, "onNewToken:" + token);
     }

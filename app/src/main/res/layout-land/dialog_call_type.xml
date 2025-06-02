@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_root_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="600dp"
+        android:layout_height="500dp"
+        android:background="@drawable/background_radius_15_fill"
+        android:elevation="5dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lay_warning_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/lay_warning_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="11">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lay_apt_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tv_dong_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:breakStrategy="balanced"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center"
+                        android:letterSpacing="-0.04"
+                        android:lineSpacingExtra="1dp"
+                        android:maxLength="4"
+                        android:text="0000"
+                        android:textColor="@color/main_color"
+                        android:textSize="45dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginTop="100dp" />
+
+                    <TextView
+                        android:id="@+id/tv_dong"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:breakStrategy="balanced"
+                        android:fontFamily="@font/pretendard_extra_bold"
+                        android:gravity="center"
+                        android:letterSpacing="-0.04"
+                        android:lineSpacingExtra="1dp"
+                        android:text="동"
+                        android:textColor="@color/black"
+                        android:textSize="30dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_dong_number"
+                        app:layout_constraintStart_toEndOf="@+id/tv_dong_number"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginTop="100dp" />
+
+                    <TextView
+                        android:id="@+id/tv_ho_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:breakStrategy="balanced"
+                        android:fontFamily="@font/pretendard_semibold"
+                        android:gravity="center"
+                        android:letterSpacing="-0.04"
+                        android:lineSpacingExtra="1dp"
+                        android:maxLength="4"
+                        android:text="0000"
+                        android:textColor="@color/main_color"
+                        android:textSize="45dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@+id/tv_dong"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_goneMarginTop="100dp" />
+
+                    <TextView
+                        android:id="@+id/tv_ho"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:breakStrategy="balanced"
+                        android:fontFamily="@font/pretendard_extra_bold"
+                        android:gravity="center"
+                        android:letterSpacing="-0.04"
+                        android:lineSpacingExtra="1dp"
+                        android:text="호"
+                        android:textColor="@color/black"
+                        android:textSize="30dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_ho_number"
+                        app:layout_constraintStart_toEndOf="@+id/tv_ho_number"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/dialog_tv_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:breakStrategy="balanced"
+                    android:fontFamily="@font/pretendard_extra_bold"
+                    android:gravity="center"
+                    android:lineSpacingExtra="1dp"
+                    android:text="으로 통화 연결합니다.\n연결 방식을 선택해 주세요."
+                    android:textColor="@color/black"
+                    android:textSize="28dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/lay_apt_info" />
+
+                <TextView
+                    android:id="@+id/dialog_tv_msg_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:breakStrategy="balanced"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:gravity="center"
+                    android:letterSpacing="-0.02"
+                    android:lineSpacingExtra="1dp"
+                    android:text="선택한 통화 방식으로 연결 됩니다."
+                    android:textColor="@color/black"
+                    android:textSize="22dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dialog_tv_msg" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_only_wall_pad"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="25dp"
+            android:background="@drawable/btn_fill_border_radius_10_blue"
+            android:fontFamily="@font/pretendard_regular"
+            android:gravity="center"
+            android:text="월패드\n통화 연결"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_wall_pad_and_phone"
+            app:layout_constraintEnd_toStartOf="@id/btn_wall_pad_and_phone"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/lay_warning_msg" />
+
+        <Button
+            android:id="@+id/btn_wall_pad_and_phone"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="35dp"
+            android:background="@drawable/btn_fill_border_radius_10_blue"
+            android:fontFamily="@font/pretendard_regular"
+            android:gravity="center"
+            android:text="월패드 &amp; 앱\n통화 연결"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/btn_cancel_"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/btn_only_wall_pad"
+            app:layout_constraintTop_toBottomOf="@+id/lay_warning_msg" />
+
+        <Button
+            android:id="@+id/btn_cancel_"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="35dp"
+            android:background="@drawable/background_radius_10_fill_gray"
+            android:fontFamily="@font/pretendard_regular"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="2"
+            app:layout_constraintStart_toStartOf="@+id/btn_only_wall_pad" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bluen.homein.gayo_security.R;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.dialog.PopupDialog;
@@ -120,7 +121,7 @@ public class ChangeWorkerActivity extends BaseActivity {
 
         Retrofit.WorkerChangePageApi workerChangePageApi = Retrofit.WorkerChangePageApi.retrofit.create(Retrofit.WorkerChangePageApi.class);
 
-        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerChangePost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerBody(serialCode, buildingCode, managerIdx, managerPhone));
+        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerChangePost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), managerIdx, managerPhone));
 
         call.enqueue(new Callback<ResponseDataFormat.WorkerListBody>() {
             @Override
@@ -152,7 +153,7 @@ public class ChangeWorkerActivity extends BaseActivity {
 
         Retrofit.WorkerChangePageApi workerChangePageApi = Retrofit.WorkerChangePageApi.retrofit.create(Retrofit.WorkerChangePageApi.class);
 
-        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerListBody(serialCode, buildingCode, currentPageNumber)); // test
+        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber)); // test
         call.enqueue(new Callback<ResponseDataFormat.WorkerListBody>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WorkerListBody> call, Response<ResponseDataFormat.WorkerListBody> response) {

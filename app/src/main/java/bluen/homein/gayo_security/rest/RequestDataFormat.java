@@ -17,6 +17,8 @@ public class RequestDataFormat {
         private String connDeviceName;
         @SerializedName("connDeviceIP")
         private String connDeviceIP;
+        @SerializedName("connSerialCode")
+        private String  connSerialCode;
         @SerializedName("page")
         private int page;
 
@@ -38,6 +40,14 @@ public class RequestDataFormat {
             this.connDeviceIP = connDeviceIP;
         }
 
+        public String getConnSerialCode() {
+            return connSerialCode;
+        }
+
+        public void setConnSerialCode(String connSerialCode) {
+            this.connSerialCode = connSerialCode;
+        }
+
         public void setPage(int page) {
             this.page = page;
         }
@@ -49,7 +59,8 @@ public class RequestDataFormat {
         private String serialCode;
         @SerializedName("builCode")
         private String buildingCode;
-
+        @SerializedName("deviceToken")
+        private String deviceToken;
         @SerializedName("deviceUI")
         private DeviceUIBody deviceUIBody;
         @SerializedName("deviceSound")
@@ -72,14 +83,22 @@ public class RequestDataFormat {
             return message;
         }
 
-
-        public DeviceBody(String serialCode, String buildingCode, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
+        public DeviceBody(String serialCode, String buildingCode, String deviceToken, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
             this.serialCode = serialCode;
             this.buildingCode = buildingCode;
+            this.deviceToken = deviceToken;
             this.deviceUIBody = deviceUIBody;
             this.deviceSoundBody = deviceSoundBody;
             this.deviceSleepModeBody = deviceSleepModeBody;
             this.deviceNetworkBody = deviceNetworkBody;
+        }
+
+        public String getDeviceToken() {
+            return deviceToken;
+        }
+
+        public void setDeviceToken(String deviceToken) {
+            this.deviceToken = deviceToken;
         }
 
         public String getSerialCode() {
@@ -126,7 +145,7 @@ public class RequestDataFormat {
     public static class DeviceSoundBody implements Serializable {
 
         @SerializedName("intercomSound")
-        private int intercomSound;
+        private int interPhoneSound;
         @SerializedName("intercomBell")
         private String intercomBell;
         @SerializedName("callSound")
@@ -142,8 +161,8 @@ public class RequestDataFormat {
         @SerializedName("systemSound")
         private int systemSound;
 
-        public DeviceSoundBody(int intercomSound, String intercomBell, int callSound, String callBell, int entranceSound, String entranceBell, int notiSound, int systemSound) {
-            this.intercomSound = intercomSound;
+        public DeviceSoundBody(int interPhoneSound, String intercomBell, int callSound, String callBell, int entranceSound, String entranceBell, int notiSound, int systemSound) {
+            this.interPhoneSound = interPhoneSound;
             this.intercomBell = intercomBell;
             this.callSound = callSound;
             this.callBell = callBell;
@@ -153,8 +172,8 @@ public class RequestDataFormat {
             this.systemSound = systemSound;
         }
 
-        public int getIntercomSound() {
-            return intercomSound;
+        public int getInterPhoneSound() {
+            return interPhoneSound;
         }
 
         public String getIntercomBell() {
@@ -204,7 +223,12 @@ public class RequestDataFormat {
     }
 
 
-    public static class DeviceNetworkBody implements Serializable {
+    public static class DeviceNetworkBody extends MyGson implements Serializable  {
+        @SerializedName("serialCode")
+        private String serialCode;
+        @SerializedName("builCode")
+        private String buildingCode;
+
         @SerializedName("facilityName")
         private String facilityName;
         @SerializedName("ipAddress")
@@ -221,6 +245,10 @@ public class RequestDataFormat {
         private int serverPort;
         @SerializedName("ipPermission")
         private List<IpAddressBody> allowedIpList;
+
+        public String getSerialCode() {
+            return serialCode;
+        }
 
         public String getFacilityName() {
             return facilityName;
@@ -264,6 +292,19 @@ public class RequestDataFormat {
             this.serverPort = serverPort;
             this.allowedIpList = allowedIpList;
         }
+
+        public DeviceNetworkBody(String serialCode, String buildingCode, String facilityName, String ipAddress, String macAddress, String gateWayIP, String subNet, String serverIP, int serverPort, List<IpAddressBody> allowedIpList) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.facilityName = facilityName;
+            this.ipAddress = ipAddress;
+            this.macAddress = macAddress;
+            this.gateWayIP = gateWayIP;
+            this.subNet = subNet;
+            this.serverIP = serverIP;
+            this.serverPort = serverPort;
+            this.allowedIpList = allowedIpList;
+        }
     }
 
     public static class DeviceSleepModeBody implements Serializable {
@@ -283,6 +324,14 @@ public class RequestDataFormat {
 
         public int getSleepTime() {
             return sleepTime;
+        }
+
+        public void setMainReturnTime(int mainReturnTime) {
+            this.mainReturnTime = mainReturnTime;
+        }
+
+        public void setSleepTime(int sleepTime) {
+            this.sleepTime = sleepTime;
         }
     }
 

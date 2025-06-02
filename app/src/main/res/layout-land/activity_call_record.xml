@@ -108,7 +108,7 @@
                 android:id="@+id/lay_select_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
+                android:background="@drawable/btn_border_radius_10_gray">
 
                 <TextView
                     android:id="@+id/tv_select_type"
@@ -168,7 +168,7 @@
                 android:id="@+id/lay_select_start_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
+                android:background="@drawable/btn_border_radius_10_gray">
 
                 <TextView
                     android:id="@+id/tv_select_start_date"
@@ -229,7 +229,7 @@
                 android:id="@+id/lay_select_end_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_gray_border_radius_10">
+                android:background="@drawable/btn_border_radius_10_gray">
 
                 <TextView
                     android:id="@+id/tv_select_end_date"
@@ -281,7 +281,7 @@
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/btn_blue_fill_border_radius_10"
+            android:background="@drawable/btn_fill_border_radius_10_blue"
             android:fontFamily="@font/pretendard_semibold"
             android:text="검 색"
             android:textColor="@color/white"

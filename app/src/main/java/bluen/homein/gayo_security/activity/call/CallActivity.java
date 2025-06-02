@@ -1,14 +1,25 @@
 package bluen.homein.gayo_security.activity.call;
 
 import static bluen.homein.gayo_security.activity.addFacilityContact.AddContactActivity.RESULT_CODE_ADD_CONTACT;
+import static bluen.homein.gayo_security.global.GlobalApplication.callStatus;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.VibrationEffect;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,10 +50,8 @@ import org.webrtc.RendererCommon;
 import org.webrtc.RtpTransceiver;
 import org.webrtc.SdpObserver;
 import org.webrtc.SessionDescription;
-import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.SurfaceViewRenderer;
 import org.webrtc.VideoCapturer;
-import org.webrtc.VideoSource;
 import org.webrtc.VideoTrack;
 
 import java.util.ArrayList;
@@ -52,6 +61,7 @@ import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.addFacilityContact.AddContactActivity;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.dialog.PopupDialog;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 import bluen.homein.gayo_security.service.WebSocketService;
 import butterknife.BindView;
@@ -60,6 +70,7 @@ import butterknife.OnClick;
 public class CallActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_ADD_CONTACT = 1;
+    public static final int RESULT_CODE_ADD_CONTACT_REFRESH = 4;
 
     @BindView(R.id.rv_facility_list)
     RecyclerView rvFacilityList;
@@ -77,9 +88,10 @@ public class CallActivity extends BaseActivity {
 
     @BindView(R.id.tv_call_message)
     TextView tvCallMessage;
+    @BindView(R.id.tv_call_time)
+    TextView tvCallTime;
     @BindView(R.id.tv_facility_name)
     TextView tvFacilityName;
-
     @BindView(R.id.tv_facility_info)
     TextView tvFacilityInfo;
     @BindView(R.id.tv_apt_dong_number)
@@ -106,8 +118,6 @@ public class CallActivity extends BaseActivity {
     // WebRTC 관련 변수
     @BindView(R.id.remote_view)
     SurfaceViewRenderer remoteView;
-    // @BindView(R.id.local_view)
-    // SurfaceViewRenderer localView;  // 필요하다면..?
     private EglBase rootEglBase;
     private MediaConstraints sdpMediaConstraints;
     private PeerConnectionFactory peerConnectionFactory;
@@ -117,14 +127,14 @@ public class CallActivity extends BaseActivity {
     private VideoCapturer videoCapturer;
 
     // 통화 상태 상수
-    public static final int CALL_STATUS_IDLE = 0;
-    public static final int CALL_STATUS_INCOMING = 1;
-    public static final int CALL_STATUS_REJECTED = 2;
+    public static final int CALL_STATUS_IDLE = -1;
+    public static final int CALL_STATUS_INCOMING = 0;
+    public static final int CALL_STATUS_REJECTED = 1;
+    public static final int CALL_STATUS_ACCEPT_CALL = 2;
     public static final int CALL_STATUS_CONNECTING = 3;
     public static final int CALL_STATUS_ACTIVE = 4;
 
     // 현재 상태
-    private int callStatus = CALL_STATUS_IDLE;
 
     // 발신/수신 구분
     // isSender = true  => “전화를 거는 기기”(발신자) => Answer 생성
@@ -132,6 +142,7 @@ public class CallActivity extends BaseActivity {
     private boolean isSender = false;
 
     // 기타
+    private View dialogView;
     private FacilityContactsButtonListAdapter facilityContactsButtonListAdapter;
 
     private String currentRoomId = "";
@@ -139,12 +150,67 @@ public class CallActivity extends BaseActivity {
     private String receivedSdp = "";
     private String senderSerialCode = "";
     private String recipientSerialCode = "";
-    boolean isWithGayoApp = false;
+    public boolean isVideoCall = false;
 
     private String dongNumber = "";
     private String hoNumber = "";
     private boolean isDongFinal = false;
     private boolean isHoFinal = false;
+    private boolean isCarInfoVisible = false;
+    private GayoAppUserBody gayoAppUserBody = null;
+
+    private Handler callTimerHandler = new Handler(Looper.getMainLooper());
+    private Runnable callTimerRunnable;
+    private int seconds = 0;
+
+    private void startCallTimer() {
+        seconds = 0; // 초기화
+        callTimerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                seconds++;
+                int mins = seconds / 60;
+                int secs = seconds % 60;
+                tvCallTime.setText(String.format("%02d:%02d", mins, secs));
+                callTimerHandler.postDelayed(this, 1000);
+            }
+        };
+        callTimerHandler.post(callTimerRunnable);
+    }
+
+    private void stopCallTimer() {
+        if (callTimerHandler != null && callTimerRunnable != null) {
+            callTimerHandler.removeCallbacks(callTimerRunnable);
+        }
+        tvCallTime.setText("00:00");
+    }
+
+    private Handler callTimeoutHandler = new Handler(Looper.getMainLooper());
+    private Runnable callTimeoutRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (callStatus < 2) {
+                WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                        gayoAppUserBody == null ? "no-answer" : "gayo-no-answer",
+                        recipientSerialCode,
+                        senderSerialCode,
+                        currentRoomId,
+                        currentClientId
+                );
+                WebSocketService.sendWebSocketMessage(body.toJson());
+            }
+        }
+    };
+
+
+    public void startCallTimeoutHandler() {
+        callTimeoutHandler.postDelayed(callTimeoutRunnable, 60000); // 60000ms = 1분
+    }
+
+    public void cancelCallTimeoutHandler() {
+        callTimeoutHandler.removeCallbacks(callTimeoutRunnable);
+    }
+
 
     @OnClick({
             R.id.tv_number_0_btn, R.id.tv_number_1_btn, R.id.tv_number_2_btn, R.id.tv_number_3_btn,
@@ -152,77 +218,116 @@ public class CallActivity extends BaseActivity {
             R.id.tv_number_8_btn, R.id.tv_number_9_btn
     })
     void onNumberClick(TextView clickedView) {
-        String digit = clickedView.getText().toString();
-        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        if (callStatus == CALL_STATUS_IDLE) {
+            String digit = clickedView.getText().toString();
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
-        // 아직 "동" 입력이 완료되지 않았다면, 동 번호에 숫자를 추가
-        if (!isDongFinal) {
-            // 동 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
-            if (dongNumber.length() < 4) {
-                dongNumber += digit;
-                tvAptDongNumber.setText(dongNumber);
+            // 아직 "동" 입력이 완료되지 않았다면, 동 번호에 숫자를 추가
+            if (!isDongFinal) {
+                // 동 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
+                if (dongNumber.length() < 4) {
+                    dongNumber += digit;
+                    tvAptDongNumber.setText(dongNumber);
 
-                // 동 번호가 4자리가 되면 자동으로 동 TextView를 visible, 동 입력 확정
-                if (dongNumber.length() == 4) {
-                    tvAptDong.setVisibility(View.VISIBLE);
-                    isDongFinal = true;
+                    // 동 번호가 4자리가 되면 자동으로 동 TextView를 visible, 동 입력 확정
+                    if (dongNumber.length() == 4) {
+                        tvAptDong.setVisibility(View.VISIBLE);
+                        isDongFinal = true;
+                    }
                 }
             }
-        }
-        // "동" 입력이 끝난 상태라면 "호" 번호에 입력
-        else if (!isHoFinal) {
-            // 호 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
-            if (hoNumber.length() < 4) {
-                hoNumber += digit;
-                tvAptHoNumber.setText(hoNumber);
+            // "동" 입력이 끝난 상태라면 "호" 번호에 입력
+            else if (!isHoFinal) {
+                // 호 번호가 아직 4자리가 안 채워졌을 때만 입력 가능
+                if (hoNumber.length() < 4) {
+                    hoNumber += digit;
+                    tvAptHoNumber.setText(hoNumber);
 
-                // 호 번호가 4자리가 되면 자동으로 호 TextView를 visible, 호 입력 확정
-                if (hoNumber.length() == 4) {
-                    tvAptHo.setVisibility(View.VISIBLE);
-                    isHoFinal = true;
+                    // 호 번호가 4자리가 되면 자동으로 호 TextView를 visible, 호 입력 확정
+                    if (hoNumber.length() == 4) {
+                        tvAptHo.setVisibility(View.VISIBLE);
+                        isHoFinal = true;
+                    }
                 }
             }
+            // isDongFinal과 isHoFinal 모두 true인 경우(동/호 모두 입력 완료) 더 이상 입력되지 않음
         }
-        // isDongFinal과 isHoFinal 모두 true인 경우(동/호 모두 입력 완료) 더 이상 입력되지 않음
     }
 
     @OnClick(R.id.tv_dong_btn)
     void onDongBtnClick() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        // 동 번호가 비어있지 않으면서 아직 확정되지 않은 상태인 경우만
-        if (!dongNumber.isEmpty() && !isDongFinal) {
-            tvAptDong.setVisibility(View.VISIBLE);
-            isDongFinal = true;
+        if (callStatus == CALL_STATUS_IDLE) {
+            // 동 번호가 비어 있지 않으면서 아직 확정 되지 않은 상태인 경우만
+            if (!dongNumber.isEmpty() && !isDongFinal) {
+                tvAptDong.setVisibility(View.VISIBLE);
+                isDongFinal = true;
+            }
         }
     }
 
     @OnClick(R.id.tv_ho_btn)
     void onHoBtnClick() {
-        if (!hoNumber.isEmpty() && !isHoFinal) {
-            tvAptHo.setVisibility(View.VISIBLE);
-            isHoFinal = true;
+        if (callStatus == CALL_STATUS_IDLE) {
+            if (!hoNumber.isEmpty() && !isHoFinal) {
+                tvAptHo.setVisibility(View.VISIBLE);
+                isHoFinal = true;
+            }
+        }
+    }
+
+    @OnClick(R.id.lay_volume_down)
+    void onVolumeDownClick() {
+//code
+    }
+
+    @OnClick(R.id.lay_volume_up)
+    void onVolumeUpClick() {
+//code
+    }
+
+    @OnClick(R.id.lay_car_number_btn)
+    void onCarNumberBtnClick() {
+//        isCarInfoVisible = !isCarInfoVisible;
+//        layCarNumberInfo.setVisibility(isCarInfoVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.lay_door_open_btn)
+    void onOpenDoorBtnClick() {
+        if (recipientSerialCode == null && !recipientSerialCode.isEmpty()) { // 경비실기 또는 월패드
+            WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                    "open/gate",
+                    recipientSerialCode
+            );
+            WebSocketService.sendWebSocketMessage(body.toJson());
+
+        } else {
+            showWarningDialog("현재 연결된 로비폰이 없습니다.\n세대 정보를 입력 후 시도해주세요.", getString(R.string.confirm));
+
         }
     }
 
     @OnClick(R.id.lay_delete_btn)
     void onDeleteClick() {
-        vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+        if (callStatus == CALL_STATUS_IDLE) {
+            vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
-        if (!hoNumber.isEmpty()) {
-            hoNumber = hoNumber.substring(0, hoNumber.length() - 1);
-            tvAptHoNumber.setText(hoNumber);
+            if (!hoNumber.isEmpty()) {
+                hoNumber = hoNumber.substring(0, hoNumber.length() - 1);
+                tvAptHoNumber.setText(hoNumber);
 
-            if (hoNumber.length() < 4) {
-                tvAptHo.setVisibility(View.INVISIBLE);
-                isHoFinal = false;
-            }
-        } else if (!dongNumber.isEmpty()) {
-            dongNumber = dongNumber.substring(0, dongNumber.length() - 1);
-            tvAptDongNumber.setText(dongNumber);
+                if (hoNumber.length() < 4) {
+                    tvAptHo.setVisibility(View.INVISIBLE);
+                    isHoFinal = false;
+                }
+            } else if (!dongNumber.isEmpty()) {
+                dongNumber = dongNumber.substring(0, dongNumber.length() - 1);
+                tvAptDongNumber.setText(dongNumber);
 
-            if (dongNumber.length() < 4) {
-                tvAptDong.setVisibility(View.INVISIBLE);
-                isDongFinal = false;
+                if (dongNumber.length() < 4) {
+                    tvAptDong.setVisibility(View.INVISIBLE);
+                    isDongFinal = false;
+                }
             }
         }
     }
@@ -235,26 +340,122 @@ public class CallActivity extends BaseActivity {
         Log.i(TAG, "onCallBtnClick()");
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
-        isSender = true;
+        if (tvAptDongNumber.getText().toString().isEmpty() || tvAptDongNumber.getText().toString().isEmpty()) {
+            showPopupDialog(null, "동 호 수를 정확히\n입력 해주세요.", getString(R.string.confirm));
+        }
 
-        // 예: 서버에 'invite' 전송
-        recipientSerialCode = "testserialCode6"; // 임시
-        senderSerialCode = serialCode;
+        // 통화 전 수신자 선택 팝업
 
-        // 임의로 roomId 생성
-        int roomId = (int) (Math.random() * 90000000) + 10000000;
-        currentRoomId = String.valueOf(roomId);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        dialogView = inflater.inflate(R.layout.dialog_call_type, null);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "invite",
-                recipientSerialCode, // 수신자
-                senderSerialCode     // 발신자
-        );
-        body.setRoomId(currentRoomId);
+        View decorView = dialog.getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        decorView.setSystemUiVisibility(uiOptions);
 
-        // 실제 전송
-        String jsonString = body.toJson();
-        WebSocketService.sendWebSocketMessage(jsonString);
+        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                    hideNavigationBar();
+                }
+            }
+        });
+
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(window.getAttributes());
+
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+            window.setAttributes(layoutParams);
+        }
+
+        Button btnWallPadAndPhone = dialogView.findViewById(R.id.btn_wall_pad_and_phone);
+        Button btnOnlyWallPad = dialogView.findViewById(R.id.btn_only_wall_pad);
+        Button btnCancel = dialogView.findViewById(R.id.btn_cancel_);
+
+        btnOnlyWallPad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callStatus == CALL_STATUS_IDLE && !tvAptDongNumber.getText().toString().isEmpty() && !tvAptHoNumber.getText().toString().isEmpty()) {
+                    isSender = true;
+
+                    // 예: 서버에 'invite' 전송
+                    recipientSerialCode = ""; // TODO 임시 입니다!!! 월패드의 시리얼 코드 적어야 함....
+                    senderSerialCode = Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode();
+
+                    // 임의로 roomId 생성
+                    int roomId = (int) (Math.random() * 90000000) + 10000000;
+                    currentRoomId = String.valueOf(roomId);
+
+                    WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                            "invite",
+                            recipientSerialCode, // 수신자
+                            senderSerialCode     // 발신자
+                    );
+                    body.setRoomId(currentRoomId);
+
+                    // 실제 전송
+                    String jsonString = body.toJson();
+                    WebSocketService.sendWebSocketMessage(jsonString);
+                }
+            }
+        });
+
+        btnWallPadAndPhone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (callStatus == CALL_STATUS_IDLE && !tvAptDongNumber.getText().toString().isEmpty() && !tvAptHoNumber.getText().toString().isEmpty()) {
+                    isSender = true;
+
+                    // 예: 서버에 'invite' 전송
+                    recipientSerialCode = ""; // TODO 로비폰, 가요 유저의 시리얼 코드를 아는 방법 없음
+                    senderSerialCode = Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode();
+
+                    // 임의로 roomId 생성
+                    int roomId = (int) (Math.random() * 90000000) + 10000000;
+                    currentRoomId = String.valueOf(roomId);
+
+                    //월패드 수신자
+                    WebSocketService.WebSocketBody body1 = new WebSocketService.WebSocketBody(
+                            "invite",
+                            recipientSerialCode, // 수신자
+                            senderSerialCode     // 발신자
+                    );
+
+                    //가요 수신자(임시 코드입니다!!!!!!) 로비폰, 가요 유저의 시리얼 코드를 아는 방법 없음!
+                    WebSocketService.WebSocketBody body2 = new WebSocketService.WebSocketBody(
+                            "invite",
+                            recipientSerialCode, // 수신자
+                            senderSerialCode     // 발신자
+                    );
+                    body1.setRoomId(currentRoomId);
+
+                    String jsonString1 = body1.toJson();
+                    String jsonString2 = body1.toJson();
+                    WebSocketService.sendWebSocketMessage(jsonString1);
+                    WebSocketService.sendWebSocketMessage(jsonString2);
+                }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
 
 
     }
@@ -264,20 +465,36 @@ public class CallActivity extends BaseActivity {
     // ------------------------------------------------------
     @OnClick(R.id.tv_connect_call_btn)
     void onConnectCallBtnClick() {
+        callStatus = CALL_STATUS_ACCEPT_CALL;
+        cancelCallTimeoutHandler();
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-
         startCallAndReleaseResources();
 
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "accept",
-                recipientSerialCode,
-                senderSerialCode,
-                currentRoomId,
-                currentClientId
-        );
+        if (gayoAppUserBody == null) { // 경비실기 또는 월패드
+            WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                    "accept",
+                    recipientSerialCode,
+                    senderSerialCode,
+                    currentRoomId,
+                    currentClientId
+            );
+            WebSocketService.sendWebSocketMessage(body.toJson());
 
-        WebSocketService.sendWebSocketMessage(body.toJson());
+        } else { // gayo app
+            WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                    "gayo-accept",
+                    recipientSerialCode,
+                    senderSerialCode,
+                    currentRoomId,
+                    currentClientId,
+                    gayoAppUserBody.getBuilCode(),
+                    gayoAppUserBody.getBuilDong(),
+                    gayoAppUserBody.getBuilHo()
+            );
+            body.setUserIdx(gayoAppUserBody.getUserIdx());
+            WebSocketService.sendWebSocketMessage(body.toJson());
 
+        }
     }
 
     // ------------------------------------------------------
@@ -287,15 +504,31 @@ public class CallActivity extends BaseActivity {
     void onRejectCallBtnClick() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         callStatus = CALL_STATUS_REJECTED;
-        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
-                "invite-away",
-                recipientSerialCode,
-                senderSerialCode,
-                currentRoomId,
-                currentClientId
-        );
+        if (gayoAppUserBody == null) {
+            WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                    "invite-away",
+                    recipientSerialCode,
+                    senderSerialCode,
+                    currentRoomId,
+                    currentClientId
+            );
 
-        WebSocketService.sendWebSocketMessage(body.toJson());
+            WebSocketService.sendWebSocketMessage(body.toJson());
+        } else {
+            WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                    "gayo-invite-away",
+                    recipientSerialCode,
+                    senderSerialCode,
+                    currentRoomId,
+                    currentClientId,
+                    gayoAppUserBody.getBuilCode(),
+                    gayoAppUserBody.getBuilDong(),
+                    gayoAppUserBody.getBuilHo()
+            );
+            body.setUserIdx(gayoAppUserBody.getUserIdx());
+
+            WebSocketService.sendWebSocketMessage(body.toJson());
+        }
     }
 
     // ------------------------------------------------------
@@ -304,10 +537,19 @@ public class CallActivity extends BaseActivity {
     @OnClick(R.id.lay_hang_up_btn)
     void onHangUpBtnClick() {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
-        if (callStatus < 3) {
-            hangUpCall("bye");
-        } else {
-            hangUpCall("call-bye"); // 통화 연결 중 끊기!
+        if (callStatus < 3) { // 통화 연결 전 끊기
+            if (gayoAppUserBody == null) {
+                hangUpCall("bye");
+            } else {
+                hangUpCall("gayo-bye");
+            }
+        } else { // 통화 연결 중 끊기
+            if (gayoAppUserBody == null) {
+                hangUpCall("call-bye");
+            } else {
+                hangUpCall("gayo-call-bye");
+
+            }
         }
 
     }
@@ -327,7 +569,7 @@ public class CallActivity extends BaseActivity {
         vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
         if (callStatus == CALL_STATUS_INCOMING || callStatus == CALL_STATUS_ACTIVE) {
-            showPopupDialog("현재 통화 중인데 나가면 통화 종료됨.", "확 인");
+            showPopupDialog("이 페이지에서 나가시면\n현재 통화가 종료됩니다.", "확 인");
         } else {
             Intent intent = new Intent(CallActivity.this, AddContactActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ADD_CONTACT);
@@ -362,8 +604,14 @@ public class CallActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_CODE_ADD_CONTACT) {
             finish();
+        } else if (resultCode == RESULT_CODE_ADD_CONTACT_REFRESH) {
+            if (mPrefGlobal.getContactsList() != null) {
+                facilityContactsButtonListAdapter.setItems(mPrefGlobal.getContactsList());
+                rvFacilityList.setAdapter(facilityContactsButtonListAdapter);
+            }
         }
     }
 
@@ -418,6 +666,30 @@ public class CallActivity extends BaseActivity {
                 @Override
                 public void clickContacts(ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo) {
                     // call code
+                    if (callStatus == CALL_STATUS_IDLE) {
+                        isSender = true;
+
+                        // 예: 서버에 'invite' 전송
+                        recipientSerialCode = facilityContactInfo.getConnSerialCode();
+                        senderSerialCode = Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode();
+                        tvFacilityInfo.setText(facilityContactInfo.getFacilityName());
+                        tvFacilityName.setText(facilityContactInfo.getFacilityName());
+                        // 임의로 roomId 생성
+                        int roomId = (int) (Math.random() * 90000000) + 10000000;
+                        currentRoomId = String.valueOf(roomId);
+
+                        WebSocketService.WebSocketBody body = new WebSocketService.WebSocketBody(
+                                "invite",
+                                recipientSerialCode, // 수신자
+                                senderSerialCode     // 발신자
+                        );
+                        body.setRoomId(currentRoomId);
+
+                        // 실제 전송
+                        String jsonString = body.toJson();
+                        WebSocketService.sendWebSocketMessage(jsonString);
+                    }
+
                 }
             });
 
@@ -444,6 +716,11 @@ public class CallActivity extends BaseActivity {
         String id = json.optString("id", "");
         int label = json.optInt("label", -1);
         String candidate = json.optString("candidate", "");
+        String buildingCode = json.optString("builCode", "");
+        String buildingDong = json.optString("builDong", "");
+        String buildingHo = json.optString("builHo", "");
+        String userIdx = json.optString("userIdx", "");
+        String canSendVideo = json.optString("canSendVideo", "N");
 
         if (!method.isEmpty()) {
             switch (method) {
@@ -462,11 +739,13 @@ public class CallActivity extends BaseActivity {
                         currentClientId = "";
                         senderSerialCode = "";
                         recipientSerialCode = "";
+                        isVideoCall = false;
                         changeViewIdle(""); // 수신자 쪽에서 바로 끊는 것임.
                     }
 
                     break;
                 case "invite":
+                    isVideoCall = canSendVideo.equals("Y");
                     onInviteReceived(roomId, clientId, seSerialCode);
                     break;
 
@@ -487,6 +766,8 @@ public class CallActivity extends BaseActivity {
                     break;
 
                 case "accept-ack":
+                case "gayo-accept-ack":
+                    startCallAndReleaseResources();
                     callStatus = CALL_STATUS_ACTIVE;
                     if (!isSender) {
                         startCallOffer();
@@ -528,27 +809,26 @@ public class CallActivity extends BaseActivity {
                     break;
                 case "invite-away":  // 상대방이 받지 않음....(부재중)
                 case "no-answer":
-                case "call-bye": //상대가 끊었음.
-                    isHangUpThePhone(method);
+                case "gayo-no-answer":
                 case "invite-calling":
+                case "call-bye": //상대가 끊었음.
                     isHangUpThePhone(method);
                     break;
                 case "bye": // 통화걸었다가 바로 끊음
+                    isHangUpThePhone(method);
                     break;
                 //** 가요 앱으로 부터
                 case "gayo-invite":
-                    break;
-                case "gayo-invite-away":
+                    if (Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode().equals(buildingCode)) {
+                        gayoAppUserBody = new GayoAppUserBody(buildingCode, buildingDong, buildingHo, userIdx);
+                        onInviteReceived(roomId, clientId, seSerialCode);
+                    }
                     break;
                 case "gayo-invite-ack":
                     break;
-                case "gayo-accept-ack":
-                    break;
-                case "gayo-bye":
-                    break;
+                case "gayo-bye": // 가요에서 전화 걸었다가 가요에서 전화 종료.
                 case "gayo-call-bye":
-                    break;
-                case "gayo-no-answer":
+                    isHangUpThePhone(method);
                     break;
 
             }
@@ -567,6 +847,11 @@ public class CallActivity extends BaseActivity {
                 currentClientId
         );
 
+        if (isVideoCall) {
+            remoteView.setVisibility(View.GONE);
+        } else {
+
+        }
         String jsonString = webSocketBody.toJson();
         WebSocketService.sendWebSocketMessage(jsonString);
     }
@@ -580,9 +865,21 @@ public class CallActivity extends BaseActivity {
         currentRoomId = roomId;
         currentClientId = clientId;
         senderSerialCode = seSerialCode;
-        recipientSerialCode = serialCode;
+        recipientSerialCode = Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode();
 
         // UI 갱신
+        boolean isContacted = false;
+        for (int i = 0; i < mPrefGlobal.getContactsList().size(); i++) {
+            if (seSerialCode.equals(mPrefGlobal.getContactsList().get(i).getConnSerialCode())) {
+                tvFacilityName.setText(mPrefGlobal.getContactsList().get(i).getFacilityName());
+                isContacted = true;
+                break;
+            }
+        }
+        if (!isContacted) {
+            tvFacilityName.setText("미확인 기기");
+            tvFacilityInfo.setText("미확인 기기");
+        }
         changeViewCalling();
 
         // 벨 울림 (미구현)
@@ -598,6 +895,7 @@ public class CallActivity extends BaseActivity {
         );
         WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
 
+        startCallTimeoutHandler();
     }
 
     private void startRingMyBell() {
@@ -627,17 +925,33 @@ public class CallActivity extends BaseActivity {
                 // 이 Offer를 서버로 전송
                 String offerSdp = sessionDescription.description;
 
-                WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
-                        "offer",
-                        recipientSerialCode,
-                        senderSerialCode,
-                        currentRoomId,
-                        currentClientId,
-                        buildingCode, "", "", // 필요 파라미터
-                        offerSdp
-                );
+                if (gayoAppUserBody == null) {
+                    WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
+                            "offer",
+                            recipientSerialCode,
+                            senderSerialCode,
+                            currentRoomId,
+                            currentClientId,
+                            Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), tvAptDongNumber.getText().toString(), tvAptHoNumber.getText().toString(), // 필요 파라미터
+                            offerSdp
+                    );
 
-                WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
+                    WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
+                } else {
+                    WebSocketService.WebSocketBody webSocketBody = new WebSocketService.WebSocketBody(
+                            "gayo-offer",
+                            recipientSerialCode,
+                            senderSerialCode,
+                            currentRoomId,
+                            currentClientId,
+                            gayoAppUserBody.getBuilCode(), gayoAppUserBody.getBuilDong(), gayoAppUserBody.getBuilHo(),
+                            offerSdp
+                    );
+
+                    webSocketBody.setUserIdx(gayoAppUserBody.getUserIdx());
+
+                    WebSocketService.sendWebSocketMessage(webSocketBody.toJson());
+                }
 
             }
 
@@ -719,7 +1033,7 @@ public class CallActivity extends BaseActivity {
                         senderSerialCode,      // 발신자
                         currentRoomId,
                         currentClientId,
-                        buildingCode,
+                        Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(),
                         "", // dong
                         "", // ho
                         answerSdp
@@ -800,9 +1114,11 @@ public class CallActivity extends BaseActivity {
                             case DISCONNECTED:
                             case FAILED:
                                 callStatus = CALL_STATUS_IDLE;
+                                stopCallTimer();
                                 break;
                             case CONNECTED:
                                 callStatus = CALL_STATUS_ACTIVE;
+                                startCallTimer();
                                 break;
                             case CHECKING:
                                 callStatus = CALL_STATUS_CONNECTING;
@@ -864,9 +1180,12 @@ public class CallActivity extends BaseActivity {
 
                         if (transceiver.getReceiver().track() instanceof VideoTrack) {
                             // 비디오 처리
-                            VideoTrack remoteVideoTrack = (VideoTrack) transceiver.getReceiver().track();
-                            remoteVideoTrack.setEnabled(true);
-                            runOnUiThread(() -> remoteVideoTrack.addSink(remoteView));
+                            // 로비폰과의 통화에서만 영상 통화를 한다.
+                            if (isVideoCall) {
+                                VideoTrack remoteVideoTrack = (VideoTrack) transceiver.getReceiver().track();
+                                remoteVideoTrack.setEnabled(true);
+                                runOnUiThread(() -> remoteVideoTrack.addSink(remoteView));
+                            }
 
                         } else if (transceiver.getReceiver().track() instanceof AudioTrack) {
                             // 오디오 처리
@@ -890,11 +1209,12 @@ public class CallActivity extends BaseActivity {
             Log.e(TAG, "localAudioTrack이 null이라 추가 실패");
         }
 
-        if (localVideoTrack != null) {
-            peerConnection.addTrack(localVideoTrack, mediaStreamList);
-        } else {
-            Log.e(TAG, "localVideoTrack이 null이라 추가 실패");
-        }
+        //경비 실기는 영상 송출 x
+//        if (localVideoTrack != null) {
+//            peerConnection.addTrack(localVideoTrack, mediaStreamList);
+//        } else {
+//            Log.e(TAG, "localVideoTrack이 null이라 추가 실패");
+//        }
     }
 
     // ------------------------------------------------------
@@ -937,7 +1257,6 @@ public class CallActivity extends BaseActivity {
 
         sdpMediaConstraints = new MediaConstraints();
         sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("offerToReceiveAudio", "true"));
-        sdpMediaConstraints.mandatory.add(new MediaConstraints.KeyValuePair("offerToReceiveAudio", "true"));
 
         //오디오
         AudioSource audioSource = peerConnectionFactory.createAudioSource(sdpMediaConstraints);
@@ -945,25 +1264,25 @@ public class CallActivity extends BaseActivity {
         localAudioTrack.setEnabled(true);
 
         //비디오
-        videoCapturer = createCameraCapturer();
-        if (videoCapturer == null) {
-            Log.e(TAG, "videoCapturer is null!");
-            return;
-        }
-
-        VideoSource videoSource = peerConnectionFactory.createVideoSource(false);
-        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
-
-        videoCapturer.initialize(surfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
-
-        try {
-            videoCapturer.startCapture(640, 480, 30); // 임시 크기
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        localVideoTrack = peerConnectionFactory.createVideoTrack("VIDEO_TRACK_ID", videoSource);
-        localVideoTrack.setEnabled(true);
+//        videoCapturer = createCameraCapturer();
+//        if (videoCapturer == null) {
+//            Log.e(TAG, "videoCapturer is null!");
+//            return;
+//        }
+//
+//        VideoSource videoSource = peerConnectionFactory.createVideoSource(false);
+//        SurfaceTextureHelper surfaceTextureHelper = SurfaceTextureHelper.create("CaptureThread", rootEglBase.getEglBaseContext());
+//
+//        videoCapturer.initialize(surfaceTextureHelper, getApplicationContext(), videoSource.getCapturerObserver());
+//
+//        try {
+//            videoCapturer.startCapture(640, 480, 30); // 임시 크기
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        localVideoTrack = peerConnectionFactory.createVideoTrack("VIDEO_TRACK_ID", videoSource);
+//        localVideoTrack.setEnabled(true);
 
     }
 
@@ -987,23 +1306,16 @@ public class CallActivity extends BaseActivity {
     public void hangUpCall(String method) {
         // 시그널 서버에 통화 종료 알림
         WebSocketService.WebSocketBody body;
-        if (method.equals("call-bye")) {
-            body = new WebSocketService.WebSocketBody(
-                    method,
-                    isSender ? recipientSerialCode : "",
-                    isSender ? "" : senderSerialCode,
-                    currentRoomId,
-                    currentClientId,
-                    receivedSdp
-            );
-        } else {
-            body = new WebSocketService.WebSocketBody(
-                    method,
-                    recipientSerialCode,
-                    senderSerialCode,
-                    currentRoomId,
-                    currentClientId
-            );
+
+        body = new WebSocketService.WebSocketBody(
+                method,
+                isSender ? recipientSerialCode : "",
+                isSender ? "" : senderSerialCode,
+                currentRoomId,
+                currentClientId
+        );
+        if (!receivedSdp.isEmpty()) {
+            body.setSdp(receivedSdp);
         }
         WebSocketService.sendWebSocketMessage(body.toJson());
 
@@ -1020,23 +1332,28 @@ public class CallActivity extends BaseActivity {
         if (isSender) {
             layCallBtn.setVisibility(View.INVISIBLE);
             layHangUpBtn.setVisibility(View.VISIBLE);
-            tvCallMessage.setText("으로 통화를 걸고 있습니다.");
+            tvCallMessage.setText("(으)로 통화를 걸고 있습니다.");
         } else {
             layCallReceptionSelect.setVisibility(View.VISIBLE);
             layButton.setAlpha(0.3F);
-            tvCallMessage.setText("으로 부터 통화가 왔습니다.");
+            tvCallMessage.setText("(으)로 부터 통화가 왔습니다.");
         }
     }
 
     //전화 연결 완료...
     private void changeViewCallingStart() {
-        remoteView.setVisibility(View.VISIBLE);
+        if (isVideoCall) {
+            remoteView.setVisibility(View.VISIBLE);
+        } else {
+            remoteView.setVisibility(View.GONE);
+
+        }
         layCallTime.setVisibility(View.VISIBLE);
         layButton.setAlpha(1F);
         layCallReceptionSelect.setVisibility(View.GONE);
         layHangUpBtn.setVisibility(View.VISIBLE);
 
-//TODO 여기 세대호출인지 관리실 통화인지에 따라 tvFacilityInfo or lay_dong_ho_info 중 setVisibility(View.VISIBLE);
+//TODO 여기 세대 호출인지 관리실 통화인 지에 따라 tvFacilityInfo or lay_dong_ho_info 중 setVisibility(View.VISIBLE);
         tvFacilityInfo.setVisibility(View.VISIBLE);
         layCallInfo.setVisibility(View.GONE);
         //** 현재 통화중인 세대 ? 또는 시설 명 보이게 끔하기 오른쪽뷰에
@@ -1054,7 +1371,8 @@ public class CallActivity extends BaseActivity {
         senderSerialCode = "";
         recipientSerialCode = "";
         receivedSdp = "";
-
+        gayoAppUserBody = null;
+        isVideoCall = false;
         endCallAndReleaseResources();
 
         // UI 복원 등
@@ -1065,9 +1383,11 @@ public class CallActivity extends BaseActivity {
         // 통화 종료 UI
         remoteView.setVisibility(View.GONE);
         layHangUpBtn.setVisibility(View.GONE);
+
         switch (method) {
             case "invite-away":
             case "no-answer":
+            case "gayo-no-answer":
             case "invite-norespone":
                 tvCallMessage.setText("과(와) 연결이 되지 않습니다.");
                 new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
@@ -1076,13 +1396,12 @@ public class CallActivity extends BaseActivity {
                 tvCallMessage.setText("이(가) 통화중 입니다.");
                 new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
                 break;
-
             case "call-bye":
                 tvCallMessage.setText("과(와) 통화가 종료 되었습니다.");
                 new Handler(Looper.getMainLooper()).postDelayed(() -> changeViewReset(), 2000);
                 break;
             default:
-                changeViewReset(); //부재중 ("bye")
+                changeViewReset(); //부재중 ("bye","gayo-bye")
                 break;
 
         }
@@ -1193,6 +1512,37 @@ public class CallActivity extends BaseActivity {
 
         @Override
         public void onSetFailure(String s) {
+        }
+    }
+
+    public static class GayoAppUserBody {
+
+        private String builCode;
+        private String builDong;
+        private String builHo;
+        private String userIdx;
+
+        public GayoAppUserBody(String builCode, String builDong, String builHo, String userIdx) {
+            this.builCode = builCode;
+            this.builDong = builDong;
+            this.builHo = builHo;
+            this.userIdx = userIdx;
+        }
+
+        public String getBuilCode() {
+            return builCode;
+        }
+
+        public String getBuilDong() {
+            return builDong;
+        }
+
+        public String getBuilHo() {
+            return builHo;
+        }
+
+        public String getUserIdx() {
+            return userIdx;
         }
     }
 }

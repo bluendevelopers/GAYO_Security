@@ -93,10 +93,11 @@ public class CallRecordListAdapter extends BaseAdapter {
                 tvDivision.setTextColor(Color.parseColor("#f1293d"));
                 break;
             case "부재중":
-                tvDivision.setTextColor(Color.parseColor("#333333"));
-                break;
-            case "수신 거부":
                 tvDivision.setTextColor(Color.parseColor("#138235"));
+                break;
+            case "수신거부":
+                tvDivision.setTextColor(Color.parseColor("#333333"));
+
                 break;
         }
 

@@ -62,7 +62,7 @@ public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButto
         if (selectedPosition == position) {
             // 선택된 상태
             holder.layBtnBackground.setBackgroundDrawable(
-                    context.getDrawable(R.drawable.btn_blue_fill_border_radius_15));
+                    context.getDrawable(R.drawable.btn_fill_border_radius_15_blue));
             holder.tvPrefName.setTextColor(
                     ContextCompat.getColor(context, R.color.white));
         } else {

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_custom_lay"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_radius_15_fill"
+    android:elevation="5dp"
+    android:layout_marginHorizontal="140dp"
+    android:layout_marginVertical="40dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/tv_inspection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="37.5dp"
+        android:fontFamily="@font/pretendard_extra_bold"
+        android:lineSpacingExtra="4.5dp"
+        android:text="PING 테스트 - 결과 보기"
+        android:textColor="#333333"
+        android:textSize="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_close_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:padding="20dp"
+        android:src="@drawable/close_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/lay_ping_test_result"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_inspection">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_medium"
+            android:lineSpacingExtra="10.8dp"
+            android:text="IP 주소"
+            android:textColor="#333333"
+            android:textSize="28dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_ip_address_1"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/btn_border_radius_15_"
+            android:fontFamily="@font/pretendard_semibold"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="000"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="#b5b5b5"
+            android:textSize="45dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toStartOf="@+id/tv_ip_address_2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/tv_ip_address_2"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/btn_border_radius_15_"
+            android:fontFamily="@font/pretendard_semibold"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="000"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="#b5b5b5"
+            android:textSize="45dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toStartOf="@+id/tv_ip_address_3"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_ip_address_1"
+            app:layout_constraintTop_toTopOf="@+id/tv_ip_address_1" />
+
+        <TextView
+            android:id="@+id/tv_ip_address_3"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/btn_border_radius_15_"
+            android:fontFamily="@font/pretendard_semibold"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="000"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="#b5b5b5"
+            android:textSize="45dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toStartOf="@+id/tv_ip_address_4"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_ip_address_2"
+            app:layout_constraintTop_toTopOf="@+id/tv_ip_address_2" />
+
+        <TextView
+            android:id="@+id/tv_ip_address_4"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/btn_border_radius_15_"
+            android:fontFamily="@font/pretendard_semibold"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:maxLength="3"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="000"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textColorHint="#b5b5b5"
+            android:textSize="45dp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tv_ip_address_3"
+            app:layout_constraintTop_toTopOf="@+id/tv_ip_address_3" />
+
+
+        <ListView
+            android:layout_width="0dp"
+            android:layout_height="395dp"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/btn_border_radius_15"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_ping_test"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ip_address_1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

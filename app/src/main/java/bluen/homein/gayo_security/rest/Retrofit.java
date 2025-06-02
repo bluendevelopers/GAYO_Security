@@ -70,6 +70,9 @@ public class Retrofit {
         @POST(RetrofitURL.CHANGE_PASSWORD)
         Call<ResponseDataFormat.PasswordDataBody> changePassword(@Header("Authorization") String auth, @Body ResponseDataFormat.PasswordDataBody passwordDataBody);
 
+        @POST(RetrofitURL.SAVE_NETWORK_DATA)
+        Call<RequestDataFormat.DeviceBody> saveNetworkData(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceNetworkBody body);
+
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -90,6 +93,12 @@ public class Retrofit {
 
         @POST(RetrofitURL.LOAD_FACILITY_CONTACT_LIST)
         Call<ResponseDataFormat.FacilityContactListBody> loadContactListPost(@Header("Authorization") String auth, @Body RequestDataFormat.ContactBody contactBody);
+
+        @POST(RetrofitURL.LOAD_FACILITY_ALL_CONTACT_LIST)
+        Call<List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo>> loadAllContactListPost(@Header("Authorization") String auth, @Body RequestDataFormat.ContactBody contactBody);
+
+        @GET(RetrofitURL.LOAD_ALL_DEVICE_LIST)
+        Call<List<RequestDataFormat.DeviceNetworkBody>> loadAllDeviceListPost(@Header("Authorization") String auth);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

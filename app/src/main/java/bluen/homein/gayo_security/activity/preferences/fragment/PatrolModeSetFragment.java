@@ -22,8 +22,8 @@ public class PatrolModeSetFragment extends BaseFragment {
 
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
-        mPrefGlobal.setPatrolDoorOpen(selectedNumber);
-        ((PreferencesActivity) activity).showPopupDialog(null, "성공적으로\n저장 되었습니다.", "확 인");
+        mPrefGlobal.setPatrolDoorOpenType(selectedNumber);
+        activity.showPopupDialog(null, "저장 되었습니다.", "확 인");
 
     }
 
@@ -68,8 +68,8 @@ public class PatrolModeSetFragment extends BaseFragment {
     @Override
     protected void initFragmentView(View v) {
         if (mPrefGlobal != null) {
-            selectedNumber = mPrefGlobal.getPatrolDoorOpen();
-            switch (mPrefGlobal.getPatrolDoorOpen()) {
+            selectedNumber = mPrefGlobal.getPatrolDoorOpenType();
+            switch (mPrefGlobal.getPatrolDoorOpenType()) {
                 case 0:
                     clickButtonView(v.findViewById(R.id.iv_auto_open));
                     break;

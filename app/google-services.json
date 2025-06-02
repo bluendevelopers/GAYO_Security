@@ -1,128 +1,26 @@
 {
   "project_info": {
-    "project_number": "204749619012",
-    "firebase_url": "https://homekey-1343.firebaseio.com",
-    "project_id": "homekey-1343",
-    "storage_bucket": "homekey-1343.firebasestorage.app"
+    "project_number": "373220009564",
+    "project_id": "gayosecurity",
+    "storage_bucket": "gayosecurity.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:204749619012:android:6dcc18172a01ac96",
-        "android_client_info": {
-          "package_name": "bluen.homein"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "204749619012-4ek0bi01qq68qt5l68nb3v30p7p4bh60.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "bluen.homein",
-            "certificate_hash": "7813ed2b4024395687fdfd93a749eeed9a2af246"
-          }
-        },
-        {
-          "client_id": "204749619012-5h0qmutbupk6dr1fjegrrr2i2ulqsbr4.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "bluen.homein",
-            "certificate_hash": "6f82da81d270e2ea2cd4fd6dd0291f4bcb9aa8e5"
-          }
-        },
-        {
-          "client_id": "204749619012-e2qrvhv645bfieoqh0ijsjln102702r5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "bluen.homein",
-            "certificate_hash": "7956a05d9b9ee9329c177046dc829c57b1b4959f"
-          }
-        },
-        {
-          "client_id": "204749619012-ljc7thnagn9607re8q00n8v05dt6ndvj.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "bluen.homein",
-            "certificate_hash": "41f9576b324a5cc7156a9dca49db0b56295a23fb"
-          }
-        },
-        {
-          "client_id": "204749619012-sqe05nfvcikm6tr7ev2u7k7b0am8jhe3.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "bluen.homein",
-            "certificate_hash": "14a4ae3588877ecb1fea512b2faaeedc704c76bc"
-          }
-        },
-        {
-          "client_id": "204749619012-fq56jipmhq3jtdq3m1kkic9rjdui0alp.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDRnEiWken4W0xMPbofeDWzZCo6gxEZZoc"
-        },
-        {
-          "current_key": "AIzaSyD1FZTHs971MzaIg2Ca-uwGAU-enn8y0L4"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "204749619012-3208k2ftul19jggdhujsuvehukblniui.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "204749619012-9qdip64c9sph1g52qm69icj627mr6ilr.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "kr.co.bluen.GAYO",
-                "app_store_id": "1252529872"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:204749619012:android:f08629692c72561e1c6111",
+        "mobilesdk_app_id": "1:373220009564:android:85171644ec0d86466b2899",
         "android_client_info": {
           "package_name": "bluen.homein.gayo_security"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "204749619012-fq56jipmhq3jtdq3m1kkic9rjdui0alp.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDRnEiWken4W0xMPbofeDWzZCo6gxEZZoc"
-        },
-        {
-          "current_key": "AIzaSyD1FZTHs971MzaIg2Ca-uwGAU-enn8y0L4"
+          "current_key": "AIzaSyBP2oJjoMnqbiptfz5UldcZvbZE8udiN9w"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "204749619012-3208k2ftul19jggdhujsuvehukblniui.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "204749619012-9qdip64c9sph1g52qm69icj627mr6ilr.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "kr.co.bluen.GAYO",
-                "app_store_id": "1252529872"
-              }
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }

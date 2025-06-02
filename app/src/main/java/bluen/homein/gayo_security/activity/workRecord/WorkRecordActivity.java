@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import bluen.homein.gayo_security.R;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.publicAdapter.PageNumberListAdapter;
 import bluen.homein.gayo_security.base.BaseActivity;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -492,7 +493,7 @@ public class WorkRecordActivity extends BaseActivity {
 
     private void getWorkerPhoneNumberList() {
         Retrofit.WorkRecordApi workRecordApi = Retrofit.WorkRecordApi.retrofit.create(Retrofit.WorkRecordApi.class);
-        Call<List<ResponseDataFormat.WorkerListBody.WorkerInfo>> call = workRecordApi.workerPhoneNumberListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerBody(buildingCode));
+        Call<List<ResponseDataFormat.WorkerListBody.WorkerInfo>> call = workRecordApi.workerPhoneNumberListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()));
 
         call.enqueue(new Callback<List<ResponseDataFormat.WorkerListBody.WorkerInfo>>() {
             @Override
@@ -524,45 +525,50 @@ public class WorkRecordActivity extends BaseActivity {
 
         Retrofit.WorkRecordApi workRecordApi = Retrofit.WorkRecordApi.retrofit.create(Retrofit.WorkRecordApi.class);
 
-        Call<ResponseDataFormat.WorkRecordListBody> call = workRecordApi.workRecordListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkRecordListBody(serialCode, buildingCode, currentPageNumber, startDate, endDate, workerPhoneNumberList.get(selectedNumberIndex).getManagerPhone(), workRecordTypeList.get(selectedTypeIndex).getCodeNumber())); // test
+        RequestDataFormat.WorkRecordListBody workRecordListBody =
+                new RequestDataFormat.WorkRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber, startDate, endDate, workerPhoneNumberList.get(selectedNumberIndex).getManagerPhone(), workRecordTypeList.get(selectedTypeIndex).getCodeNumber());
+        Call<ResponseDataFormat.WorkRecordListBody> call = workRecordApi.workRecordListPost(mPrefGlobal.getAuthorization(), workRecordListBody); // test
         call.enqueue(new Callback<ResponseDataFormat.WorkRecordListBody>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WorkRecordListBody> call, Response<ResponseDataFormat.WorkRecordListBody> response) {
                 closeProgress();
                 hideNavigationBar();
-
-                if (response.body().getMessage() == null) {
-                    pageList = new ArrayList<>();
-                    layBeforeBtn.setVisibility(View.VISIBLE);
-                    layNextBtn.setVisibility(View.VISIBLE);
-                    if (response.body().getPageCountInfo().getTotalPageCnt() != 0) {
-                        for (int i = 1; i <= response.body().getPageCountInfo().getTotalPageCnt(); i++) {
-                            if (!pageList.contains(String.valueOf(i))) {
-                                pageList.add(String.valueOf(i));
+                if (response.body() != null) {
+                    if (response.body().getMessage() == null) {
+                        pageList = new ArrayList<>();
+                        layBeforeBtn.setVisibility(View.VISIBLE);
+                        layNextBtn.setVisibility(View.VISIBLE);
+                        if (response.body().getPageCountInfo().getTotalPageCnt() != 0) {
+                            for (int i = 1; i <= response.body().getPageCountInfo().getTotalPageCnt(); i++) {
+                                if (!pageList.contains(String.valueOf(i))) {
+                                    pageList.add(String.valueOf(i));
+                                }
+                            }
+                        } else {
+                            layNextBtn.setVisibility(View.INVISIBLE);
+                            if (!pageList.contains("1")) {
+                                pageList.add("1");
                             }
                         }
-                    } else {
-                        layNextBtn.setVisibility(View.INVISIBLE);
-                        if (!pageList.contains("1")) {
-                            pageList.add("1");
+
+                        if (currentPageNumber == 1) {
+                            layBeforeBtn.setVisibility(View.INVISIBLE);
                         }
-                    }
+                        if (currentPageNumber == response.body().getPageCountInfo().getTotalPageCnt()) {
+                            layNextBtn.setVisibility(View.INVISIBLE);
+                        }
 
-                    if (currentPageNumber == 1) {
-                        layBeforeBtn.setVisibility(View.INVISIBLE);
-                    }
-                    if (currentPageNumber == response.body().getPageCountInfo().getTotalPageCnt()) {
-                        layNextBtn.setVisibility(View.INVISIBLE);
-                    }
-
-                    workRecordListAdapter.setData(response.body().getWorkRecordList());
+                        workRecordListAdapter.setData(response.body().getWorkRecordList());
 
 
-                    pageNumberListAdapter.setItems(pageList);
-                    pageNumberListAdapter.setPageNumber(currentPageNumber);
-                    rvPageNumber.setAdapter(pageNumberListAdapter);
-                } else {
+                        pageNumberListAdapter.setItems(pageList);
+                        pageNumberListAdapter.setPageNumber(currentPageNumber);
+                        rvPageNumber.setAdapter(pageNumberListAdapter);
+                    } else {
 //                    showPopupDialog("");
+                    }
+                } else {
+
                 }
 
             }

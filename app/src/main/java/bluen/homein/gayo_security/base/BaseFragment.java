@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -25,8 +27,6 @@ public abstract class BaseFragment extends Fragment {
 
     protected Context appContext = null;
     protected Context fragmentContext = null;
-    protected String serialCode = "";
-    protected String buildingCode = "";
     protected String myPassword = "";
     protected Gayo_SharedPreferences mPrefGlobal = null;
 
@@ -46,8 +46,6 @@ public abstract class BaseFragment extends Fragment {
 
         if (activity != null) {
             appContext = mContext;
-            serialCode = activity.serialCode;
-            buildingCode = activity.buildingCode;
             mPrefGlobal = activity.mPrefGlobal;
         }
 
@@ -69,10 +67,18 @@ public abstract class BaseFragment extends Fragment {
         ButterKnife.bind(this, v);
 
         initFragmentView(v);
-
+        if (Gayo_SharedPreferences.PrefDeviceData.prefItem != null && Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceUIBody() != null) {
+            setScreenBrightness(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceUIBody().getBrightness() / 100f);
+        }
         return v;
     }
 
+    protected void setScreenBrightness(float brightness) {
+        Window window = getActivity().getWindow();
+        WindowManager.LayoutParams layoutParams = window.getAttributes();
+        layoutParams.screenBrightness = brightness;
+        window.setAttributes(layoutParams);
+    }
 
     public void hideAndClearFocus(Context _context, EditText _editText) {
         InputMethodManager inputManager = (InputMethodManager) _context.getSystemService(INPUT_METHOD_SERVICE);
