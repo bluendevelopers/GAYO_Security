@@ -1,5 +1,8 @@
 package bluen.homein.gayo_security.service;
 
+import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_IDLE;
+import static bluen.homein.gayo_security.global.GlobalApplication.callStatus;
+
 import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -39,7 +42,9 @@ public class WebSocketService extends Service {
     private static WebSocket webSocket;  // 전역(정적 아님) or Singleton으로 관리
     private OkHttpClient client;
     private String auth = "";
-    private static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";
+    public static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";
+    public static final String SIGNAL_GAYO_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/gayo/ws";
+    public static final String SIGNAL_WALLPAD_SERVER_URL = "";
     private RequestDataFormat.DeviceBody deviceBody;
 
     @Nullable
@@ -174,12 +179,14 @@ public class WebSocketService extends Service {
 //            return;
 //        }
 
-        // 2) 앱이 포그라운드인지 백그라운드인지 판단
-        if (isAppInForeground(getApplicationContext())) {
-            // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
-            startCallActivity(jsonText);
-        } else {
-            showIncomingCallNotification(jsonText);
+        if ((callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || body.getMethod().equals("gayo-invite")) || callStatus != CALL_STATUS_IDLE) {
+            // 2) 앱이 포그라운드인지 백그라운드인지 판단
+            if (isAppInForeground(getApplicationContext())) {
+                // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
+                startCallActivity(jsonText);
+            } else {
+                showIncomingCallNotification(jsonText);
+            }
         }
 
     }
@@ -336,12 +343,13 @@ public class WebSocketService extends Service {
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
         }
 
-        public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId) {
+
+        public WebSocketBody(String method, String _reSerialCode, String seSerialCode, String roomId, String clientId) {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
-            this.reSerialCode = reSerialCode;
+            this.reSerialCode = _reSerialCode;
             this.seSerialCode = seSerialCode;
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.receiver = "rtc:" + _reSerialCode + "@" + SIGNAL_SERVER_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
             this.roomId = roomId;
             this.clientId = clientId;
@@ -387,6 +395,33 @@ public class WebSocketService extends Service {
             this.builHo = builHo;
         }
 
+        // 경비실기 -> 가요앱, reSerialCode는 그냥 더미용
+        public WebSocketBody(String method, String seSerialCode, String roomId, String builCode) {
+            this.method = method;
+            this.seSerialCode = seSerialCode;
+            this.roomId = roomId;
+            this.builCode = builCode;
+        }
+
+        public void setReSerialCode(String reSerialCode) {
+            this.reSerialCode = reSerialCode;
+        }
+
+        public void setReceiver(String receiver) {
+            this.receiver = receiver;
+        }
+
+        public void setSender(String sender) {
+            this.sender = sender;
+        }
+
+        public void setBuilDong(String builDong) {
+            this.builDong = builDong;
+        }
+
+        public void setBuilHo(String builHo) {
+            this.builHo = builHo;
+        }
 
         public void setUserIdx(String userIdx) {
             this.userIdx = userIdx;
