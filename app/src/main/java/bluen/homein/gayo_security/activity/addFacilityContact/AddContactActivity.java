@@ -218,6 +218,12 @@ public class AddContactActivity extends BaseActivity {
         getFacilityContactList();
     }
 
+    public void hideAndClearFocus(Context _context, EditText _editText) {
+        InputMethodManager inputManager = (InputMethodManager) _context.getSystemService(INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(_editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        _editText.clearFocus();
+    }
+
     private void loadAllContactList() {
         showProgress();
 
@@ -523,14 +529,6 @@ public class AddContactActivity extends BaseActivity {
             }
         });
 
-    }
-
-    public void hideAndClearFocus(Context _context, EditText _editText) {
-        if (_editText.isFocused()) {
-            InputMethodManager inputManager = (InputMethodManager) _context.getSystemService(INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(_editText.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            _editText.clearFocus();
-        }
     }
 
 }

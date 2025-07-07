@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.util.Log;
@@ -260,6 +261,8 @@ public class MainActivity extends BaseActivity {
 
                         // Get new FCM registration token
                         String token = task.getResult();
+                        Log.i(TAG, "Fetching FCM registration token : " + token);
+
                         if (mPrefGlobal.getFirebaseToken() == null || !mPrefGlobal.getFirebaseToken().equals(token)) {
                             mPrefGlobal.setFirebaseToken(token);
 
@@ -282,10 +285,8 @@ public class MainActivity extends BaseActivity {
 
         if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
             Intent serviceIntent = new Intent(this, WebSocketService.class);
-            serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
-            serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
-
             startService(serviceIntent);
+
             getDeviceList();
             getFacilityAllContactList();
             getCurrentWorkerInfo();

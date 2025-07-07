@@ -18,7 +18,7 @@ public class RequestDataFormat {
         @SerializedName("connDeviceIP")
         private String connDeviceIP;
         @SerializedName("connSerialCode")
-        private String  connSerialCode;
+        private String connSerialCode;
         @SerializedName("page")
         private int page;
 
@@ -223,7 +223,7 @@ public class RequestDataFormat {
     }
 
 
-    public static class DeviceNetworkBody extends MyGson implements Serializable  {
+    public static class DeviceNetworkBody extends MyGson implements Serializable {
         @SerializedName("serialCode")
         private String serialCode;
         @SerializedName("builCode")
@@ -365,6 +365,8 @@ public class RequestDataFormat {
         private String macAddress;
         @SerializedName("ipAddress")
         private String ipAddress;
+        @SerializedName("deviceToken")
+        private String deviceToken;
 
         public DeviceInfoBody(String serialCode, String buildingCode) {
             this.serialCode = serialCode;
@@ -376,6 +378,14 @@ public class RequestDataFormat {
             this.buildingCode = buildingCode;
             this.macAddress = macAddress;
             this.ipAddress = ipAddress;
+        }
+
+        public DeviceInfoBody(String serialCode, String buildingCode, String macAddress, String ipAddress, String deviceToken) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.macAddress = macAddress;
+            this.ipAddress = ipAddress;
+            this.deviceToken = deviceToken;
         }
     }
 

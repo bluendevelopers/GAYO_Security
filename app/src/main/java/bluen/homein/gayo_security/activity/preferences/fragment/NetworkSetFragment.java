@@ -478,7 +478,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
 
         Call<ResponseDataFormat.LoginData> call = loginInterface.getAuthInfo(
                 new RequestDataFormat.DeviceInfoBody(etSerialCode.getText().toString(), etBuildingCode.getText().toString(),
-                        _macAddress, _ipAddress));
+                        _macAddress, _ipAddress, mPrefGlobal.getFirebaseToken()));
         call.enqueue(new Callback<ResponseDataFormat.LoginData>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.LoginData> call, Response<ResponseDataFormat.LoginData> response) {

@@ -113,7 +113,7 @@ public class Retrofit {
     public interface WorkerChangePageApi {
 
         @POST(RetrofitURL.WORKER_LIST)
-        Call<ResponseDataFormat.WorkerListBody> workerListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerListBody weatherBody);
+        Call<ResponseDataFormat.WorkerListBody> workerListPost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerListBody workerListBody);
 
         @POST(RetrofitURL.WORKER_CHANGE)
         Call<ResponseDataFormat.WorkerListBody> workerChangePost(@Header("Authorization") String auth, @Body RequestDataFormat.WorkerBody workerBody);

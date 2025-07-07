@@ -1,6 +1,9 @@
 package bluen.homein.gayo_security.activity.callRecord;
 
+import static org.webrtc.ContextUtils.getApplicationContext;
+
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -19,6 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 import bluen.homein.gayo_security.R;
+import bluen.homein.gayo_security.activity.call.CallActivity;
 import bluen.homein.gayo_security.rest.ResponseDataFormat;
 
 
@@ -39,8 +43,8 @@ public class CallRecordListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int i) {
-        Object item = itemsList != null ? itemsList.get(i) : null;
+    public ResponseDataFormat.CallRecordListBody.CallRecordInfo getItem(int i) {
+        ResponseDataFormat.CallRecordListBody.CallRecordInfo item = itemsList != null ? itemsList.get(i) : null;
         return item;
     }
 
@@ -69,7 +73,7 @@ public class CallRecordListAdapter extends BaseAdapter {
 
         tvDivision.setText(itemsList.get(position).getCallType());
         tvDate.setText(itemsList.get(position).getStartDate());
-        String strCallTime = itemsList.get(position).getCallMinute() + "분 " + itemsList.get(position).getCallMinute() + "초";
+        String strCallTime = itemsList.get(position).getCallMinute() + "분 " + itemsList.get(position).getCallSecond() + "초";
         tvCallTime.setText(strCallTime);
         tvFacilityName.setText(itemsList.get(position).getCallLocName());
 
@@ -103,6 +107,13 @@ public class CallRecordListAdapter extends BaseAdapter {
 
         layConnectBtn.setOnClickListener(v -> {
             //code
+            //해당 연락처로 전화되도록
+            Intent callIntent = new Intent(context, CallActivity.class);
+            callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            String reCall = "reCall";
+            callIntent.putExtra("reCall", getItem(position));
+            //여기서 근데 세대호출인지, 기기간 전화인지 알아야할듯?
+            getApplicationContext().startActivity(callIntent); // 가서 파싱
         });
 
         layDeleteBtn.setOnClickListener(v -> {

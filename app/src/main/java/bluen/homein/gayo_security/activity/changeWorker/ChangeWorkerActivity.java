@@ -152,8 +152,9 @@ public class ChangeWorkerActivity extends BaseActivity {
         showProgress();
 
         Retrofit.WorkerChangePageApi workerChangePageApi = Retrofit.WorkerChangePageApi.retrofit.create(Retrofit.WorkerChangePageApi.class);
+        RequestDataFormat.WorkerListBody workerListBody = new RequestDataFormat.WorkerListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(),Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber);
 
-        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerListPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.WorkerListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), currentPageNumber)); // test
+        Call<ResponseDataFormat.WorkerListBody> call = workerChangePageApi.workerListPost(mPrefGlobal.getAuthorization(),workerListBody);
         call.enqueue(new Callback<ResponseDataFormat.WorkerListBody>() {
             @Override
             public void onResponse(Call<ResponseDataFormat.WorkerListBody> call, Response<ResponseDataFormat.WorkerListBody> response) {

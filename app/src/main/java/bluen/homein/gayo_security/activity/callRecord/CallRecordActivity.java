@@ -422,7 +422,7 @@ public class CallRecordActivity extends BaseActivity {
         tvSelectedStartDate.setText(startDate);
         tvSelectedEndDate.setText(endDate);
 
-        callRecordListAdapter = new CallRecordListAdapter(CallRecordActivity.this);
+        callRecordListAdapter = new CallRecordListAdapter(getApplicationContext()); // 전화 걸어야해서 global로
 
         lvCallRecord.setAdapter(callRecordListAdapter);
         lvCallRecord.setEmptyView(tvEmptyView);

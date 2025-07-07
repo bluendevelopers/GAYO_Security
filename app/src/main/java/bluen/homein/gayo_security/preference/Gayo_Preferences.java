@@ -23,4 +23,6 @@ public class Gayo_Preferences {
             ROOT_PATH + ROOTING_PATH_3,
             ROOT_PATH + ROOTING_PATH_4
     };
+
+    public static String DEVICE_NOT_CONNECTED = "device not connected";
 }

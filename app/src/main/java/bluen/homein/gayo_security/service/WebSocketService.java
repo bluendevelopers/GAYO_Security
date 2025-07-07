@@ -1,7 +1,9 @@
 package bluen.homein.gayo_security.service;
 
+import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_ACTIVE;
 import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_IDLE;
 import static bluen.homein.gayo_security.global.GlobalApplication.callStatus;
+import static bluen.homein.gayo_security.preference.Gayo_Preferences.DEVICE_NOT_CONNECTED;
 
 import android.app.ActivityManager;
 import android.app.NotificationChannel;
@@ -25,10 +27,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.call.CallActivity;
+import bluen.homein.gayo_security.rest.MyGson;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,14 +42,16 @@ import okhttp3.WebSocketListener;
 import okio.ByteString;
 
 public class WebSocketService extends Service {
-    String TAG = "WebSocketService";
+    private static String TAG = "WebSocketService";
     private static WebSocket webSocket;  // 전역(정적 아님) or Singleton으로 관리
     private OkHttpClient client;
     private String auth = "";
-    public static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws";
-    public static final String SIGNAL_GAYO_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/gayo/ws";
-    public static final String SIGNAL_WALLPAD_SERVER_URL = "";
+    //    public static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws"; // OLD
+    public static final String SIGNAL_SERVER_URL = "wss://smarthomesignalserver.bluen.co.kr:28088/ws"; // NEW
+    //    public static final String SIGNAL_WALLPAD_SERVER_URL = "";
     private RequestDataFormat.DeviceBody deviceBody;
+    private static boolean isConnected = false;
+    private final List<String> pendingMessages = new ArrayList<>();
 
     @Nullable
     @Override
@@ -62,17 +68,27 @@ public class WebSocketService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
+        super.onStartCommand(intent, flags, startId);
         if (intent != null) {
-            Log.d(TAG, "onStartCommand: startWebSocketConnection");
+            Log.d(TAG, "onStartCommand");
+            String jsonText = intent.getStringExtra("websocketMessage");
+            if (jsonText != null) {
+                RequestDataFormat.DeviceBody _deviceBody =
+                        (RequestDataFormat.DeviceBody) intent.getSerializableExtra("deviceBody");
+                deviceBody = _deviceBody;
+                auth = intent.getStringExtra("authorization");
+                if (!isConnected) {
+                    startDeviceWebSocketConnection(deviceBody, jsonText);
+                    if (!jsonText.isEmpty()) {
+                        pendingMessages.add(jsonText);
+                    }
+                } else {
+                    startCallActivity(jsonText);
 
-            RequestDataFormat.DeviceBody _deviceBody =
-                    (RequestDataFormat.DeviceBody) intent.getSerializableExtra("deviceBody");
-            deviceBody = _deviceBody;
-            auth = intent.getStringExtra("authorization");
-
-            startDeviceWebSocketConnection(_deviceBody);
+                }
+            }
         }
+
         return START_STICKY;
     }
 
@@ -91,8 +107,11 @@ public class WebSocketService extends Service {
         return false;
     }
 
-    private void startDeviceWebSocketConnection(RequestDataFormat.DeviceBody deviceBody) {
+    private void startDeviceWebSocketConnection(RequestDataFormat.DeviceBody deviceBody, String jsonText) {
         client = new OkHttpClient();
+
+        WebSocketService.WebSocketBody body =
+                new Gson().fromJson(jsonText.toString(), WebSocketService.WebSocketBody.class);
 
         Request request = new Request.Builder().url(SIGNAL_SERVER_URL)
                 .addHeader("Authorization", auth)
@@ -100,19 +119,39 @@ public class WebSocketService extends Service {
                 .addHeader("SerialCode", deviceBody.getSerialCode())
                 .addHeader("MacAddr", deviceBody.getDeviceNetworkBody().getMacAddress())
                 .addHeader("IPAddr", deviceBody.getDeviceNetworkBody().getIpAddress()).build();
+        String message = body.getMessage() != null ? body.getMessage() : "";
 
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 Log.d(TAG, "onOpen: WebSocket connected");
+
+                isConnected = true;
+                if (pendingMessages.isEmpty()) {
+                    if (jsonText != null && !jsonText.isEmpty()) {
+
+                        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") && !body.getDevice().equals("guard") || callStatus == CALL_STATUS_IDLE && body.getMethod().equals("OK")
+                                || callStatus != CALL_STATUS_IDLE || message.equals(DEVICE_NOT_CONNECTED)) {
+                            // 2) 앱이 포그라운드인지 백그라운드인지 판단
+                            if (isAppInForeground(getApplicationContext())) {
+                                // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
+                                startCallActivity(jsonText);
+                            }
+                        }
+
+                    }
+                } else {
+                    for (String m : pendingMessages) startCallActivity(jsonText);
+                    pendingMessages.clear();
+                }
             }
 
             @Override
             public void onMessage(WebSocket webSocket, String text) {
                 super.onMessage(webSocket, text);
                 // 수신부!!!!!
-                Log.d(TAG, "onMessage: " + text); //
+                Log.d(TAG, "새 메세지가 도착했습니다 onMessage: " + text); //
 
                 if ("pong".equals(text)) {
                     Log.d(TAG, "Heartbeat pong received");
@@ -130,14 +169,14 @@ public class WebSocketService extends Service {
             public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                reconnectWebSocketWithDelay();
+//                reconnectWebSocketWithDelay(jsonText);
             }
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
                 super.onClosing(webSocket, code, reason);
                 Log.d(TAG, "onClosing: 연결 종료 예정, reason: " + reason);
-                reconnectWebSocketWithDelay();
+//                reconnectWebSocketWithDelay(jsonText);
 
             }
 
@@ -145,7 +184,7 @@ public class WebSocketService extends Service {
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 super.onClosed(webSocket, code, reason);
                 Log.d(TAG, "onClosed: code=" + code + ", reason=" + reason);
-                reconnectWebSocketWithDelay();
+//                reconnectWebSocketWithDelay(jsonText);
 
             }
         });
@@ -153,11 +192,21 @@ public class WebSocketService extends Service {
         // 참고: client가 종료되지 않도록, onDestroy()에서 종료 처리
     }
 
+    public static void disconnectWebSocket() {
+        if (webSocket != null) {
+            webSocket.close(1000, "Client requested disconnect");  // 정상 종료 코드
+            webSocket = null;
+            isConnected = false;
+
+            Log.d(TAG, "WebSocket disconnected (service still running)");
+        }
+    }
+
     // 재연결 로직 메서드 추가
-    private void reconnectWebSocketWithDelay() {
+    private void reconnectWebSocketWithDelay(String jsonText) {
         Log.d(TAG, "WebSocket disconnected, trying to reconnect in 5 seconds...");
         new Handler(Looper.getMainLooper())
-                .postDelayed(() -> startDeviceWebSocketConnection(deviceBody), 5000);
+                .postDelayed(() -> startDeviceWebSocketConnection(deviceBody, jsonText), 5000);
 
     }
 
@@ -167,62 +216,17 @@ public class WebSocketService extends Service {
         //    예: {"method":"invite", "roomId":"47263086", ...}
 
         WebSocketBody body = new Gson().fromJson(jsonText, WebSocketBody.class);
+        String message = body.getMessage() != null ? body.getMessage() : "";
 
-//        String method = body.getMethod();    // null 일 수도 있음
-//        String code = body.getCode();      // "Error"
-//        String device = body.getDevice();    // "signalServer"
-//        String msg = body.getMessage();   // "오류가 발생 했습니다."
-
-//        if ("Error".equals(code)) {
-//            Log.e(TAG, "서버에서 오류 수신: " + msg);
-//            // 에러 로직 처리
-//            return;
-//        }
-
-        if ((callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || body.getMethod().equals("gayo-invite")) || callStatus != CALL_STATUS_IDLE) {
+        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || callStatus == CALL_STATUS_IDLE && body.getMethod().equals("OK")
+                || callStatus != CALL_STATUS_IDLE || message.equals(DEVICE_NOT_CONNECTED)) {
             // 2) 앱이 포그라운드인지 백그라운드인지 판단
             if (isAppInForeground(getApplicationContext())) {
                 // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
                 startCallActivity(jsonText);
-            } else {
-                showIncomingCallNotification(jsonText);
             }
         }
 
-    }
-
-    private void showIncomingCallNotification(String jsonText) {
-        // 1) Notification 클릭 시 이동할 Intent
-        Intent callIntent = new Intent(getApplicationContext(), CallActivity.class);
-        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        callIntent.putExtra("jsonText", jsonText);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(),
-                0,
-                callIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        // 2) Notification 구성
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "CALL_CHANNEL_ID")
-                .setSmallIcon(R.drawable.call_icon) //임시
-                .setContentTitle("Incoming Call")
-                .setContentText("상대방이 전화를 걸어왔습니다.")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        // 3) Notification 매니저로 표시
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationChannel channel = new NotificationChannel(
-                "CALL_CHANNEL_ID",
-                "Call Notifications",
-                NotificationManager.IMPORTANCE_HIGH
-        );
-        notificationManager.createNotificationChannel(channel);
-
-        notificationManager.notify(1001, builder.build());
     }
 
     private void startCallActivity(String jsonText) {
@@ -253,9 +257,11 @@ public class WebSocketService extends Service {
 
     public static void sendWebSocketMessage(String message) {
         if (webSocket != null) {
+
             boolean isSent = webSocket.send(message);
             if (isSent) {
                 Log.d("WebSocketService", "웹소켓 전송 성공 JSON: " + message);
+
             } else {
                 Log.e("WebSocketService", "웹소켓 전송 실패 (연결 끊김): " + message);
 
@@ -265,7 +271,7 @@ public class WebSocketService extends Service {
         }
     }
 
-    public static class WebSocketBody implements Serializable {
+    public static class WebSocketBody extends MyGson implements Serializable {
 
         @SerializedName("method")
         private String method;
@@ -273,6 +279,8 @@ public class WebSocketService extends Service {
         private String reSerialCode;
         @SerializedName("seSerialCode")
         private String seSerialCode;
+        @SerializedName("serialCode")
+        private String serialCode;
         @SerializedName("sender")
         private String sender;
         @SerializedName("receiver")
@@ -281,10 +289,10 @@ public class WebSocketService extends Service {
         private String code = "100";
         @SerializedName("device")
         private String device = "guard";
-        @SerializedName("roomId")
-        private String roomId;
-        @SerializedName("clientId")
-        private String clientId;
+        @SerializedName("roomid")
+        private String roomid;
+        @SerializedName("clientid")
+        private String clientid;
         @SerializedName("title")
         private String title;
         @SerializedName("builCode")
@@ -297,6 +305,8 @@ public class WebSocketService extends Service {
         private String userIdx;
         @SerializedName("candidate")
         private String candidate;
+        @SerializedName("callDevice")
+        private String callDevice;
         @SerializedName("content")
         private String content;
         @SerializedName("sdp")
@@ -307,6 +317,11 @@ public class WebSocketService extends Service {
         private String id;
         @SerializedName("label")
         private int label;
+        @SerializedName("lobbyPhoneSerialCode")
+        private String lobbyPhoneSerialCode;
+        @SerializedName("guardSerialCode")
+        private String guardSerialCode;
+
 
         public WebSocketBody(String method, String reSerialCode) {
             this.method = method;
@@ -317,19 +332,11 @@ public class WebSocketService extends Service {
             this.method = method;
             this.reSerialCode = recipientSerialCode;
             this.seSerialCode = senderSerialCode;
-            this.roomId = currentRoomId;
-            this.clientId = currentClientId;
+            this.roomid = currentRoomId;
+            this.clientid = currentClientId;
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
             this.sdp = receivedSdp;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public int getLabel() {
-            return label;
         }
 
         // 1) 기본 생성자, 혹은 필요한 생성자
@@ -351,8 +358,8 @@ public class WebSocketService extends Service {
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + _reSerialCode + "@" + SIGNAL_SERVER_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
-            this.roomId = roomId;
-            this.clientId = clientId;
+            this.roomid = roomId;
+            this.clientid = clientId;
         }
 
         public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId, int label, String id, String candidate) {
@@ -362,8 +369,8 @@ public class WebSocketService extends Service {
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
-            this.roomId = roomId;
-            this.clientId = clientId;
+            this.roomid = roomId;
+            this.clientid = clientId;
             this.id = id;
             this.label = label;
             this.candidate = candidate;
@@ -375,8 +382,8 @@ public class WebSocketService extends Service {
             this.seSerialCode = seSerialCode;
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.roomId = roomId;
-            this.clientId = clientId;
+            this.roomid = roomId;
+            this.clientid = clientId;
             this.builCode = builCode;
             this.builDong = builDong;
             this.builHo = builHo;
@@ -388,8 +395,8 @@ public class WebSocketService extends Service {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
             this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.roomId = roomId;
-            this.clientId = clientId;
+            this.roomid = roomId;
+            this.clientid = clientId;
             this.builCode = builCode;
             this.builDong = builDong;
             this.builHo = builHo;
@@ -399,8 +406,19 @@ public class WebSocketService extends Service {
         public WebSocketBody(String method, String seSerialCode, String roomId, String builCode) {
             this.method = method;
             this.seSerialCode = seSerialCode;
-            this.roomId = roomId;
+            this.roomid = roomId;
             this.builCode = builCode;
+        }
+
+        public void setCallDevice(String callDevice) {
+            this.callDevice = callDevice;
+        }
+
+        public void setLobbyPhoneSerialCode(String lobbyPhoneSerialCode) {
+            this.lobbyPhoneSerialCode = lobbyPhoneSerialCode;
+        }
+        public void setGuardSerialCode(String guardSerialCode) {
+            this.guardSerialCode = guardSerialCode;
         }
 
         public void setReSerialCode(String reSerialCode) {
@@ -431,6 +449,10 @@ public class WebSocketService extends Service {
             this.sdp = sdp;
         }
 
+        public String getSerialCode() {
+            return serialCode;
+        }
+
         public String getSeSerialCode() {
             return seSerialCode;
         }
@@ -456,7 +478,23 @@ public class WebSocketService extends Service {
         }
 
         public void setRoomId(String roomId) {
-            this.roomId = roomId;
+            this.roomid = roomId;
+        }
+
+        public void setSerialCode(String serialCode) {
+            this.serialCode = serialCode;
+        }
+
+        public String getCallDevice() {
+            return callDevice;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public int getLabel() {
+            return label;
         }
 
         public String getReSerialCode() {
