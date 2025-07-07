@@ -896,10 +896,9 @@ public class CallActivity extends BaseActivity {
                         isVideoCall = false;
                         isHangUpThePhone(""); // 수신자 쪽에서 바로 끊는 것임.
                     }
-
                     break;
-                case "invite":
 
+                case "invite":
                     if (callStatus == CALL_STATUS_IDLE) {
                         gayoAppUserBody = null;
                         isVideoCall = canSendVideo.equals("Y");

@@ -61,10 +61,12 @@ public class AddContactActivity extends BaseActivity {
     private List<String> pageList;
     private int currentPageNumber = 1; //default
     private int currentTotalPageCount = 0; //default
-    public int STATUS_CODE = 0;
+    public final int STATUS_NONE = 0;
     public final int STATUS_ADD_CONTACT = 1;
     public final int STATUS_DELETE_CONTACT = 2;
     public final int STATUS_LOAD_ALL_CONTACT = 3;
+    public final int STATUS_REFRESH = 4;
+    public int STATUS_CODE = STATUS_NONE;
 
     ResponseDataFormat.FacilityContactListBody.FacilityContactInfo deleteItem = null;
     private List<ResponseDataFormat.FacilityContactListBody.FacilityContactInfo> currentContactList;
@@ -93,6 +95,16 @@ public class AddContactActivity extends BaseActivity {
     void clickAddContract() {
         clickLayTop();
         STATUS_CODE = STATUS_ADD_CONTACT;
+        if (etIpAddress1.getText().toString().isEmpty() || etIpAddress2.getText().toString().isEmpty() || etIpAddress3.getText().toString().isEmpty() || etIpAddress4.getText().toString().isEmpty()) {
+            STATUS_CODE = STATUS_NONE;
+            showWarningDialog("IP 주소를 정확히 입력해주세요", "확 인");
+            return;
+        }
+        if (etFacilityName.getText().toString().isEmpty()) {
+            STATUS_CODE = STATUS_NONE;
+            showWarningDialog("시설 명을 정확히 입력해주세요", "확 인");
+            return;
+        }
         showPopupDialog(etFacilityName.getText().toString() + "\n", "연락처를 추가 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
 
     }
@@ -101,7 +113,7 @@ public class AddContactActivity extends BaseActivity {
     void clickLoadContact() {
         //code
         STATUS_CODE = STATUS_LOAD_ALL_CONTACT;
-        showWarningDialog("서버 클라우드를 연결하여\n" + "모든 연락처를 불러옵니다.\n(기존 등록된 연락처 정보는 덮어 씌워집니다.)", "취 소", "진행 하기");
+        showWarningDialog("서버 클라우드를 연결하여\n" + "모든 연락처를 불러옵니다.\n(기존 등록된 연락처 정보는 보존됩니다.)", "취 소", "진행 하기");
     }
 
     @OnClick(R.id.lay_before_btn)
@@ -150,17 +162,22 @@ public class AddContactActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 if (STATUS_CODE == STATUS_ADD_CONTACT) {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
                     getFacilityContactList();
                 } else if (STATUS_CODE == STATUS_DELETE_CONTACT) {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
                     if (deleteItem == null) {
                         getFacilityContactList();
                     } else {
                         deleteItem = null;
                     }
+                } else if (STATUS_CODE == STATUS_REFRESH) {
+                    STATUS_CODE = STATUS_NONE;
+
+                    getFacilityContactList();
+
                 } else {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
                 }
             }
 
@@ -194,12 +211,13 @@ public class AddContactActivity extends BaseActivity {
                     if (deleteItem != null) {
                         deleteContactItem();
                     } else {
-                        STATUS_CODE = 0;
+                        STATUS_CODE = STATUS_NONE;
                         getFacilityContactList();
                     }
                 } else if (STATUS_CODE == STATUS_LOAD_ALL_CONTACT) {
                     loadAllContactList();
-                } else {
+                } else if (STATUS_CODE == STATUS_REFRESH) {
+                    STATUS_CODE = STATUS_NONE;
                     getFacilityContactList();
 
                 }
@@ -235,9 +253,29 @@ public class AddContactActivity extends BaseActivity {
                 for (int i = 0; i < mPrefGlobal.getAllDeviceList().size(); i++) {
                     RequestDataFormat.DeviceNetworkBody item = mPrefGlobal.getAllDeviceList().get(i);
 
+                    boolean isAdded = false;
                     if (item.getIpAddress().equals(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceNetworkBody().getIpAddress())) {
-                        continue;
+                        isAdded = true;
+                    } else {
+                        for (int j = 0; j < currentContactList.size(); j++) {
+                            if (currentContactList.get(j).getFacilityIPAddress().equals((item.getIpAddress()))) {
+                                isAdded = true;
+                                break;
+                            }
+                        }
                     }
+
+                    if (isAdded) {
+                        if (i == mPrefGlobal.getAllDeviceList().size() - 1) {
+                            STATUS_CODE = 4;
+                            closeProgress();
+                            showPopupDialog("연락처 불러오기에\n성공하였습니다.", "확 인");
+                            return;
+                        } else {
+                            continue;
+                        }
+                    }
+
                     ResponseDataFormat.FacilityContactListBody.FacilityContactInfo facilityContactInfo =
                             new ResponseDataFormat.FacilityContactListBody.FacilityContactInfo(i, item.getFacilityName(), item.getIpAddress(), item.getSerialCode());
                     showProgress();
@@ -288,7 +326,7 @@ public class AddContactActivity extends BaseActivity {
                     showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
 
                 } else {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
 
                     //code
 
@@ -308,7 +346,7 @@ public class AddContactActivity extends BaseActivity {
 
     private void addContactItem() {
         String facilityName = etFacilityName.getText().toString().trim();
-        String ipAddress = etIpAddress1.getText().toString().trim() + etIpAddress2.getText().toString().trim() + etIpAddress3.getText().toString().trim() + etIpAddress4.getText().toString().trim();
+        String ipAddress = etIpAddress1.getText().toString().trim() + "." + etIpAddress2.getText().toString().trim() + "." + etIpAddress3.getText().toString().trim() + "." + etIpAddress4.getText().toString().trim();
 
         RequestDataFormat.ContactBody contactBody = null;
 
@@ -324,6 +362,7 @@ public class AddContactActivity extends BaseActivity {
         }
 
         if (contactBody == null) {
+            STATUS_CODE = STATUS_NONE;
             showWarningDialog("해당 ip 주소와 일치하는\n시설이 존재하지 않습니다.", getString(R.string.confirm));
             return;
         }
@@ -331,6 +370,7 @@ public class AddContactActivity extends BaseActivity {
 
         Retrofit.AddFacilityContactApi facilityContactApi = Retrofit.AddFacilityContactApi.retrofit.create(Retrofit.AddFacilityContactApi.class);
         Call<ResponseDataFormat.FacilityContactListBody> call = facilityContactApi.addContactPost(mPrefGlobal.getAuthorization(), contactBody);
+        RequestDataFormat.ContactBody finalContactBody = contactBody;
         call.enqueue(new Callback<ResponseDataFormat.FacilityContactListBody>() {
 
             @Override
@@ -342,12 +382,19 @@ public class AddContactActivity extends BaseActivity {
                         if (currentContactList.size() == 4 && currentPageNumber == currentTotalPageCount) {
                             currentPageNumber = currentTotalPageCount + 1;
                         }
-                        STATUS_CODE = 0;
+                        STATUS_CODE = STATUS_REFRESH;
                         //여기에 setSerialCode 추가!!!!!
+                        runOnUiThread(() -> {
+                            etFacilityName.setText("");
+                            etIpAddress1.setText("");
+                            etIpAddress2.setText("");
+                            etIpAddress3.setText("");
+                            etIpAddress4.setText("");
+                        });
+
                         showPopupDialog(facilityName, "연락처가 추가 되었습니다.", getString(R.string.confirm));
                     } else {
-                        STATUS_CODE = 0;
-
+                        STATUS_CODE = STATUS_NONE;
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                     }
                 } else if (response.errorBody() != null) {
@@ -360,7 +407,7 @@ public class AddContactActivity extends BaseActivity {
                     showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
 
                 } else {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
 
                     //code
 
@@ -410,7 +457,7 @@ public class AddContactActivity extends BaseActivity {
                         showPopupDialog(facilityName, "연락처가 삭제 되었습니다.", getString(R.string.confirm));
 
                     } else {
-                        STATUS_CODE = 0;
+                        STATUS_CODE = STATUS_NONE;
 
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                         //code
@@ -425,7 +472,7 @@ public class AddContactActivity extends BaseActivity {
                     showWarningDialog(ErrorBodyParser.JsonParser(error)[ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""), getString(R.string.confirm));
 
                 } else {
-                    STATUS_CODE = 0;
+                    STATUS_CODE = STATUS_NONE;
 
                     //code
                 }
@@ -471,6 +518,9 @@ public class AddContactActivity extends BaseActivity {
                     if (response.body().getMessage() == null) {
                         if (response.body().getFacilityContactList() != null) {
                             currentContactList = response.body().getFacilityContactList();
+
+                            mPrefGlobal.setContactsList(currentContactList);
+
                             pageList = new ArrayList<>();
                             layBeforeBtn.setVisibility(View.VISIBLE);
                             layNextBtn.setVisibility(View.VISIBLE);
