@@ -3,6 +3,7 @@ package bluen.homein.gayo_security.activity.preferences.fragment;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.VibrationEffect;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -27,10 +28,10 @@ import bluen.homein.gayo_security.rest.ResponseDataFormat;
 
 public class AllowedIpListAdapter extends BaseAdapter {
 
-    public  List<RequestDataFormat.IpAddressBody> itemsList;
+    public List<RequestDataFormat.IpAddressBody> itemsList;
     private final Context context;
 
-    public AllowedIpListAdapter(Context context,  List<RequestDataFormat.IpAddressBody> itemsList) {
+    public AllowedIpListAdapter(Context context, List<RequestDataFormat.IpAddressBody> itemsList) {
         super();
         this.context = context;
         this.itemsList = itemsList;
@@ -123,6 +124,7 @@ public class AllowedIpListAdapter extends BaseAdapter {
         if (position == 0) {
             ivBtnType.setImageResource(R.drawable.plus_b);
             ivBtnType.setOnClickListener(v -> {
+                ((PreferencesActivity) context).vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                 if (itemsList.size() < 5) {
                     itemsList.add(new RequestDataFormat.IpAddressBody("..."));
                     notifyDataSetChanged();
@@ -134,6 +136,7 @@ public class AllowedIpListAdapter extends BaseAdapter {
         } else {
             ivBtnType.setImageResource(R.drawable.minus_b);
             ivBtnType.setOnClickListener(v -> {
+                ((PreferencesActivity) context).vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
                 itemsList.remove(position);
                 notifyDataSetChanged();
             });

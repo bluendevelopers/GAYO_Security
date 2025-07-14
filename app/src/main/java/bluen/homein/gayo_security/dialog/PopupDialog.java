@@ -262,10 +262,13 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
             } else {
                 confirm.setVisibility(View.GONE);
             }
-
-            cancel.setText(_cancel);
-            cancel.setOnClickListener(this);
-
+            if (_cancel != null) {
+                cancel.setVisibility(View.VISIBLE);
+                cancel.setText(_cancel);
+                cancel.setOnClickListener(this);
+            } else {
+                cancel.setVisibility(View.GONE);
+            }
             if (_additionalMsg != null) {
                 additionalMsg.setVisibility(View.VISIBLE);
                 additionalMsg.setText(_additionalMsg);
@@ -274,6 +277,7 @@ public class PopupDialog extends Dialog implements View.OnClickListener {
             }
 
             if (_title != null) {
+                title.setVisibility(View.VISIBLE);
                 title.setText(_title);
             } else {
                 title.setVisibility(View.GONE);

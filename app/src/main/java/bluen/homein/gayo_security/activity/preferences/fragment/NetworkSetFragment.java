@@ -3,6 +3,8 @@ package bluen.homein.gayo_security.activity.preferences.fragment;
 import static org.webrtc.ContextUtils.getApplicationContext;
 
 import android.content.Context;
+import android.media.AudioManager;
+import android.os.VibrationEffect;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -98,13 +100,14 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
     @BindView(R.id.lv_allow_ip)
     ListView lvAllowIp;
 
+    private AudioManager am;
     AllowedIpListAdapter allowedIpListAdapter;
     List<RequestDataFormat.IpAddressBody> tempAllowedIpList = new ArrayList<>();
-
     String TAG = "NetworkSetFragment";
 
     @OnClick(R.id.tv_load_data_btn)
     void clickLoadDataBtn() {
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
         if (etBuildingCode.getText().toString().isEmpty()) {
             activity.showPopupDialog(null, "건물 번호를 입력해주세요.", "확 인");
@@ -134,7 +137,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
 
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
-
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
         if (etBuildingCode.getText().toString().isEmpty()) {
             activity.showPopupDialog(null, "건물 번호를 입력해주세요.", "확 인");
@@ -193,6 +196,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
 
     @OnClick(R.id.tv_cancel)
     void clickCancelBtn() {
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_REFRESH);
         activity.showWarningDialog("수정을 취소하시겠습니까?\n변경 값이 원래 값으로 초기화 됩니다.", "아니오", "예");
     }
@@ -222,6 +226,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
 
     @Override
     protected void initFragmentView(View v) {
+        am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
         if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
             RequestDataFormat.DeviceNetworkBody deviceNetworkBody = Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceNetworkBody();
@@ -361,11 +366,11 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
         }
 
         if (Gayo_SharedPreferences.PrefDeviceData.prefItem == null) {
-            // 최초로 모든 설정 저장하는 api
+            // 최초로 모든 설정 저장하는 api 볼륨 기본값 7 (max가 15)
             Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext
                     , new RequestDataFormat.DeviceBody(EditTextToString(etSerialCode), EditTextToString(etBuildingCode), mPrefGlobal.getFirebaseToken()
                             , new RequestDataFormat.DeviceUIBody(50, "L")
-                            , new RequestDataFormat.DeviceSoundBody(5, "01", 5, "01", 5, "01", 5, 5)
+                            , new RequestDataFormat.DeviceSoundBody(7, "01", 5, "01", 7, "01", 7, 7)
                             , new RequestDataFormat.DeviceSleepModeBody(0, 0),
                             newDeviceNetworkBody));
             Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceNetworkBody(newDeviceNetworkBody);
@@ -417,6 +422,23 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
 
                             Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceNetworkBody(deviceNetworkBody);
                             Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
+                            if (Gayo_SharedPreferences.PrefDeviceData.prefItem != null && Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody() != null) {
+                                am.setStreamVolume(
+                                        AudioManager.STREAM_RING,
+                                        Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getCallSound(),
+                                        0
+                                );
+                                am.setStreamVolume(
+                                        AudioManager.STREAM_ALARM,
+                                        Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getAlarmSound(),
+                                        0
+                                );
+                                am.setStreamVolume(
+                                        AudioManager.STREAM_SYSTEM,
+                                        Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getSystemSound(),
+                                        0
+                                );
+                            }
                             activity.showPopupDialog(null, "설정 데이터 불러오기에\n성공하였습니다.", "확 인");
 
                         }

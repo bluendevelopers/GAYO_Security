@@ -41,6 +41,7 @@ public class SleepModeSetFragment extends BaseFragment {
 
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceSleepModeBody(new RequestDataFormat.DeviceSleepModeBody(selectedMainReturnTime, selectedSleepModeTime));
         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
 //        activity.setFragmentRequested(activity.SLEEP_MODE_REFRESH);

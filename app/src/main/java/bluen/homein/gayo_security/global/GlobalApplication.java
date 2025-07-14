@@ -35,7 +35,6 @@ import java.util.List;
 
 public class GlobalApplication extends MultiDexApplication {
     private static final String TAG = "GlobalApplication";
-    public static boolean isSecurityMode = false;
     public static int callStatus = CALL_STATUS_IDLE;
 
     @Override

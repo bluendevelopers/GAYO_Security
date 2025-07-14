@@ -1,5 +1,7 @@
 package bluen.homein.gayo_security.activity.preferences.fragment;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.os.VibrationEffect;
 import android.view.View;
 
@@ -21,24 +23,44 @@ public class VolumeSetFragment extends BaseFragment {
     Slidr slidrAlarm;
     @BindView(R.id.slidr_system)
     Slidr slidrSystem;
+    private AudioManager am;
 
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
 //      mPrefGlobal.setBrightness(slidrBrightness.getCurrentValue() / 100f);
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceSoundBody(
                 new RequestDataFormat.DeviceSoundBody(0, "01", (int) slidrPhone.getCurrentValue(), "01",
                         0, "01", (int) slidrAlarm.getCurrentValue(), (int) slidrSystem.getCurrentValue()));
         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
+
+        am.setStreamVolume(
+                AudioManager.STREAM_RING,
+                (int) slidrPhone.getCurrentValue(),
+                0
+        );
+        am.setStreamVolume(
+                AudioManager.STREAM_ALARM,
+                (int) slidrAlarm.getCurrentValue(),
+                0
+        );
+        am.setStreamVolume(
+                AudioManager.STREAM_SYSTEM,
+                (int) slidrSystem.getCurrentValue(),
+                0
+        );
         activity.showPopupDialog(null, "성공적으로 저장 되었습니다.", "확 인");
+
+
     }
 
     @OnClick(R.id.iv_phone_volume_max)
-    void clickPhoneVolumeUpBtn() {
-        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
+    void clickCallVolumeUpBtn() {
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         float upValue = slidrPhone.getCurrentValue() + 1;
-        if (upValue >= 10) {
-            upValue = 10;
+        int maxVol = am.getStreamMaxVolume(AudioManager.STREAM_RING);
+        if (upValue >= maxVol) {
+            upValue = maxVol;
         }
         slidrPhone.setCurrentValue(upValue);
 
@@ -46,7 +68,7 @@ public class VolumeSetFragment extends BaseFragment {
     }
 
     @OnClick(R.id.iv_phone_volume_min)
-    void clickPhoneVolumeDownBtn() {
+    void clickCallVolumeDownBtn() {
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         float downValue = slidrPhone.getCurrentValue() - 1;
 
@@ -76,8 +98,10 @@ public class VolumeSetFragment extends BaseFragment {
     void clickAlarmUpBtn() {
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         float upValue = slidrAlarm.getCurrentValue() + 1;
-        if (upValue >= 10) {
-            upValue = 10;
+        int maxVol = am.getStreamMaxVolume(AudioManager.STREAM_ALARM);
+
+        if (upValue >= maxVol) {
+            upValue = maxVol;
         }
         slidrAlarm.setCurrentValue(upValue);
 
@@ -101,8 +125,10 @@ public class VolumeSetFragment extends BaseFragment {
     void clickSystemUpBtn() {
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         float upValue = slidrSystem.getCurrentValue() + 1;
-        if (upValue >= 10) {
-            upValue = 10;
+        int maxVol = am.getStreamMaxVolume(AudioManager.STREAM_SYSTEM);
+
+        if (upValue >= maxVol) {
+            upValue = maxVol;
         }
         slidrSystem.setCurrentValue(upValue);
 
@@ -134,29 +160,41 @@ public class VolumeSetFragment extends BaseFragment {
 
     @Override
     protected void initFragmentView(View v) {
+        am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
-        sliderUiSet(slidrPhone);
-        sliderUiSet(slidrAlarm);
-        sliderUiSet(slidrSystem);
+        sliderUiSet(slidrPhone, am.getStreamMaxVolume(AudioManager.STREAM_RING));
+        sliderUiSet(slidrAlarm, am.getStreamMaxVolume(AudioManager.STREAM_ALARM));
+        sliderUiSet(slidrSystem, am.getStreamMaxVolume(AudioManager.STREAM_SYSTEM));
 
         if (Gayo_SharedPreferences.PrefDeviceData.prefItem != null && Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody() != null) {
             slidrPhone.setCurrentValue(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getCallSound());
-            slidrAlarm.setCurrentValue(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getNotiSound());
+            slidrAlarm.setCurrentValue(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getAlarmSound());
             slidrSystem.setCurrentValue(Gayo_SharedPreferences.PrefDeviceData.prefItem.getDeviceSoundBody().getSystemSound());
         } else {
             //default value
-            slidrPhone.setCurrentValue(5);
-            slidrAlarm.setCurrentValue(5);
-            slidrSystem.setCurrentValue(5);
+            slidrPhone.setCurrentValue(7);
+            slidrAlarm.setCurrentValue(7);
+            slidrSystem.setCurrentValue(7);
         }
 
 
     }
 
-    private void sliderUiSet(Slidr _slidr) {
-        _slidr.setMax(10);
+    private void sliderUiSet(Slidr _slidr, int maxVol) {
+        _slidr.setMax(maxVol);
         _slidr.setMin(0);
-//        _slidr.setCurrentValue(5);
+        _slidr.setListener(new Slidr.Listener() {
+            @Override
+            public void valueChanged(Slidr slidr, float newValue) {
+                int newIntValue = (int) newValue;
+                _slidr.setCurrentValue(newIntValue);
+            }
+
+            @Override
+            public void bubbleClicked(Slidr slidr) {
+
+            }
+        });
         _slidr.setRegionTextFormatter(new Slidr.RegionTextFormatter() {
             @Override
             public String format(int region, float value) {

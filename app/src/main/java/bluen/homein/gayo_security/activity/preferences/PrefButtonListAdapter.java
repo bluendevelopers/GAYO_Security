@@ -1,6 +1,7 @@
 package bluen.homein.gayo_security.activity.preferences;
 
 import android.content.Context;
+import android.os.VibrationEffect;
 import android.view.View;
 import android.widget.TextView;
 
@@ -74,6 +75,7 @@ public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButto
         }
 
         holder.layBtnBackground.setOnClickListener(view -> {
+            ((PreferencesActivity) context).vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
             if (mPrefGlobal.getAuthorization() != null) {
                 if (isAccessible) {
                     int previousSelected = selectedPosition;

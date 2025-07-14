@@ -12,6 +12,8 @@ public class RetrofitURL {
     public final static String LOGIN_URL = "dev/login";
     public final static String WEATHER_INFO_URL = "device/wt/info";
     public final static String CURRENT_WORKER_INFO = "main/work/manager/info";
+    public final static String PATROL_INFO = "patrol/info";
+    public final static String UPDATE_PATROL_MODE = "patrol/mod/update";
 
     //* 설정
     public final static String EXPORT_SETTING_DATA = "device/update/setting";
@@ -27,7 +29,6 @@ public class RetrofitURL {
     public final static String LOAD_FACILITY_ALL_CONTACT_LIST = "device/my/conn/list/all"; //연락처(시설명) 전체 목록
     public final static String LOAD_ALL_DEVICE_LIST = "dev/device/list";
 
-
     //** 근무자 변경
     public final static String WORKER_LIST = "work/manager/list";
     public final static String WORKER_CHANGE = "work/update/manager/2";
@@ -36,9 +37,10 @@ public class RetrofitURL {
     public final static String WORK_RECORD_LIST = "work/manager/his/list";
     public final static String WORKER_PHONE_NUMBER_LIST = "build/manager/list";
 
-    //** 통화 목록
+    //** 통화 기록
     public final static String LOAD_CALL_LOG_LIST = "device/search/call";
     public final static String DELETE_CALL_LOG_DATA = "device/call/delete/seq";
+    public final static String DELETE_CALL_LOG_DATA_ALL = "device/call/delete/all";
 
     //** 방문자 목록
     public final static String LOAD_VISITOR_LOG_LIST = "ent/search/list";

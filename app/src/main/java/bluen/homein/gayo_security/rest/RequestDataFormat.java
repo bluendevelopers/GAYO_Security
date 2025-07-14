@@ -69,11 +69,24 @@ public class RequestDataFormat {
         private DeviceSleepModeBody deviceSleepModeBody;
         @SerializedName("deviceNetwork")
         private DeviceNetworkBody deviceNetworkBody;
+        @SerializedName("patrolState")
+        private String patrolState;
 
         @SerializedName("result")
         private String result;
         @SerializedName("message")
         private String message;
+
+        public DeviceBody(String serialCode, String buildingCode) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+        }
+
+        public DeviceBody(String serialCode, String buildingCode, String patrolState) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
+            this.patrolState = patrolState;
+        }
 
         public String getResult() {
             return result;
@@ -81,6 +94,10 @@ public class RequestDataFormat {
 
         public String getMessage() {
             return message;
+        }
+
+        public String getPatrolState() {
+            return patrolState;
         }
 
         public DeviceBody(String serialCode, String buildingCode, String deviceToken, DeviceUIBody deviceUIBody, DeviceSoundBody deviceSoundBody, DeviceSleepModeBody deviceSleepModeBody, DeviceNetworkBody deviceNetworkBody) {
@@ -157,7 +174,7 @@ public class RequestDataFormat {
         @SerializedName("entranceBell")
         private String entranceBell;
         @SerializedName("notiSound")
-        private int notiSound;
+        private int alarmSound;
         @SerializedName("systemSound")
         private int systemSound;
 
@@ -168,7 +185,7 @@ public class RequestDataFormat {
             this.callBell = callBell;
             this.entranceSound = entranceSound;
             this.entranceBell = entranceBell;
-            this.notiSound = notiSound;
+            this.alarmSound = notiSound;
             this.systemSound = systemSound;
         }
 
@@ -196,8 +213,8 @@ public class RequestDataFormat {
             return entranceBell;
         }
 
-        public int getNotiSound() {
-            return notiSound;
+        public int getAlarmSound() {
+            return alarmSound;
         }
 
         public int getSystemSound() {
@@ -493,6 +510,11 @@ public class RequestDataFormat {
             this.startDate = startDate;
             this.endDate = endDate;
             this.callType = callType;
+        }
+
+        public CallRecordListBody(String serialCode, String buildingCode) {
+            this.serialCode = serialCode;
+            this.buildingCode = buildingCode;
         }
 
         public CallRecordListBody(String serialCode, String buildingCode, Integer callSeq) {

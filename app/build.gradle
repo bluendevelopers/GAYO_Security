@@ -31,12 +31,14 @@ android {
     buildFeatures {
         viewBinding true
     }
-    
-    tasks.withType(JavaCompile).configureEach{options.fork = true
-        options.forkOptions.jvmArgs +=[
+
+    tasks.withType(JavaCompile).configureEach {
+        options.fork = true
+        options.forkOptions.jvmArgs += [
                 '--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
                 '--add-exports=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
-                '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']}
+                '--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED']
+    }
 
 }
 
@@ -68,12 +70,13 @@ dependencies {
     implementation libs.android.slidr
 
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    
+
     implementation 'io.github.ParkSangGwon:tedpermission-normal:3.3.0'
 
 
     // web RTC
 //    implementation 'org.webrtc:google-webrtc:1.0.32006'
+//    implementation 'com.infobip:google-webrtc:1.0.45036'
     implementation 'com.infobip:google-webrtc:1.0.0035529'
 //    implementation files('libs/autobanh.jar')
 //    implementation 'com.google.firebase:firebase-core:21.1.1'

@@ -247,15 +247,32 @@
                         app:layout_constraintStart_toStartOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <org.webrtc.SurfaceViewRenderer
-                    android:id="@+id/remote_view"
+                <bluen.homein.gayo_security.base.RoundFrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:layout_height="match_parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <org.webrtc.SurfaceViewRenderer
+                        android:id="@+id/remote_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:outlineProvider="background"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </bluen.homein.gayo_security.base.RoundFrameLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/background_radius_15_fill_call" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/lay_call_time"

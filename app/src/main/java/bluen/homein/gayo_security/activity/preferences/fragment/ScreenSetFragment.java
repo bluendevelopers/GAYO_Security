@@ -24,6 +24,7 @@ public class ScreenSetFragment extends BaseFragment {
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
 //        mPrefGlobal.setBrightness(slidrBrightness.getCurrentValue() / 100f);
+        activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceUIBody(new RequestDataFormat.DeviceUIBody((int) slidrBrightness.getCurrentValue(), "L"));
         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
         activity.showPopupDialog(null, "성공적으로 저장 되었습니다.", "확 인");

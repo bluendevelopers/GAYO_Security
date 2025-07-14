@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.util.Log;
@@ -65,8 +64,8 @@ public class MainActivity extends BaseActivity {
     TextView tvWorkerPhoneNumber;
     @BindView(R.id.tv_worker_name)
     TextView tvWorkerName;
-    @BindView(R.id.iv_power_btn)
-    ImageView ivPowerBtn;
+    @BindView(R.id.iv_patrol_btn)
+    ImageView ivPatrolBtn;
     @BindView(R.id.tv_security_state_2)
     TextView tvSecurityState2;
     @BindView(R.id.tv_year_and_month)
@@ -90,19 +89,23 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    @OnClick(R.id.iv_power_btn)
+    @OnClick(R.id.iv_patrol_btn)
     void clickSecurityOnOffBtn() {
-        GlobalApplication.isSecurityMode = !GlobalApplication.isSecurityMode;
 
-        if (GlobalApplication.isSecurityMode) {
-            ivPowerBtn.setImageResource(R.drawable.on_icon);
+        boolean patrolMode = mPrefGlobal.getPatrolMode();
+        patrolMode = !patrolMode;
+
+        if (patrolMode) {
+            ivPatrolBtn.setImageResource(R.drawable.on_icon);
             tvSecurityState1.setText("경비실기 - 순찰 중");
             tvSecurityState2.setText("순찰 ON");
         } else {
-            ivPowerBtn.setImageResource(R.drawable.off_icon);
+            ivPatrolBtn.setImageResource(R.drawable.off_icon);
             tvSecurityState1.setText("경비실기 - 근무 중");
             tvSecurityState2.setText("순찰 OFF");
         }
+        mPrefGlobal.setPatrolMode(patrolMode);
+        updatePatrolMode();
     }
 
     @OnClick(R.id.lay_back_btn)
@@ -271,7 +274,6 @@ public class MainActivity extends BaseActivity {
                     }
                 });
 
-
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
 
@@ -291,12 +293,82 @@ public class MainActivity extends BaseActivity {
             getFacilityAllContactList();
             getCurrentWorkerInfo();
             getWeatherInfo();
+            getPatrolModeInfo();
 
 
         } else {
             showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는 데이터를 불러와주세요.", getString(R.string.confirm));
         }
 
+    }
+
+    private void getPatrolModeInfo() {
+
+        Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
+
+
+        Call<RequestDataFormat.DeviceBody> call = mainInfoApi.patrolModeInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()));
+        call.enqueue(new Callback<RequestDataFormat.DeviceBody>() {
+            @Override
+            public void onResponse(Call<RequestDataFormat.DeviceBody> call, Response<RequestDataFormat.DeviceBody> response) {
+                if (response.body() != null) {
+                    if (response.body().getPatrolState() != null) {
+                        if (response.body().getPatrolState().equalsIgnoreCase("O")) {
+                            mPrefGlobal.setPatrolMode(true);
+                            ivPatrolBtn.setImageResource(R.drawable.on_icon);
+                            tvSecurityState1.setText("경비실기 - 순찰 중");
+                            tvSecurityState2.setText("순찰 ON");
+
+                        } else {
+                            mPrefGlobal.setPatrolMode(false);
+                            ivPatrolBtn.setImageResource(R.drawable.off_icon);
+                            tvSecurityState1.setText("경비실기 - 근무 중");
+                            tvSecurityState2.setText("순찰 OFF");
+                        }
+                    }
+                } else {
+                    //code
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RequestDataFormat.DeviceBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void updatePatrolMode() {
+        showProgress();
+
+        Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
+
+        Call<RequestDataFormat.DeviceBody> call = mainInfoApi.updatePatrolModePost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode(), mPrefGlobal.getPatrolMode() ? "O" : "X"));
+        call.enqueue(new Callback<RequestDataFormat.DeviceBody>() {
+            @Override
+            public void onResponse(Call<RequestDataFormat.DeviceBody> call, Response<RequestDataFormat.DeviceBody> response) {
+                closeProgress();
+
+                if (response.body() != null) {
+
+                    if (response.body().getResult().equalsIgnoreCase("OK")) {
+
+                    } else {
+
+                    }
+
+                } else {
+                    //code
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<RequestDataFormat.DeviceBody> call, Throwable t) {
+                closeProgress();
+            }
+        });
     }
 
 

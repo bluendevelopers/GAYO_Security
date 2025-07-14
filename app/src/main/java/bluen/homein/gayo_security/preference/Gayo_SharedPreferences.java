@@ -44,6 +44,15 @@ public class Gayo_SharedPreferences {
 
     }
 
+    public void setPatrolMode(boolean _value) {
+        putBoolean(PrefKey.PATROL_MODE, _value);
+    }
+
+    public boolean getPatrolMode() {
+        return getBoolean(PrefKey.PATROL_MODE, false);
+
+    }
+
 
     // 밝기 저장
     public void setBrightness(float brightness) {
@@ -305,6 +314,7 @@ public class Gayo_SharedPreferences {
     static private class PrefKey {
 
         private static final String AUTHORIZATION = "authorization";
+        private static final String PATROL_MODE = "patrol_mode";
         private static final String PATROL_DOOR_OPEN_TYPE = "patrol_door_open_type";
         private static final String FIREBASE_TOKEN = "firebase_token";
         private static final String FACILITY_CONTACTS = "facility_contacts";

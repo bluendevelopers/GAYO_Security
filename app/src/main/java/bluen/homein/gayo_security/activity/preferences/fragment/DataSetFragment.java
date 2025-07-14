@@ -1,9 +1,10 @@
 package bluen.homein.gayo_security.activity.preferences.fragment;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.view.View;
 
 import bluen.homein.gayo_security.R;
-import bluen.homein.gayo_security.activity.preferences.PreferencesActivity;
 import bluen.homein.gayo_security.base.BaseFragment;
 import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
@@ -15,6 +16,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DataSetFragment extends BaseFragment {
+    private AudioManager am;
 
     @OnClick(R.id.tv_load_data_btn)
     void getDeviceData() {
@@ -41,6 +43,22 @@ public class DataSetFragment extends BaseFragment {
                             body.getDeviceSleepModeBody().setSleepTime(0);
                         }
                         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, body);
+
+                        am.setStreamVolume(
+                                AudioManager.STREAM_RING,
+                                body.getDeviceSoundBody().getCallSound(),
+                                0
+                        );
+                        am.setStreamVolume(
+                                AudioManager.STREAM_ALARM,
+                                body.getDeviceSoundBody().getAlarmSound(),
+                                0
+                        );
+                        am.setStreamVolume(
+                                AudioManager.STREAM_SYSTEM,
+                                body.getDeviceSoundBody().getSystemSound(),
+                                0
+                        );
                         activity.showPopupDialog(null, "데이터 불러오기에\n성공하였습니다.", "확 인");
 
                     } else {
@@ -119,7 +137,7 @@ public class DataSetFragment extends BaseFragment {
 
     @Override
     protected void initFragmentView(View v) {
-
+        am = (AudioManager) activity.getSystemService(Context.AUDIO_SERVICE);
 
     }
 

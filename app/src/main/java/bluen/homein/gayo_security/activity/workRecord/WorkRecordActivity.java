@@ -522,7 +522,7 @@ public class WorkRecordActivity extends BaseActivity {
     }
 
     private void getWorkRecordList() {
-
+        showProgress();
         Retrofit.WorkRecordApi workRecordApi = Retrofit.WorkRecordApi.retrofit.create(Retrofit.WorkRecordApi.class);
 
         RequestDataFormat.WorkRecordListBody workRecordListBody =
@@ -551,10 +551,12 @@ public class WorkRecordActivity extends BaseActivity {
                             }
                         }
 
-                        if (currentPageNumber == 1) {
+                        if (currentPageNumber <= 1) {
+                            currentPageNumber = 1;
                             layBeforeBtn.setVisibility(View.INVISIBLE);
                         }
-                        if (currentPageNumber == response.body().getPageCountInfo().getTotalPageCnt()) {
+                        if (currentPageNumber >= response.body().getPageCountInfo().getTotalPageCnt()) {
+                            currentPageNumber = response.body().getPageCountInfo().getTotalPageCnt();
                             layNextBtn.setVisibility(View.INVISIBLE);
                         }
 

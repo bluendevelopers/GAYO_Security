@@ -108,7 +108,8 @@ public class CallRecordActivity extends BaseActivity {
     void clickBtnDeleteAll() {
         if (currentCallRecordList != null && !currentCallRecordList.isEmpty()) {
             //code
-
+            mIsDelete = true;
+            showPopupDialog(null, "통화 기록을\n전부 삭제 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
         }
     }
 
@@ -387,7 +388,7 @@ public class CallRecordActivity extends BaseActivity {
         popupDialog.onCallBack(new PopupDialog.DialogCallback() {
             @Override
             public void onFinish() {
-                if (mIsDelete) {
+                if (mIsDelete) { // 삭제 취소
                     mIsDelete = false;
                     if (deleteItem == null) {
                         getCallRecordList();
@@ -400,8 +401,10 @@ public class CallRecordActivity extends BaseActivity {
             @Override
             public void onNextStep() {
                 if (mIsDelete) {
-                    if (deleteItem != null) {
+                    if (deleteItem != null) { // 선택 삭제
                         deleteCallRecordItem();
+                    } else { // 전체 삭제
+                        deleteCallRecordAll();
                     }
                 }
             }
@@ -422,7 +425,7 @@ public class CallRecordActivity extends BaseActivity {
         tvSelectedStartDate.setText(startDate);
         tvSelectedEndDate.setText(endDate);
 
-        callRecordListAdapter = new CallRecordListAdapter(getApplicationContext()); // 전화 걸어야해서 global로
+        callRecordListAdapter = new CallRecordListAdapter(this);
 
         lvCallRecord.setAdapter(callRecordListAdapter);
         lvCallRecord.setEmptyView(tvEmptyView);
@@ -448,7 +451,7 @@ public class CallRecordActivity extends BaseActivity {
                         if (currentCallRecordList.size() == 1 && currentPageNumber > 1) {
                             currentPageNumber--;
                         }
-                        showPopupDialog(facilityName + "\n" + date[0] + "\n", "통화 목록이 삭제 되었습니다.", getString(R.string.confirm));
+                        showPopupDialog(facilityName + "\n" + date[0] + "\n", "통화 기록이 삭제 되었습니다.", getString(R.string.confirm));
                     } else {
                         mIsDelete = false;
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
@@ -462,6 +465,39 @@ public class CallRecordActivity extends BaseActivity {
             @Override
             public void onFailure(Call<ResponseDataFormat.CallRecordListBody> call, Throwable t) {
                 closeProgress();
+                mIsDelete = false;
+                hideNavigationBar();
+                //code
+            }
+        });
+    }
+
+    private void deleteCallRecordAll() {
+
+        showProgress();
+        Retrofit.CallRecordApi callRecordApi = Retrofit.CallRecordApi.retrofit.create(Retrofit.CallRecordApi.class);
+        Call<ResponseDataFormat.CallRecordListBody> call = callRecordApi.deleteCallRecordAllPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.CallRecordListBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()));
+
+        call.enqueue(new Callback<ResponseDataFormat.CallRecordListBody>() {
+            @Override
+            public void onResponse(Call<ResponseDataFormat.CallRecordListBody> call, Response<ResponseDataFormat.CallRecordListBody> response) {
+                closeProgress();
+                if (response.body() != null) {
+                    if (response.body().getResult().equals("OK")) {
+                        showPopupDialog("통화 기록이 삭제 되었습니다.", getString(R.string.confirm));
+                    } else {
+                        mIsDelete = false;
+                        showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
+                    }
+                } else {
+                    mIsDelete = false;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseDataFormat.CallRecordListBody> call, Throwable t) {
+                closeProgress();
+                mIsDelete = false;
                 hideNavigationBar();
                 //code
             }

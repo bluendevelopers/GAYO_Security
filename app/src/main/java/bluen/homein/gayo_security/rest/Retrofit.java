@@ -28,7 +28,6 @@ public class Retrofit {
     }
 
     //** 메인 화면
-
     public interface MainInfoApi {
 
         @POST(RetrofitURL.CURRENT_WORKER_INFO)
@@ -36,6 +35,12 @@ public class Retrofit {
 
         @POST(RetrofitURL.WEATHER_INFO_URL)
         Call<ResponseDataFormat.WeatherData> weatherInfoPost(@Header("Authorization") String auth, @Body RequestDataFormat.WeatherBody weatherBody);
+
+        @POST(RetrofitURL.PATROL_INFO)
+        Call<RequestDataFormat.DeviceBody> patrolModeInfoPost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
+
+        @POST(RetrofitURL.UPDATE_PATROL_MODE)
+        Call<RequestDataFormat.DeviceBody> updatePatrolModePost(@Header("Authorization") String auth, @Body RequestDataFormat.DeviceBody deviceBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)
@@ -158,6 +163,9 @@ public class Retrofit {
 
         @POST(RetrofitURL.DELETE_CALL_LOG_DATA)
         Call<ResponseDataFormat.CallRecordListBody> deleteCallRecordPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
+
+        @POST(RetrofitURL.DELETE_CALL_LOG_DATA_ALL)
+        Call<ResponseDataFormat.CallRecordListBody> deleteCallRecordAllPost(@Header("Authorization") String auth, @Body RequestDataFormat.CallRecordListBody callRecordListBody);
 
         retrofit2.Retrofit retrofit = new retrofit2.Retrofit.Builder()
                 .baseUrl(RetrofitURL.BASE_URL)

@@ -80,9 +80,22 @@ public class WebSocketService extends Service {
                 if (!isConnected) {
                     startDeviceWebSocketConnection(deviceBody, jsonText);
                     if (!jsonText.isEmpty()) {
-                        pendingMessages.add(jsonText);
+                        WebSocketService.WebSocketBody body =
+                                new Gson().fromJson(jsonText.toString(), WebSocketService.WebSocketBody.class);
+
+                        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite")) {
+                            sendWebSocketMessage(jsonText);
+
+                        } else {
+                            pendingMessages.add(jsonText);
+                        }
+                    } else {
+                        Log.e(TAG, "onStartCommand jsonText == null || jsonText.isEmpty() !!!!!");
+
                     }
                 } else {
+
+
                     startCallActivity(jsonText);
 
                 }
@@ -142,8 +155,17 @@ public class WebSocketService extends Service {
 
                     }
                 } else {
-                    for (String m : pendingMessages) startCallActivity(jsonText);
-                    pendingMessages.clear();
+                    if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite")) {
+                        if (jsonText != null && !jsonText.isEmpty()) {
+                            sendWebSocketMessage(jsonText);
+                        } else {
+                            Log.e(TAG, "jsonText == null || jsonText.isEmpty() !!!!!");
+
+                        }
+                    } else {
+                        for (String m : pendingMessages) startCallActivity(jsonText);
+                        pendingMessages.clear();
+                    }
                 }
             }
 
@@ -169,14 +191,13 @@ public class WebSocketService extends Service {
             public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 Log.e(TAG, "onFailure: " + t.getMessage());
-//                reconnectWebSocketWithDelay(jsonText);
+                disconnectWebSocket();
             }
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason) {
                 super.onClosing(webSocket, code, reason);
                 Log.d(TAG, "onClosing: 연결 종료 예정, reason: " + reason);
-//                reconnectWebSocketWithDelay(jsonText);
 
             }
 
@@ -218,7 +239,7 @@ public class WebSocketService extends Service {
         WebSocketBody body = new Gson().fromJson(jsonText, WebSocketBody.class);
         String message = body.getMessage() != null ? body.getMessage() : "";
 
-        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || callStatus == CALL_STATUS_IDLE && body.getMethod().equals("OK")
+        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || callStatus == CALL_STATUS_IDLE && body.getMethod().equalsIgnoreCase("ok")
                 || callStatus != CALL_STATUS_IDLE || message.equals(DEVICE_NOT_CONNECTED)) {
             // 2) 앱이 포그라운드인지 백그라운드인지 판단
             if (isAppInForeground(getApplicationContext())) {
@@ -417,6 +438,7 @@ public class WebSocketService extends Service {
         public void setLobbyPhoneSerialCode(String lobbyPhoneSerialCode) {
             this.lobbyPhoneSerialCode = lobbyPhoneSerialCode;
         }
+
         public void setGuardSerialCode(String guardSerialCode) {
             this.guardSerialCode = guardSerialCode;
         }

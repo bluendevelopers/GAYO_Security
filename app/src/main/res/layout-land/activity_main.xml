@@ -151,7 +151,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/iv_power_btn"
+                        android:id="@+id/iv_patrol_btn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:src="@drawable/off_icon"
@@ -169,9 +169,9 @@
                         android:textColor="#222222"
                         android:textSize="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@id/iv_power_btn"
-                        app:layout_constraintStart_toStartOf="@id/iv_power_btn"
-                        app:layout_constraintTop_toBottomOf="@id/iv_power_btn" />
+                        app:layout_constraintEnd_toEndOf="@id/iv_patrol_btn"
+                        app:layout_constraintStart_toStartOf="@id/iv_patrol_btn"
+                        app:layout_constraintTop_toBottomOf="@id/iv_patrol_btn" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -294,7 +294,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/pretendard_light"
-                                android:text="2"
+                                android:text="0"
                                 android:textAlignment="textEnd"
                                 android:textColor="@color/black"
                                 android:textSize="54dp"
@@ -321,7 +321,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/pretendard_light"
-                            android:text="대구 남구 대명동"
+                            android:text="날씨 정보 없음"
                             android:textColor="@color/black"
                             android:textSize="16dp"
                             app:layout_constraintEnd_toEndOf="parent"
