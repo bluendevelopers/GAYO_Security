@@ -43,6 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public ProgressDialog progressDialog;
     public Gayo_SharedPreferences mPrefGlobal = null;
     public boolean mIsFinish;
+    public boolean mIsError;
     public String TAG = "";
     public Vibrator vibrator;
     public PopupDialog popupDialog;

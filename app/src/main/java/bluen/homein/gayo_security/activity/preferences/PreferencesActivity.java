@@ -55,7 +55,8 @@ public class PreferencesActivity extends BaseActivity {
     private PrefButtonListAdapter prefButtonListAdapter;
     private List<String> prefItemList = new ArrayList<>();
     private String clickedBtnName = "";
-    private int fragmentRequestedNumber = 0;
+    public final int REQUEST_NONE = 0;
+    private int fragmentRequestedNumber = REQUEST_NONE;
     public final int REQUEST_REFRESH = 1;
     public final int REQUEST_SETTING_SUCCESS = 2;
     public final int REQUEST_SAVE_DATA = 3;
@@ -89,7 +90,6 @@ public class PreferencesActivity extends BaseActivity {
 
     @OnClick(R.id.btn_password)
     void clickBtnPassword() {
-        //code
         if (etPassword.getText().toString().equals(mPrefGlobal.getDevicePassword())) {
             prefButtonListAdapter.setAccessible(true);
             hideAndClearFocus(PreferencesActivity.this, etPassword);
@@ -126,12 +126,13 @@ public class PreferencesActivity extends BaseActivity {
 
     @Override
     protected void initActivity(Bundle savedInstanceState) {
+        closeProgress();
         hideNavigationBar();
 
         popupDialog.onCallBack(new PopupDialog.DialogCallback() {
             @Override
             public void onFinish() {
-                fragmentRequestedNumber = 0;
+                fragmentRequestedNumber = REQUEST_NONE;
             }
 
             @Override
@@ -142,26 +143,28 @@ public class PreferencesActivity extends BaseActivity {
                     switch (fragmentRequestedNumber) {
                         case REQUEST_REFRESH:
                             ((NetworkInterface) currentFragment).refreshFragment();
-                            fragmentRequestedNumber = 0;
+                            fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case SLEEP_MODE_REFRESH:
                             onResume();
-                            fragmentRequestedNumber = 0;
+                            fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_GET_TOKEN:
                             ((NetworkInterface) currentFragment).getToken();
-                            fragmentRequestedNumber = 0;
+                            fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_SAVE_DATA:
                             ((NetworkInterface) currentFragment).saveData();
-                            fragmentRequestedNumber = 0;
+                            fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_GET_NETWORK_DATA:
                             ((NetworkInterface) currentFragment).getNetworkData();
-                            fragmentRequestedNumber = 0;
+                            fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_SETTING_SUCCESS:
                             finish();
+                            break;
+                        default:
                             break;
 
                     }

@@ -42,7 +42,7 @@ public class ChangeWorkerActivity extends BaseActivity {
     TextView tvEmptyView;
     @BindView(R.id.lv_worker_list)
     ListView lvWorkerList;
-    private ResponseDataFormat.WorkerListBody.WorkerInfo selectedWorkerInfo;
+    protected ResponseDataFormat.WorkerListBody.WorkerInfo selectedWorkerInfo;
     private WorkerListAdapter workerListAdapter;
     private PageNumberListAdapter pageNumberListAdapter;
     private List<String> pageList;

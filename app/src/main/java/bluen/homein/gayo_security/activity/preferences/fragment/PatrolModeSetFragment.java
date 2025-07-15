@@ -23,7 +23,7 @@ public class PatrolModeSetFragment extends BaseFragment {
     @OnClick(R.id.tv_save_btn)
     void clickSaveBtn() {
         mPrefGlobal.setPatrolDoorOpenType(selectedNumber);
-        activity.showPopupDialog(null, "저장 되었습니다.", "확 인");
+        activity.showPopupDialog(null, "저장 되었습니다.",  getString(R.string.confirm));
 
     }
 

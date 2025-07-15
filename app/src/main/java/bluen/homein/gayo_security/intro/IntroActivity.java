@@ -196,12 +196,12 @@ public class IntroActivity extends BaseActivity {
         if (!isDenied) {
             mIsFinish = false;
             mPermissionIsDenied = true;
-            showPopupDialog("권한 페이지로 이동하여\n카메라 권한을 허용해 주세요.", "확 인");
+            showPopupDialog("권한 페이지로 이동하여\n카메라 권한을 허용해 주세요.",  getString(R.string.confirm));
         } else {
             mPermissionIsDenied = false;
             if (!PermissionsHelper.isPermissionGranted(this, permissions)) {
                 mIsFinish = true;
-                showPopupDialog("카메라 권한을 허용해주세요", "확 인");
+                showPopupDialog("카메라 권한을 허용해주세요",  getString(R.string.confirm));
             }
         }
     }

@@ -54,22 +54,22 @@ public class ChangePasswordFragment extends BaseFragment {
 
         if (etCurrentPassword.getText().toString().isEmpty()) {
             //popup
-            activity.showPopupDialog(null, "현재 비밀번호를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "현재 비밀번호를 입력해주세요.",  getString(R.string.confirm));
             return;
         }
         if (etNewPassword.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "새 비밀번호를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "새 비밀번호를 입력해주세요.",  getString(R.string.confirm));
             return;
         }
         if (etNewPasswordRe.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "새 비밀번호 확인을 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "새 비밀번호 확인을 입력해주세요.",  getString(R.string.confirm));
             return;
         }
 
         if (mPrefGlobal.getDevicePassword().equals(etCurrentPassword.getText().toString())) {
 
             if (etNewPasswordRe.getText().toString().equals(etCurrentPassword.getText().toString())) {
-                activity.showPopupDialog(null, "현재 비밀번호와 새 비밀번호가 같습니다.", "확 인");
+                activity.showPopupDialog(null, "현재 비밀번호와 새 비밀번호가 같습니다.",  getString(R.string.confirm));
                 return;
             }
 
@@ -91,7 +91,7 @@ public class ChangePasswordFragment extends BaseFragment {
                                     etCurrentPassword.setText("");
                                     etNewPassword.setText("");
                                     etNewPasswordRe.setText("");
-                                    activity.showPopupDialog(null, "비밀번호 변경에 성공하였습니다.", "확 인");
+                                    activity.showPopupDialog(null, "비밀번호 변경에 성공하였습니다.",  getString(R.string.confirm));
                                 } else {
                                     // 실패 ui
                                     etNewPassword.setBackgroundDrawable(appContext.getDrawable(R.drawable.btn_border_radius_15_stroke_red));

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.VibrationEffect;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -109,7 +111,7 @@ public class CallRecordActivity extends BaseActivity {
         if (currentCallRecordList != null && !currentCallRecordList.isEmpty()) {
             //code
             mIsDelete = true;
-            showPopupDialog(null, "통화 기록을\n전부 삭제 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
+            showWarningDialog("통화 기록을\n전부 삭제 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
         }
     }
 
@@ -458,7 +460,19 @@ public class CallRecordActivity extends BaseActivity {
                     }
                 } else {
                     mIsDelete = false;
-                    //code
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    if (errorMessage != null) {
+                        Log.e(TAG, errorMessage);
+
+                        showWarningDialog(errorMessage, getString(R.string.confirm));
+                    }
+
                 }
             }
 
@@ -491,6 +505,19 @@ public class CallRecordActivity extends BaseActivity {
                     }
                 } else {
                     mIsDelete = false;
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    if (errorMessage != null) {
+                        Log.e(TAG, errorMessage);
+
+                        showWarningDialog(errorMessage, getString(R.string.confirm));
+                    }
+
                 }
             }
 
@@ -517,9 +544,18 @@ public class CallRecordActivity extends BaseActivity {
                     callTypeList = response.body();
                     getCallRecordList();
 
-                } else {
+                } else if (response.errorBody() != null) {
                     closeProgress();
-
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
             }
 
@@ -580,9 +616,17 @@ public class CallRecordActivity extends BaseActivity {
                     } else {
                         //code
                     }
-                } else {
-                    //code
-
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
             }
 

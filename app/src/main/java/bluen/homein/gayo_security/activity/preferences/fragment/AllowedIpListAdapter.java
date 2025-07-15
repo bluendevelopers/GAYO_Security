@@ -130,7 +130,7 @@ public class AllowedIpListAdapter extends BaseAdapter {
                     notifyDataSetChanged();
                 } else {
                     ((PreferencesActivity) context)
-                            .showPopupDialog("허용 IP 는 최대 5개 까지\n등록 가능합니다.", "확 인");
+                            .showPopupDialog("허용 IP 는 최대 5개 까지\n등록 가능합니다.",  context.getString(R.string.confirm));
                 }
             });
         } else {
@@ -166,14 +166,14 @@ public class AllowedIpListAdapter extends BaseAdapter {
 
             if (parts.length != 4) {
                 ((PreferencesActivity) context)
-                        .showPopupDialog("허용 IP를 공란이 없도록 입력해주세요.", "확 인");
+                        .showPopupDialog("허용 IP를 공란이 없도록 입력해주세요.",  context.getString(R.string.confirm));
                 return;
             }
 
             for (String part : parts) {
                 if (part.trim().isEmpty()) {
                     ((PreferencesActivity) context)
-                            .showPopupDialog("허용 IP를 공란이 없도록 입력해주세요.", "확 인");
+                            .showPopupDialog("허용 IP를 공란이 없도록 입력해주세요.",  context.getString(R.string.confirm));
                     return;
                 }
             }

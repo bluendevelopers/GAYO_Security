@@ -97,12 +97,12 @@ public class AddContactActivity extends BaseActivity {
         STATUS_CODE = STATUS_ADD_CONTACT;
         if (etIpAddress1.getText().toString().isEmpty() || etIpAddress2.getText().toString().isEmpty() || etIpAddress3.getText().toString().isEmpty() || etIpAddress4.getText().toString().isEmpty()) {
             STATUS_CODE = STATUS_NONE;
-            showWarningDialog("IP 주소를 정확히 입력해주세요", "확 인");
+            showWarningDialog("IP 주소를 정확히 입력해주세요",  getString(R.string.confirm));
             return;
         }
         if (etFacilityName.getText().toString().isEmpty()) {
             STATUS_CODE = STATUS_NONE;
-            showWarningDialog("시설 명을 정확히 입력해주세요", "확 인");
+            showWarningDialog("시설 명을 정확히 입력해주세요",  getString(R.string.confirm));
             return;
         }
         showPopupDialog(etFacilityName.getText().toString() + "\n", "연락처를 추가 하시겠습니까?", getString(R.string.cancel), getString(R.string.confirm));
@@ -269,7 +269,7 @@ public class AddContactActivity extends BaseActivity {
                         if (i == mPrefGlobal.getAllDeviceList().size() - 1) {
                             STATUS_CODE = 4;
                             closeProgress();
-                            showPopupDialog("연락처 불러오기에\n성공하였습니다.", "확 인");
+                            showPopupDialog("연락처 불러오기에\n성공하였습니다.",  getString(R.string.confirm));
                             return;
                         } else {
                             continue;
@@ -317,6 +317,8 @@ public class AddContactActivity extends BaseActivity {
 
                     }
                 } else if (response.errorBody() != null) {
+                    STATUS_CODE = STATUS_NONE;
+
                     String error = "";
                     try {
                         error = response.errorBody().string();
@@ -398,6 +400,7 @@ public class AddContactActivity extends BaseActivity {
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                     }
                 } else if (response.errorBody() != null) {
+                    STATUS_CODE = STATUS_NONE;
                     String error = "";
                     try {
                         error = response.errorBody().string();
@@ -458,11 +461,11 @@ public class AddContactActivity extends BaseActivity {
 
                     } else {
                         STATUS_CODE = STATUS_NONE;
-
                         showWarningDialog(response.body().getMessage(), getString(R.string.confirm));
                         //code
                     }
                 } else if (response.errorBody() != null) {
+                    STATUS_CODE = STATUS_NONE;
                     String error = "";
                     try {
                         error = response.errorBody().string();

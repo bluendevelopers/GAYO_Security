@@ -47,7 +47,7 @@ public class SleepModeSetFragment extends BaseFragment {
 //        activity.setFragmentRequested(activity.SLEEP_MODE_REFRESH);
         activity.setSleepTimeoutSeconds(selectedSleepModeTime);
         activity.setGoToMainSeconds(selectedMainReturnTime);
-        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.", "확 인");
+        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.",  getString(R.string.confirm));
     }
 
     @OnClick({R.id.iv_sleep_always, R.id.iv_sleep_after_10s,

@@ -49,7 +49,7 @@ public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButto
 //
 //                listener.clickButton(holder.tvPrefName); // 그에 맞는 화면 변경
 //            } else {
-//                ((PreferencesActivity) context).showPopupDialog("비밀번호 입력 후 사용 가능합니다.", "확 인");
+//                ((PreferencesActivity) context).showPopupDialog("비밀번호 입력 후 사용 가능합니다.",  getString(R.string.confirm));
 //            }
 //        });
 //
@@ -87,11 +87,11 @@ public class PrefButtonListAdapter extends BaseRecyclerAdapter<String, PrefButto
                     listener.clickButton(holder.tvPrefName);
                 } else {
                     ((PreferencesActivity) context)
-                            .showPopupDialog("비밀번호 입력 후\n사용 가능합니다.", "확 인");
+                            .showPopupDialog("비밀번호 입력 후\n사용 가능합니다.",  context.getString(R.string.confirm));
                 }
             } else {
                 ((PreferencesActivity) context)
-                        .showPopupDialog("데이터 세팅 또는 데이터 불러오기\n완료 후 사용 가능합니다.", "확 인");
+                        .showPopupDialog("데이터 세팅 또는 데이터 불러오기\n완료 후 사용 가능합니다.",  context.getString(R.string.confirm));
             }
         });
     }

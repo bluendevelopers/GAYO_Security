@@ -49,7 +49,7 @@ public class VolumeSetFragment extends BaseFragment {
                 (int) slidrSystem.getCurrentValue(),
                 0
         );
-        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.", "확 인");
+        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.",  getString(R.string.confirm));
 
 
     }

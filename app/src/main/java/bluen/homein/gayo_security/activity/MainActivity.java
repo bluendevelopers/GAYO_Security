@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -191,7 +192,7 @@ public class MainActivity extends BaseActivity {
                 getWeatherInfo();
                 getFacilityAllContactList();
             } else {
-                showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는\n데이터를 불러와주세요. (임시 문구)", getString(R.string.confirm));
+                showWarningDialog("저장된 데이터가 없습니다.\n설정으로 이동하여 세팅 또는\n데이터를 불러와주세요.", getString(R.string.confirm));
             }
             return;
         }
@@ -220,6 +221,9 @@ public class MainActivity extends BaseActivity {
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         filter.addAction(Intent.ACTION_TIME_CHANGED);
         registerReceiver(dateChangeReceiver, filter);
+        if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
+            getWeatherInfo();
+        }
 
     }
 
@@ -246,9 +250,15 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onNextStep() {
+                if (mIsError) {
+                    mIsError = false;
+                    return;
+                }
                 if (mPrefGlobal.getAuthorization() == null || Gayo_SharedPreferences.PrefDeviceData.prefItem == null) {
+                    showProgress();
                     Intent intent = new Intent(MainActivity.this, PreferencesActivity.class);
                     startActivityForResult(intent, REQUEST_CODE_FIRST_SETTING);
+
                 }
             }
         });
@@ -306,7 +316,6 @@ public class MainActivity extends BaseActivity {
 
         Retrofit.MainInfoApi mainInfoApi = Retrofit.MainInfoApi.retrofit.create(Retrofit.MainInfoApi.class);
 
-
         Call<RequestDataFormat.DeviceBody> call = mainInfoApi.patrolModeInfoPost(mPrefGlobal.getAuthorization(), new RequestDataFormat.DeviceBody(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode(), Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()));
         call.enqueue(new Callback<RequestDataFormat.DeviceBody>() {
             @Override
@@ -327,7 +336,18 @@ public class MainActivity extends BaseActivity {
                         }
                     }
                 } else {
-                    //code
+                    mIsError = true;
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    if (errorMessage != null) {
+                        Log.e(TAG, errorMessage);
+                        showWarningDialog(errorMessage, getString(R.string.confirm));
+                    }
                 }
 
             }
@@ -358,8 +378,17 @@ public class MainActivity extends BaseActivity {
 
                     }
 
-                } else {
-                    //code
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
 
             }
@@ -386,8 +415,17 @@ public class MainActivity extends BaseActivity {
                 if (response.body() != null) {
                     mPrefGlobal.setContactsList(response.body());
 
-                } else {
-                    //code
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
 
             }
@@ -429,8 +467,17 @@ public class MainActivity extends BaseActivity {
 //                    if (!response.body().isEmpty()) {}
                     mPrefGlobal.setAllDeviceList(response.body());
 
-                } else {
-
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
             }
 
@@ -456,8 +503,17 @@ public class MainActivity extends BaseActivity {
                         tvWorkerName.setText(response.body().getWorkerName().isEmpty() ? "근무자" : response.body().getWorkerName());
                         tvWorkerPhoneNumber.setText(response.body().getWorkerPhoneNumber().isEmpty() ? "정보 없음" : response.body().getWorkerPhoneNumber());
                     }
-                } else {
-
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
             }
 
@@ -483,8 +539,17 @@ public class MainActivity extends BaseActivity {
                         tvTemperature.setText(String.valueOf(response.body().getCurrentTemp()));
                         tvRegionInfo.setText(response.body().getAreaName());
                     }
-                } else {
-
+                } else if (response.errorBody() != null) {
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mIsError = true;
+                    String errorMessage = BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", "");
+                    Log.e(TAG, errorMessage);
+                    showWarningDialog(errorMessage, getString(R.string.confirm));
                 }
             }
 

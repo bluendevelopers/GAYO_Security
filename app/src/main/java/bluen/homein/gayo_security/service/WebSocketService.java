@@ -2,6 +2,7 @@ package bluen.homein.gayo_security.service;
 
 import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_ACTIVE;
 import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_IDLE;
+import static bluen.homein.gayo_security.activity.call.CallActivity.isSender;
 import static bluen.homein.gayo_security.global.GlobalApplication.callStatus;
 import static bluen.homein.gayo_security.preference.Gayo_Preferences.DEVICE_NOT_CONNECTED;
 
@@ -32,6 +33,7 @@ import java.util.List;
 
 import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.call.CallActivity;
+import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.MyGson;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import okhttp3.OkHttpClient;
@@ -78,13 +80,17 @@ public class WebSocketService extends Service {
                 deviceBody = _deviceBody;
                 auth = intent.getStringExtra("authorization");
                 if (!isConnected) {
+                    Log.e(TAG, "onStartCommand 웹소켓 연결이 안되어있어요!");
+                    Log.i(TAG, jsonText);
                     startDeviceWebSocketConnection(deviceBody, jsonText);
                     if (!jsonText.isEmpty()) {
                         WebSocketService.WebSocketBody body =
                                 new Gson().fromJson(jsonText.toString(), WebSocketService.WebSocketBody.class);
 
-                        if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite")) {
-                            sendWebSocketMessage(jsonText);
+                        if (callStatus == CALL_STATUS_IDLE && (body.getMethod().equals("invite"))) {
+                            if (!body.getCallDevice().equals("lobby") && isSender) {
+                                sendWebSocketMessage(jsonText);
+                            }
 
                         } else {
                             pendingMessages.add(jsonText);
@@ -94,8 +100,8 @@ public class WebSocketService extends Service {
 
                     }
                 } else {
-
-
+                    Log.e(TAG, "onStartCommand 웹소켓 연결이 되어있어요!");
+                    Log.e(TAG, "onStartCommand jsonText == null || jsonText.isEmpty() !!!!!");
                     startCallActivity(jsonText);
 
                 }
@@ -157,7 +163,9 @@ public class WebSocketService extends Service {
                 } else {
                     if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite")) {
                         if (jsonText != null && !jsonText.isEmpty()) {
-                            sendWebSocketMessage(jsonText);
+                            if (!body.getCallDevice().equals("lobby") && isSender) {
+                                sendWebSocketMessage(jsonText);
+                            }
                         } else {
                             Log.e(TAG, "jsonText == null || jsonText.isEmpty() !!!!!");
 
@@ -343,6 +351,13 @@ public class WebSocketService extends Service {
         @SerializedName("guardSerialCode")
         private String guardSerialCode;
 
+        @SerializedName("visitorDong")
+        private String visitorDong;
+        @SerializedName("visitorHo")
+        private String visitorHo;
+        @SerializedName("visitorCarNumber")
+        private String visitorCarNumber;
+
 
         public WebSocketBody(String method, String reSerialCode) {
             this.method = method;
@@ -469,6 +484,18 @@ public class WebSocketService extends Service {
 
         public void setSdp(String sdp) {
             this.sdp = sdp;
+        }
+
+        public void setVisitorDong(String visitorDong) {
+            this.visitorDong = visitorDong;
+        }
+
+        public void setVisitorHo(String visitorHo) {
+            this.visitorHo = visitorHo;
+        }
+
+        public void setVisitorCarNumber(String visitorCarNumber) {
+            this.visitorCarNumber = visitorCarNumber;
         }
 
         public String getSerialCode() {

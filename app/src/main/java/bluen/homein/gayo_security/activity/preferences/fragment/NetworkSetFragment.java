@@ -110,26 +110,25 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
         if (etBuildingCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "건물 번호를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "건물 번호를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etSerialCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "시리얼 코드를 입력해주세요.", "확 인");
+            activity.showPopupDialog(null, "시리얼 코드를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
-
         if (Gayo_SharedPreferences.PrefDeviceData.prefItem == null) {
             ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_GET_TOKEN);
-            activity.showPopupDialog(null, "입력하신 값을 바탕으로\n서버 내 데이터 유무 확인 후\n설정 데이터를 불러옵니다.", "취 소", "확 인");
+            activity.showPopupDialog(null, "입력하신 값을 바탕으로\n서버 내 데이터 유무 확인 후\n설정 데이터를 불러옵니다.", "취 소", getString(R.string.confirm));
         } else {
             if (!etBuildingCode.equals(Gayo_SharedPreferences.PrefDeviceData.prefItem.getBuildingCode()) || !etSerialCode.equals(Gayo_SharedPreferences.PrefDeviceData.prefItem.getSerialCode())) {
                 ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_GET_TOKEN);
-                activity.showPopupDialog(null, "입력하신 값을 바탕으로\n서버 내 데이터 유무 확인 후\n설정 데이터를 불러옵니다.", "취 소", "확 인");
+                activity.showPopupDialog(null, "입력하신 값을 바탕으로\n서버 내 데이터 유무 확인 후\n설정 데이터를 불러옵니다.", "취 소", getString(R.string.confirm));
             } else {
                 ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_GET_NETWORK_DATA);
-                activity.showPopupDialog(null, "입력하신 정보를 바탕으로\n서버에 저장된 네트워크 정보를 불러옵니다.\n(주의: 저장 되지 않은 값은 유실됩니다.)", "취 소", "확 인");
+                activity.showPopupDialog(null, "입력하신 정보를 바탕으로\n서버에 저장된 네트워크 정보를 불러옵니다.\n(주의: 저장 되지 않은 값은 유실됩니다.)", "취 소", getString(R.string.confirm));
             }
         }
 
@@ -140,51 +139,51 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
 
         if (etBuildingCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "건물 번호를 입력해주세요.", "확 인");
+            activity.showWarningDialog("건물 번호를 입력해주세요.", getString(R.string.confirm));
             return;
         }
         if (etSerialCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "시리얼 코드를 입력해주세요.", "확 인");
+            activity.showWarningDialog("시리얼 코드를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (mPrefGlobal.getAuthorization() == null || Gayo_SharedPreferences.PrefDeviceData.prefItem == null) {
-            activity.showPopupDialog(null, "먼저, 스크롤 하단의\n'설정 데이터 불러오기' 버튼을 눌러\n서버 데이터를 확인해주세요.", "확 인");
+            activity.showPopupDialog(null, "먼저, 스크롤 하단의\n'설정 데이터 불러오기' 버튼을 눌러\n서버 데이터를 확인해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etDeviceName.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "기기 명을 입력해주세요.", "확 인");
+            activity.showWarningDialog("기기 명을 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etIpAddress1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "IP 주소를 입력해주세요.", "확 인");
+            activity.showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etMacAddress1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "MAC 주소를 입력해주세요.", "확 인");
+            activity.showWarningDialog("MAC 주소를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
-
         if (etSubnetMask1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "Subnet을 입력해주세요.", "확 인");
+            activity.showWarningDialog("Subnet을 입력해주세요.", getString(R.string.confirm));
             return;
         }
         if (etGateway1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "Gateway를 입력해주세요.", "확 인");
+            activity.showWarningDialog("Gateway를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etServerIp1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "서버 IP를 입력해주세요.", "확 인");
+            activity.showWarningDialog("서버 IP를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etServerPort.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "서버 Port 를 입력해주세요.", "확 인");
+            activity.showWarningDialog("서버 Port 를 입력해주세요.", getString(R.string.confirm));
+            return;
         }
 
         allowedIpListAdapter.checkBlankItem();
@@ -361,7 +360,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
         );
 
         if (mPrefGlobal.getFirebaseToken() == null) {
-            activity.showWarningDialog("설정 데이터 저장에 실패하였습니다.\n(토큰 정보 없음)", "확 인");
+            activity.showWarningDialog("설정 데이터 저장에 실패하였습니다.\n(토큰 정보 없음)", getString(R.string.confirm));
             return;
         }
 
@@ -439,15 +438,15 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
                                         0
                                 );
                             }
-                            activity.showPopupDialog(null, "설정 데이터 불러오기에\n성공하였습니다.", "확 인");
+                            activity.showPopupDialog(null, "설정 데이터 불러오기에\n성공하였습니다.", getString(R.string.confirm));
 
                         }
 
                     } else {
-                        activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", "확 인");
+                        activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", getString(R.string.confirm));
                     }
                 } else {
-                    activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", "확 인");
+                    activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", getString(R.string.confirm));
 
                 }
 
@@ -465,21 +464,25 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
     public void getToken() {
 
         if (etBuildingCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "건물 번호를 입력해주세요.", "확 인");
+            ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+            activity.showWarningDialog("건물 번호를 입력해주세요.", getString(R.string.confirm));
             return;
         }
         if (etSerialCode.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "시리얼 코드를 입력해주세요.", "확 인");
+            ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+            activity.showWarningDialog("시리얼 코드를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etIpAddress1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "IP 주소를 입력해주세요.", "확 인");
+            ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+            activity.showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
         if (etMacAddress1.getText().toString().isEmpty()) {
-            activity.showPopupDialog(null, "MAC 주소를 입력해주세요.", "확 인");
+            ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+            activity.showWarningDialog("MAC 주소를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 
@@ -519,6 +522,8 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
                         //code
                     }
                 } else if (response.errorBody() != null) {
+                    ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+
                     String error = "";
                     try {
                         error = response.errorBody().string();
@@ -574,12 +579,22 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
                         Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceNetworkBody(deviceNetworkBody);
                         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
                         ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_REFRESH);
-                        activity.showPopupDialog(null, "성공적으로\n저장 되었습니다.", "확 인");
+                        activity.showPopupDialog(null, "성공적으로\n저장 되었습니다.", getString(R.string.confirm));
                     } else {
                         Log.e(TAG, call.request().toString());
-                        activity.showPopupDialog(response.body().getResult(), response.body().getMessage(), "확 인");
+                        activity.showPopupDialog(response.body().getResult(), response.body().getMessage(), getString(R.string.confirm));
                     }
-                } else {
+                } else if (response.errorBody() != null) {
+                    ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e(TAG, BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""));
+                    activity.showWarningDialog("해당 정보로 등록된 기기가 존재하지 않습니다.", getString(R.string.confirm));
 
                 }
             }
@@ -606,11 +621,21 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
                 if (response.body() != null) {
                     if (response.body().getResult().equals("OK")) {
                         ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_SETTING_SUCCESS);
-                        activity.showPopupDialog(null, "기기 세팅이 완료되었습니다.", "확 인");
+                        activity.showPopupDialog(null, "기기 세팅이 완료되었습니다.", getString(R.string.confirm));
                     } else {
 
                     }
-                } else {
+                } else if (response.errorBody() != null) {
+                    ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+
+                    String error = "";
+                    try {
+                        error = response.errorBody().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e(TAG, BaseActivity.ErrorBodyParser.JsonParser(error)[BaseActivity.ErrorBodyParser.ERROR_MESSAGE_NUM].replace("\"", ""));
+                    activity.showWarningDialog("해당 정보로 등록된 기기가 존재하지 않습니다.", getString(R.string.confirm));
 
                 }
             }
@@ -649,13 +674,15 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
                         }
                         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, body);
                         ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_SETTING_SUCCESS);
-                        activity.showPopupDialog(null, "설정 데이터 불러오기에\n성공하였습니다.", "확 인");
+                        activity.showPopupDialog(null, "설정 데이터 불러오기에\n성공하였습니다.", getString(R.string.confirm));
 
                     } else {
-                        activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", "확 인");
+                        ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+                        activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", getString(R.string.confirm));
                     }
                 } else {
-                    activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", "확 인");
+                    ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
+                    activity.showWarningDialog("설정 데이터 불러오기에 실패하였습니다.\n기기 정보 입력 후 저장 버튼을 눌러 세팅을 완료해주세요.", getString(R.string.confirm));
 
                 }
 

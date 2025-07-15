@@ -73,9 +73,13 @@ public class WorkerListAdapter extends BaseAdapter {
             }
         }
         tvSelectWorkerBtn.setOnClickListener(v -> {
-            //code
-            ((ChangeWorkerActivity) context).setSelectedWorkerInfo(itemsList.get(position));
-            ((ChangeWorkerActivity) context).showPopupDialog("현재 근무자를", itemsList.get(position).getPhoneNumber(), "으로 변경하시겠습니까?", "취 소", "확 인");
+            if (!((ChangeWorkerActivity) context).mPrefGlobal.getPatrolMode()) {
+                ((ChangeWorkerActivity) context).setSelectedWorkerInfo(itemsList.get(position));
+                ((ChangeWorkerActivity) context).showPopupDialog("현재 근무자를", itemsList.get(position).getPhoneNumber(), "으로 변경하시겠습니까?", "취 소",  context.getString(R.string.confirm));
+            } else {
+                ((ChangeWorkerActivity) context).selectedWorkerInfo = null;
+                ((ChangeWorkerActivity) context).showWarningDialog("순찰 모드 중에는\n근무자 변경이 불가능 합니다.",  context.getString(R.string.confirm));
+            }
         });
 
 

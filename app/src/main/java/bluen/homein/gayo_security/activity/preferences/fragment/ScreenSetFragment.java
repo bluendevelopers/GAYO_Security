@@ -27,7 +27,7 @@ public class ScreenSetFragment extends BaseFragment {
         activity.vibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE));
         Gayo_SharedPreferences.PrefDeviceData.prefItem.setDeviceUIBody(new RequestDataFormat.DeviceUIBody((int) slidrBrightness.getCurrentValue(), "L"));
         Gayo_SharedPreferences.PrefDeviceData.setPrefDeviceData(appContext, Gayo_SharedPreferences.PrefDeviceData.prefItem);
-        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.", "확 인");
+        activity.showPopupDialog(null, "성공적으로 저장 되었습니다.",  getString(R.string.confirm));
     }
 
     @OnClick(R.id.iv_bright_min)

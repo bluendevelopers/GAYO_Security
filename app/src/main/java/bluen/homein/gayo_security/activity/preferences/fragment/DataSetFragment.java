@@ -59,7 +59,7 @@ public class DataSetFragment extends BaseFragment {
                                 body.getDeviceSoundBody().getSystemSound(),
                                 0
                         );
-                        activity.showPopupDialog(null, "데이터 불러오기에\n성공하였습니다.", "확 인");
+                        activity.showPopupDialog(null, "데이터 불러오기에\n성공하였습니다.",  getString(R.string.confirm));
 
                     } else {
 
@@ -106,7 +106,7 @@ public class DataSetFragment extends BaseFragment {
                 activity.closeProgress();
                 if (response.body() != null) {
                     if (response.body().getResult().equals("OK")) {
-                        activity.showPopupDialog(null, "데이터 내보내기에\n성공하였습니다.", "확 인");
+                        activity.showPopupDialog(null, "데이터 내보내기에\n성공하였습니다.",  getString(R.string.confirm));
                     } else {
 
                     }
