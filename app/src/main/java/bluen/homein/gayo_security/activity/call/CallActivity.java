@@ -770,6 +770,7 @@ public class CallActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        stopRingMyBell();
         endCallAndReleaseResources();
     }
 
@@ -1800,6 +1801,7 @@ public class CallActivity extends BaseActivity {
     private void changeViewIdle(String method) {
 
         Log.e(TAG, "changeViewIdle(" + method + ")");
+        stopRingMyBell();
 
         // 통화 종료 UI
         remoteView.setVisibility(View.GONE);
