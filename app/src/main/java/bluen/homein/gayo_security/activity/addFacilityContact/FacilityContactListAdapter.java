@@ -14,6 +14,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,7 +98,7 @@ public class FacilityContactListAdapter extends BaseAdapter {
         String[] itemAddress = getItem(position).getFacilityIPAddress().split("\\.", -1);
 
         layPingTestBtn.setOnClickListener(v -> {
-            //code
+
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             LayoutInflater inflater = LayoutInflater.from(context);
             dialogView = inflater.inflate(R.layout.dialog_ping_test, null);
@@ -116,6 +117,8 @@ public class FacilityContactListAdapter extends BaseAdapter {
             TextView tvTestIpAddress2 = dialogView.findViewById(R.id.et_test_ip_address_2);
             TextView tvTestIpAddress3 = dialogView.findViewById(R.id.et_test_ip_address_3);
             TextView tvTestIpAddress4 = dialogView.findViewById(R.id.et_test_ip_address_4);
+            Button btnTestStart = dialogView.findViewById(R.id.dialog_btn_test_start);
+            Button btnResult = dialogView.findViewById(R.id.dialog_btn_result);
 
             tvIpAddress1.setText(myIdAddress[0]);
             tvIpAddress2.setText(myIdAddress[1]);
@@ -135,6 +138,16 @@ public class FacilityContactListAdapter extends BaseAdapter {
 
             ivCloseBtn.setOnClickListener(w -> {
                 dialog.dismiss();
+            });
+
+            btnTestStart.setOnClickListener(w -> {
+                //핑테스트 테스트 시작
+                //code
+            });
+
+            btnResult.setOnClickListener(w -> {
+                //핑테스트 결과 보기
+                //code
             });
 
             dialog.show();

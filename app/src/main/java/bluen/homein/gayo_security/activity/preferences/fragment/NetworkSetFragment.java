@@ -334,7 +334,7 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
     }
 
     @Override
-    public void saveData() {
+    public void saveDataFirst() {
         ArrayList<RequestDataFormat.IpAddressBody> _ipAddressList = new ArrayList<>();
 
         if (!allowedIpListAdapter.itemsList.isEmpty()) {
@@ -471,12 +471,6 @@ public class NetworkSetFragment extends BaseFragment implements PreferencesActiv
         if (etSerialCode.getText().toString().isEmpty()) {
             ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
             activity.showWarningDialog("시리얼 코드를 입력해주세요.", getString(R.string.confirm));
-            return;
-        }
-
-        if (etIpAddress1.getText().toString().isEmpty()) {
-            ((PreferencesActivity) activity).setFragmentRequested(((PreferencesActivity) activity).REQUEST_NONE);
-            activity.showWarningDialog("IP 주소를 입력해주세요.", getString(R.string.confirm));
             return;
         }
 

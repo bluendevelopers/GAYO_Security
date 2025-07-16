@@ -67,7 +67,7 @@ public class PreferencesActivity extends BaseActivity {
     public interface NetworkInterface {
         void refreshFragment();
 
-        void saveData();
+        void saveDataFirst();
 
         void getNetworkData();
 
@@ -154,7 +154,7 @@ public class PreferencesActivity extends BaseActivity {
                             fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_SAVE_DATA:
-                            ((NetworkInterface) currentFragment).saveData();
+                            ((NetworkInterface) currentFragment).saveDataFirst();
                             fragmentRequestedNumber = REQUEST_NONE;
                             break;
                         case REQUEST_GET_NETWORK_DATA:

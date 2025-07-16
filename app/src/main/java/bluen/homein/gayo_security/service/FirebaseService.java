@@ -99,7 +99,6 @@ public class FirebaseService extends FirebaseMessagingService {
 
         if (callStatus == CALL_STATUS_IDLE && body.getMethod().equals("invite") || callStatus == CALL_STATUS_IDLE && body.getMethod().equals("OK")
                 || callStatus != CALL_STATUS_IDLE || message.equals(DEVICE_NOT_CONNECTED)) {
-            // 2) 앱이 포그라운드인지 백그라운드인지 판단
             if (isAppInForeground(getApplicationContext())) {
                 // 앱이 현재 실행중(포그라운드)이면 곧바로 CallActivity로 이동
                 if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
@@ -112,14 +111,6 @@ public class FirebaseService extends FirebaseMessagingService {
             }
         }
 
-    }
-
-    private void startCallActivity(String jsonText) {
-        Intent callIntent = new Intent(getApplicationContext(), CallActivity.class);
-        callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        callIntent.putExtra("jsonText", jsonText);
-
-        getApplicationContext().startActivity(callIntent); // 가서 파싱
     }
 
     public boolean isAppInForeground(Context context) {

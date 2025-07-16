@@ -61,11 +61,11 @@ public class AddContactActivity extends BaseActivity {
     private List<String> pageList;
     private int currentPageNumber = 1; //default
     private int currentTotalPageCount = 0; //default
-    public final int STATUS_NONE = 0;
-    public final int STATUS_ADD_CONTACT = 1;
-    public final int STATUS_DELETE_CONTACT = 2;
-    public final int STATUS_LOAD_ALL_CONTACT = 3;
-    public final int STATUS_REFRESH = 4;
+    public final int STATUS_NONE = 0; // 아무 일이 일어나지 않는 경우
+    public final int STATUS_ADD_CONTACT = 1; // 연락처를 등록하는 경우
+    public final int STATUS_DELETE_CONTACT = 2; // 연락처를 제거하는 경우
+    public final int STATUS_LOAD_ALL_CONTACT = 3; // 연락처를 불러오는 경우
+    public final int STATUS_REFRESH = 4; // 단순 새로고침 하는 경우 (아이템 교체 후)
     public int STATUS_CODE = STATUS_NONE;
 
     ResponseDataFormat.FacilityContactListBody.FacilityContactInfo deleteItem = null;

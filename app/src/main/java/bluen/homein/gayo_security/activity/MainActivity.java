@@ -297,6 +297,8 @@ public class MainActivity extends BaseActivity {
 
         if (mPrefGlobal.getAuthorization() != null && Gayo_SharedPreferences.PrefDeviceData.prefItem != null) {
             Intent serviceIntent = new Intent(this, WebSocketService.class);
+            serviceIntent.putExtra("authorization", mPrefGlobal.getAuthorization());
+            serviceIntent.putExtra("deviceBody", Gayo_SharedPreferences.PrefDeviceData.prefItem);
             startService(serviceIntent);
 
             getDeviceList();

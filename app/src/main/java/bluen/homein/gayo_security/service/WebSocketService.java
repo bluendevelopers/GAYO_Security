@@ -1,15 +1,11 @@
 package bluen.homein.gayo_security.service;
 
-import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_ACTIVE;
 import static bluen.homein.gayo_security.activity.call.CallActivity.CALL_STATUS_IDLE;
 import static bluen.homein.gayo_security.activity.call.CallActivity.isSender;
 import static bluen.homein.gayo_security.global.GlobalApplication.callStatus;
 import static bluen.homein.gayo_security.preference.Gayo_Preferences.DEVICE_NOT_CONNECTED;
 
 import android.app.ActivityManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +15,6 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
@@ -30,10 +25,11 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import bluen.homein.gayo_security.R;
 import bluen.homein.gayo_security.activity.call.CallActivity;
-import bluen.homein.gayo_security.preference.Gayo_SharedPreferences;
 import bluen.homein.gayo_security.rest.MyGson;
 import bluen.homein.gayo_security.rest.RequestDataFormat;
 import okhttp3.OkHttpClient;
@@ -41,19 +37,25 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
-import okio.ByteString;
 
 public class WebSocketService extends Service {
     private static String TAG = "WebSocketService";
-    private static WebSocket webSocket;  // 전역(정적 아님) or Singleton으로 관리
-    private OkHttpClient client;
-    private String auth = "";
-    //    public static final String SIGNAL_SERVER_URL = "wss://gayo-smarthome-guard-signalserver.bluen.co.kr/guard/ws"; // OLD
-    public static final String SIGNAL_SERVER_URL = "wss://smarthomesignalserver.bluen.co.kr:28088/ws"; // NEW
-    //    public static final String SIGNAL_WALLPAD_SERVER_URL = "";
+
     private RequestDataFormat.DeviceBody deviceBody;
-    private static boolean isConnected = false;
+    private String auth = "";
+
+    public static final String SIGNAL_SERVER_CALL_URL = "wss://smarthomesignalserver.bluen.co.kr:28088/ws"; // NEW
+    public static final String SIGNAL_SERVER_EVT_URL = "wss://smarthomesignalserver.bluen.co.kr:28089/evt";
+
+    private static WebSocket webSocketCall;
+    private static WebSocket webSocketEvt;
+    private OkHttpClient callClient;
+    private OkHttpClient evtClient;
+
+    private static boolean isCallConnected = false;
+    private static boolean isEvtConnected = false;
     private final List<String> pendingMessages = new ArrayList<>();
+    private ScheduledExecutorService scheduler;
 
     @Nullable
     @Override
@@ -79,8 +81,8 @@ public class WebSocketService extends Service {
                         (RequestDataFormat.DeviceBody) intent.getSerializableExtra("deviceBody");
                 deviceBody = _deviceBody;
                 auth = intent.getStringExtra("authorization");
-                if (!isConnected) {
-                    Log.e(TAG, "onStartCommand 웹소켓 연결이 안되어있어요!");
+                if (!isCallConnected) {
+                    Log.e(TAG, "onStartCommand 웹소켓 연결 X");
                     Log.i(TAG, jsonText);
                     startDeviceWebSocketConnection(deviceBody, jsonText);
                     if (!jsonText.isEmpty()) {
@@ -100,10 +102,18 @@ public class WebSocketService extends Service {
 
                     }
                 } else {
-                    Log.e(TAG, "onStartCommand 웹소켓 연결이 되어있어요!");
+                    Log.e(TAG, "onStartCommand 웹소켓 연결 O");
                     Log.e(TAG, "onStartCommand jsonText == null || jsonText.isEmpty() !!!!!");
                     startCallActivity(jsonText);
 
+                }
+            } else {
+                if (!isEvtConnected) {
+                    RequestDataFormat.DeviceBody _deviceBody =
+                            (RequestDataFormat.DeviceBody) intent.getSerializableExtra("deviceBody");
+                    deviceBody = _deviceBody;
+                    auth = intent.getStringExtra("authorization");
+                    startWebSocketEvtConnection();
                 }
             }
         }
@@ -126,13 +136,79 @@ public class WebSocketService extends Service {
         return false;
     }
 
+    private void startWebSocketEvtConnection() {
+        evtClient = new OkHttpClient();
+
+        Request request = new Request.Builder().url(SIGNAL_SERVER_EVT_URL)
+                .addHeader("Authorization", auth)
+                .addHeader("BuilCode", deviceBody.getBuildingCode())
+                .addHeader("SerialCode", deviceBody.getSerialCode())
+                .addHeader("MacAddr", deviceBody.getDeviceNetworkBody().getMacAddress())
+                .addHeader("IPAddr", deviceBody.getDeviceNetworkBody().getIpAddress()).build();
+
+        webSocketEvt = evtClient.newWebSocket(request, new WebSocketListener() {
+            @Override
+            public void onOpen(WebSocket webSocket, Response response) {
+                super.onOpen(webSocket, response);
+                Log.d(TAG, "onOpen: WebSocketEvt connected");
+                isEvtConnected = true;
+
+                // 핑찍기 스케줄러 초기화 및 첫 전송 시작
+                scheduler = Executors.newSingleThreadScheduledExecutor();
+                scheduleNextPing();
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, String text) {
+                super.onMessage(webSocket, text);
+                Log.d(TAG, text);
+
+                if (text.contains("lobbyPhoneSerialCode")) { // 문열림 수신 확인 용
+                    startCallActivity(text);
+                }
+
+                // 나중에 핑테스트용으로 여기서 추가
+            }
+
+            @Override
+            public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
+                super.onFailure(webSocket, t, response);
+                Log.e(TAG, "onFailure: " + t.getMessage());
+                isEvtConnected = false;
+                cleanupScheduler();
+                reconnectWebSocketWithDelay();
+            }
+
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason) {
+                super.onClosing(webSocket, code, reason);
+                Log.d(TAG, "onClosing: 연결 종료 예정, reason: " + reason);
+                isEvtConnected = false;
+                cleanupScheduler();
+                reconnectWebSocketWithDelay();
+
+            }
+
+            @Override
+            public void onClosed(WebSocket webSocket, int code, String reason) {
+                super.onClosed(webSocket, code, reason);
+                Log.d(TAG, "onClosed: code=" + code + ", reason=" + reason);
+                isEvtConnected = false;
+                cleanupScheduler();
+                reconnectWebSocketWithDelay();
+
+            }
+        });
+
+    }
+
     private void startDeviceWebSocketConnection(RequestDataFormat.DeviceBody deviceBody, String jsonText) {
-        client = new OkHttpClient();
+        callClient = new OkHttpClient();
 
         WebSocketService.WebSocketBody body =
                 new Gson().fromJson(jsonText.toString(), WebSocketService.WebSocketBody.class);
 
-        Request request = new Request.Builder().url(SIGNAL_SERVER_URL)
+        Request request = new Request.Builder().url(SIGNAL_SERVER_CALL_URL)
                 .addHeader("Authorization", auth)
                 .addHeader("BuilCode", deviceBody.getBuildingCode())
                 .addHeader("SerialCode", deviceBody.getSerialCode())
@@ -140,13 +216,13 @@ public class WebSocketService extends Service {
                 .addHeader("IPAddr", deviceBody.getDeviceNetworkBody().getIpAddress()).build();
         String message = body.getMessage() != null ? body.getMessage() : "";
 
-        webSocket = client.newWebSocket(request, new WebSocketListener() {
+        webSocketCall = callClient.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 super.onOpen(webSocket, response);
                 Log.d(TAG, "onOpen: WebSocket connected");
 
-                isConnected = true;
+                isCallConnected = true;
                 if (pendingMessages.isEmpty()) {
                     if (jsonText != null && !jsonText.isEmpty()) {
 
@@ -183,14 +259,10 @@ public class WebSocketService extends Service {
                 // 수신부!!!!!
                 Log.d(TAG, "새 메세지가 도착했습니다 onMessage: " + text); //
 
-                if ("pong".equals(text)) {
-                    Log.d(TAG, "Heartbeat pong received");
-                } else {
-                    try {
-                        handleServerMessage(text);
-                    } catch (JSONException e) {
-                        throw new RuntimeException(e);
-                    }
+                try {
+                    handleServerMessage(text);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
                 }
 
             }
@@ -199,7 +271,7 @@ public class WebSocketService extends Service {
             public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
                 super.onFailure(webSocket, t, response);
                 Log.e(TAG, "onFailure: " + t.getMessage());
-                disconnectWebSocket();
+                disconnectWebSocketCall();
             }
 
             @Override
@@ -221,21 +293,21 @@ public class WebSocketService extends Service {
         // 참고: client가 종료되지 않도록, onDestroy()에서 종료 처리
     }
 
-    public static void disconnectWebSocket() {
-        if (webSocket != null) {
-            webSocket.close(1000, "Client requested disconnect");  // 정상 종료 코드
-            webSocket = null;
-            isConnected = false;
+    public static void disconnectWebSocketCall() {
+        if (webSocketCall != null) {
+            webSocketCall.close(1000, "Client requested disconnect");  // 정상 종료 코드
+            webSocketCall = null;
+            isCallConnected = false;
 
             Log.d(TAG, "WebSocket disconnected (service still running)");
         }
     }
 
     // 재연결 로직 메서드 추가
-    private void reconnectWebSocketWithDelay(String jsonText) {
+    private void reconnectWebSocketWithDelay() {
         Log.d(TAG, "WebSocket disconnected, trying to reconnect in 5 seconds...");
         new Handler(Looper.getMainLooper())
-                .postDelayed(() -> startDeviceWebSocketConnection(deviceBody, jsonText), 5000);
+                .postDelayed(() -> startWebSocketEvtConnection(), 5000);
 
     }
 
@@ -270,13 +342,42 @@ public class WebSocketService extends Service {
     public void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy: Service stopped");
-        if (webSocket != null) {
-            webSocket.cancel();
-            webSocket.close(1000, "Service destroyed");
-            webSocket = null;
+        if (webSocketCall != null) {
+            webSocketCall.cancel();
+            webSocketCall.close(1000, "Service destroyed");
+            webSocketCall = null;
         }
-        if (client != null) {
-            client.dispatcher().executorService().shutdown();
+        if (callClient != null) {
+            callClient.dispatcher().executorService().shutdown();
+        }
+    }
+
+    private void scheduleNextPing() {
+        if (!isEvtConnected || scheduler.isShutdown()) return;
+
+        int delaySeconds = 10; // 10초
+        scheduler.schedule(() -> {
+            try {
+                JSONObject json = new JSONObject();
+                json.put("method", "conn");
+                json.put("device", "guard");
+                boolean sent = webSocketEvt.send(json.toString());
+                Log.d(TAG, "Ping sent? " + sent + " payload=" + json);
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to send ping", e);
+            }
+            // 다음 전송 예약
+            scheduleNextPing();
+        }, delaySeconds, TimeUnit.SECONDS);
+    }
+
+    /**
+     * WebSocket 종료 시 스케줄러도 정리
+     */
+    private void cleanupScheduler() {
+        isEvtConnected = false;
+        if (scheduler != null && !scheduler.isShutdown()) {
+            scheduler.shutdownNow();
         }
     }
 
@@ -285,9 +386,25 @@ public class WebSocketService extends Service {
      */
 
     public static void sendWebSocketMessage(String message) {
-        if (webSocket != null) {
+        if (webSocketCall != null) {
 
-            boolean isSent = webSocket.send(message);
+            boolean isSent = webSocketCall.send(message);
+            if (isSent) {
+                Log.d("WebSocketService", "웹소켓 전송 성공 JSON: " + message);
+
+            } else {
+                Log.e("WebSocketService", "웹소켓 전송 실패 (연결 끊김): " + message);
+
+            }
+        } else {
+            Log.e("WebSocketService", "webSocket 객체가 null입니다. 연결되지 않음.");
+        }
+    }
+
+    public static void sendWebSocketEvtMessage(String message) {
+        if (webSocketEvt != null) {
+
+            boolean isSent = webSocketEvt.send(message);
             if (isSent) {
                 Log.d("WebSocketService", "웹소켓 전송 성공 JSON: " + message);
 
@@ -359,9 +476,9 @@ public class WebSocketService extends Service {
         private String visitorCarNumber;
 
 
-        public WebSocketBody(String method, String reSerialCode) {
+        public WebSocketBody(String method, String seSerialCode) {
             this.method = method;
-            this.reSerialCode = reSerialCode;
+            this.seSerialCode = seSerialCode;
         }
 
         public WebSocketBody(String method, String recipientSerialCode, String senderSerialCode, String currentRoomId, String currentClientId, String receivedSdp) {
@@ -370,8 +487,8 @@ public class WebSocketService extends Service {
             this.seSerialCode = senderSerialCode;
             this.roomid = currentRoomId;
             this.clientid = currentClientId;
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             this.sdp = receivedSdp;
         }
 
@@ -381,8 +498,8 @@ public class WebSocketService extends Service {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.reSerialCode = recipientSerialCode;
             this.seSerialCode = senderSerialCode;
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
         }
 
@@ -391,8 +508,8 @@ public class WebSocketService extends Service {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.reSerialCode = _reSerialCode;
             this.seSerialCode = seSerialCode;
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + _reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + _reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
             this.roomid = roomId;
             this.clientid = clientId;
@@ -402,8 +519,8 @@ public class WebSocketService extends Service {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.reSerialCode = reSerialCode;
             this.seSerialCode = seSerialCode;
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             // 8자리 랜덤 숫자: 10000000 ~ 99999999 범위
             this.roomid = roomId;
             this.clientid = clientId;
@@ -416,8 +533,8 @@ public class WebSocketService extends Service {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
             this.reSerialCode = reSerialCode;
             this.seSerialCode = seSerialCode;
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             this.roomid = roomId;
             this.clientid = clientId;
             this.builCode = builCode;
@@ -429,8 +546,8 @@ public class WebSocketService extends Service {
 
         public WebSocketBody(String method, String reSerialCode, String seSerialCode, String roomId, String clientId, String builCode, String builDong, String builHo) {
             this.method = method;// invite, invite-away, invite-ack, accept,accept-ack, offer, answer, candidate, bye, call-bye,no-answer
-            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_URL;
-            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_URL;
+            this.sender = "rtc:" + seSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
+            this.receiver = "rtc:" + reSerialCode + "@" + SIGNAL_SERVER_CALL_URL;
             this.roomid = roomId;
             this.clientid = clientId;
             this.builCode = builCode;
